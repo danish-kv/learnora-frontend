@@ -1,0 +1,159 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# MacOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Parcel-bundler cache
+.cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build output
+.nuxt
+
+# Gatsby files
+.cache/
+# Comment in the public line in if your project uses Gatsby and not Next.js
+# public
+
+# Vuepress build output
+.vuepress/dist
+
+# temporary files
+tmp/
+temp/
+
+# private data
+*.pem
+*.key
+*.crt
+
+# dependencies
+node_modules/
+
+# production
+build/
+
+# misc
+.env
+.env.*
+!.env.example
+
+# next.js
+.next/
+out/
+
+# nuxt.js
+.nuxt/
+dist/
+
+# parcel-bundler
+.cache/
+.parcel-cache/
+
+# SvelteKit
+/.svelte-kit
+/build/
+
+# Remix
+/.cache
+/build
+
+# static build folder
+dist/
+
+# Storybook
+out/
+.storybook-out/
+storybook-static/
+
+# misc
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+__pycache__/
+*.py[cod]
+.cyphers/
+.serverless/
+.fusebox/
+.docker
+.*.swp
+*.lock
+.jest
+__snapshots__
+
+# IDEs and editors
+/.idea
+/.vscode
+*.sw?
