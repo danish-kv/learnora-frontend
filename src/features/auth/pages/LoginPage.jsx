@@ -1,44 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { validateLogin } from "../../../utils/validation";
 import authService from "../../../services/authService";
 import { toast } from "react-toastify";
 import { ThreeDot } from "react-loading-indicators";
 import LoadingDotStream from "../../../components/common/Loading";
-import { dispalyToastAlert } from "../../../utils/displayToastAlert";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import { useDispatch, useSelector } from "react-redux";
+import { loginThunk } from "../../../redux/thunk/authThunks";
+import { toggleOtpAccess } from "../../../redux/slices/authSlice";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import Header from "../../../components/layout/Header";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const { handleSignInWithGoogle } = useGoogleAuth();
   const navigate = useNavigate();
+  const dispath = useDispatch();
+
+  const loading = useSelector((state) => state.auth.loading);
+  console.log("loading in ", loading);
+
+  useEffect(() => {
+    google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_CLIENT_ID,
+      callback: onGoogleSignIn,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+      text: "continue_with",
+      width: "780",
+    });
+  }, []);
+
+  const onGoogleSignIn = async (res) => {
+    await handleSignInWithGoogle(res, "student", "login");
+  };
 
   const handleSubmit = async (e) => {
     console.log("handleSubmit called");
     e.preventDefault();
-    console.log("Default form submission prevented");
+
+    console.log(email, password);
 
     const { isValid, errors } = validateLogin({ email, password });
     console.log(isValid, errors);
 
     if (isValid) {
-      setLoading(true);
+      // setLoading(true);
       console.log("form submitted");
 
       try {
-        const data = await authService.login(email, password);
-        if (data.role === "student") {
+        const res = await dispath(loginThunk({ email, password })).unwrap();
+        console.log("res of res ====>", res);
+
+        if (res.role === "student") {
           navigate("/");
-          toast.success('Welcome back!')
-        }else{
-          toast.error('Not a authorized person')
+          displayToastAlert(200, "Welcome back!");
+        } else {
+          displayToastAlert(400, "Not a authorized person");
         }
-        
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
+        if (error.status == 403) {
+          dispath(toggleOtpAccess(true));
+          await displayToastAlert(100, "Verification Incomplete");
+          navigate("otp/", { state: { email } });
+        }
       }
     } else {
       setErrors(errors);
@@ -49,7 +80,7 @@ const LoginPage = () => {
   return (
     <div className="flex h-screen">
       {/* Left side */}
-      <div className="w-1/2 bg-indigo-400 p-12 flex flex-col justify-between">
+      <div className="w-1/2 bg-indigo-300 p-12 flex flex-col justify-between">
         <div className="text-white">
           {/* <h2 className="text-3xl font-bold mb-4">Knowledge Unleashed,</h2>
           <h2 className="text-3xl font-bold">Virtually Limitless</h2> */}
@@ -99,25 +130,19 @@ const LoginPage = () => {
             )}
           </div>
           <div className="mb-4 text-right">
-            <Link to='forget_password' >
-            <a  className="text-indigo-500">
-              Forgot Password
-            </a>
-             </Link>
+            <Link to="/forget-reset">
+              <a className="text-indigo-500">Forgot Password</a>
+            </Link>
           </div>
           <button className="w-full bg-indigo-500 text-white p-2 rounded mb-4">
             {loading ? <LoadingDotStream /> : "Login"}
           </button>
           <div className="text-center mb-4">OR</div>
           <button
-            type="button"
-            className="w-full border border-gray-300 p-2 rounded flex items-center justify-center"
-          >
-            <img src="google-icon.png" alt="Google" className="mr-2" />
-            Sign with Google
-          </button>
+            id="signInDiv"
+            className="w-full    flex items-center justify-center"
+          ></button>
         </form>
-        <button className="bg-black text-white" onClick={dispalyToastAlert(200,'hola give how are ')}>click</button>
 
         <div className="mt-6 text-center">
           <Link to="/register">

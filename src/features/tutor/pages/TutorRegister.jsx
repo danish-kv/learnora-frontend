@@ -5,8 +5,10 @@ import { Riple, ThreeDot } from "react-loading-indicators";
 import authService from "../../../services/authService";
 import { validateRegistration } from "../../../utils/validation";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 
-const InstructorRegister = () => {
+const TutorRegister = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +16,7 @@ const InstructorRegister = () => {
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+  const dispath = useDispatch()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,8 +32,10 @@ const InstructorRegister = () => {
       console.log("Form submitted");
 
       try {
-        await authService.register(email, password, username, 'instructor');
-        navigate("/otp", { state: { email } });
+        await authService.register(email, password, username, 'tutor');
+        
+        dispath(toggleOtpAccess(true));
+        navigate("/otp", { state: { email , is_tutor : true} });
       } catch (error) {
         console.log(error);
       } finally {
@@ -48,12 +53,12 @@ const InstructorRegister = () => {
           <div className="w-1/2 bg-blue-200 flex items-center justify-center">
             <div className="text-center p-10">
               <img
-                src="/instructor.jpg"
+                src="/tutor.jpg"
                 alt="Illustration"
                 className="mb-4 max-w-xs max-h-100 object-contain mx-auto"
               />
               <h2 className="text-2xl font-bold text-white mb-2">
-                Join as an Instructor
+                Join as a Tutor
               </h2>
               <p className="text-white">
                 Share your knowledge and expertise with our community.
@@ -62,14 +67,14 @@ const InstructorRegister = () => {
           </div>
           <div className="w-1/2 p-8">
             <h2 className="text-2xl font-bold text-gray-700 mb-4">
-              Instructor Registration
+            Tutor Registration
             </h2>
             <p className="text-gray-600 mb-6">
               Sign up now to start creating and sharing your courses!
             </p>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
+                <label className="block text-gray-700">Username</label>
                 <input
                   type="text"
                   onChange={(e) => setUsername(e.target.value)}
@@ -117,9 +122,11 @@ const InstructorRegister = () => {
                 )}
               </div>
               <div className="mb-4 flex items-center justify-between">
-                <a href="#" className="text-sm text-blue-600 hover:underline">
+                <Link to={'/forget-password'}>
+                <p  className="text-sm text-blue-600 hover:underline">
                   Forgot Password?
-                </a>
+                </p>
+                </Link>
               </div>
               <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200">
                 {loading ? (
@@ -136,7 +143,7 @@ const InstructorRegister = () => {
             </button> */}
             <p className="mt-4 text-center text-gray-600">
               Already have an account?{" "}
-              <Link to="/instructor/login">
+              <Link to="/tutor/login">
                 <span className="text-blue-600 hover:underline">
                   Log In
                 </span>
@@ -148,4 +155,4 @@ const InstructorRegister = () => {
     );
   };
 
-export default InstructorRegister;
+export default TutorRegister;

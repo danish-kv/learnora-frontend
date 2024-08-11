@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import React from "react";
 
-const InstructorSidebar = () => {
+const TutorSidebar = () => {
   return (
     <div className="w-64 bg-blue-300 text-white flex flex-col">
       <div className="flex items-center justify-center h-20 border-b border-blue-500">
-        <h1 className="text-2xl font-bold">Instructor Dashboard</h1>
+        <h1 className="text-2xl font-bold">Tutor Dashboard</h1>
       </div>
       <nav className="flex-1 p-4">
         <ul>
           <li>
             <Link
-              to="/instructor"
+              to="/tutor"
               className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-400"
             >
               Dashboard
@@ -19,7 +19,7 @@ const InstructorSidebar = () => {
           </li>
           <li>
             <Link
-              to="/instructor/course"
+              to="/tutor/course"
               className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-400"
             >
               My Course
@@ -27,7 +27,7 @@ const InstructorSidebar = () => {
           </li>
           <li>
             <Link
-              to="/instructor/profile"
+              to="/tutor/profile"
               className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-400"
             >
               Profile
@@ -44,4 +44,4 @@ const InstructorSidebar = () => {
   );
 };
 
-export default InstructorSidebar;
+export default TutorSidebar;

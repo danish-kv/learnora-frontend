@@ -14,7 +14,7 @@ const Mentors = () => {
         <div className="w-1/4 p-4">
           <img src="path/to/mentor2.png" alt="Taylor Swift" className="mb-4 mx-auto rounded-full"/>
           <h3 className="text-xl font-bold mb-2">Taylor Swift</h3>
-          <p className="text-gray-700">Instructor</p>
+          <p className="text-gray-700">Tutor</p>
         </div>
         <div className="w-1/4 p-4">
           <img src="path/to/mentor3.png" alt="Mariam Davidson" className="mb-4 mx-auto rounded-full"/>

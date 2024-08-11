@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import LoadingDotStream from '../../../components/common/Loading'
 import { validateLogin } from '../../../utils/validation'
 import authService from '../../../services/authService'
-import { dispalyToastAlert } from '../../../utils/displayToastAlert'
+import { displayToastAlert } from '../../../utils/displayToastAlert'
 
-const InstructorLogin = () => {
+const TutorLogin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState('')
@@ -26,12 +26,12 @@ const InstructorLogin = () => {
 
       try {
         const data = await authService.login(email,password)
-        if(data.role==='instructor'){
+        if(data.role==='tutor'){
 
-          navigate('/instructor')
-          dispalyToastAlert(200,'Welcome back instructor')
+          navigate('/tutor')
+          displayToastAlert(200,'Welcome back Tutor')
         }else{
-          dispalyToastAlert(400, 'Not a instructor')
+          displayToastAlert(400, 'Not a Tutor')
         }
       } catch (error) {
         console.log(error);
@@ -41,7 +41,7 @@ const InstructorLogin = () => {
       }
     }else{
       setErrors(errors)
-      dispalyToastAlert(400,'Please fix the validation errors')
+      displayToastAlert(400,'Please fix the validation errors')
     }
 
   }
@@ -51,7 +51,7 @@ const InstructorLogin = () => {
         <div className="w-1/2 bg-blue-200 flex items-center justify-center">
           <div className="text-center p-10">
             <img
-              src="/instructor-login.jpg"
+              src="/tutor-login.jpg"
               alt="Illustration"
               className="mb-4 max-w-xs max-h-100 object-contain mx-auto"
             />
@@ -113,7 +113,7 @@ const InstructorLogin = () => {
           </form>
           <p className="mt-4 text-center text-gray-600">
             Don't have an account?{' '}
-            <Link to='/instructor/register' >
+            <Link to='/tutor/register' >
             <a className="text-blue-600 hover:underline">
               Sign Up
             </a>
@@ -125,4 +125,4 @@ const InstructorLogin = () => {
   )
 }
 
-export default InstructorLogin
+export default TutorLogin

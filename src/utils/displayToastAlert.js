@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const dispalyToastAlert = (status, message) => {
+export const displayToastAlert = (status, message) => {
   const options = {
     position: "bottom-right",
     draggable: true,

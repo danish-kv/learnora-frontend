@@ -15,6 +15,8 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.log('Request error:', error); 
+    
     return Promise.reject(error);
   }
 );
@@ -22,6 +24,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log('Response error:', error); 
+    
     const originalRequest = error.config;
 
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -29,12 +33,14 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+        console.log('refresh token', refreshToken);
+        
         const { data } = await api.post("token/refresh/", {
           refresh: refreshToken,
         });
         console.log("res == >", data);
 
-        localStorage.setItem(ACCESS_TOKEN, data.access);
+        console.log('Refresh token response:', data); 
 
         api.defaults.headers["Authorization"] = `Bearer ${data.access}`;
         originalRequest.headers["Authorization"] = `Bearer ${data.access}`;
@@ -42,7 +48,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         localStorage.clear();
-        console.log(err, "refrseh token error");
+        console.log('Refresh token error:', err);  //
         let data =
           (await err?.data?.code) === "user_active"
             ? "You account is blocked"
@@ -50,14 +56,11 @@ api.interceptors.response.use(
         toast.error(data);
         setTimeout(() => {
           window.location.href = "/";
-        }, 2000);
-        return Promise.reject(refreshError);
+        },  2000);
+        return Promise.reject(err);
       }
     } else if (error.response.status === 403) {
-      console.error(
-        "403 forbbiden error found in interceptors",
-        error.response.data
-      );
+      console.error('403 Forbidden error:', error.response.data);
     }
     return Promise.reject(error);
   }

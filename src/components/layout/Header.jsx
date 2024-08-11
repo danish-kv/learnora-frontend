@@ -1,12 +1,30 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/thunk/authThunks";
+import { capitalizeFirstLetter } from "../../utils/capitalize";
 
 function Header() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dispath = useDispatch();
+  const navigate = useNavigate();
+
+  const isAuthenticated = useSelector((state) => state.auth.role);
+  const user = useSelector((state) => state.auth.user);
+  console.log(isAuthenticated);
+
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await dispath(logout()).unwrap();
+      navigate("/");
+    } catch (error) {
+      console.log("logout error", error);
+    }
   };
 
   return (
@@ -17,29 +35,29 @@ function Header() {
 
       <div className="hidden md:flex space-x-8">
         <Link to="/">
-          <a className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+          <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Home
-          </a>
+          </p>
         </Link>
         <Link to="/course">
-          <a className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+          <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Courses
-          </a>
+          </p>
         </Link>
         <Link to="/contest">
-          <a className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+          <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Contest
-          </a>
+          </p>
         </Link>
         <Link to="/discussion">
-          <a className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+          <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Discussion
-          </a>
+          </p>
         </Link>
         <Link to="/community">
-          <a className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
+          <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Community
-          </a>
+          </p>
         </Link>
       </div>
 
@@ -51,11 +69,13 @@ function Header() {
               className="flex items-center space-x-2 focus:outline-none"
             >
               <img
-                src="/profile-image.jpg"
+                src="/prodfile-image.jpg"
                 alt="Profile"
                 className="w-8 h-8 rounded-full"
               />
-              <span className="text-gray-700 font-medium">Adinan</span>
+              <span className="text-gray-700 font-medium">
+                {capitalizeFirstLetter(user)}
+              </span>
               <svg
                 className="w-4 h-4 text-gray-500"
                 fill="none"
@@ -85,7 +105,10 @@ function Header() {
                   Settings
                 </a>
                 <Link to="/logout">
-                  <a className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-b-lg">
+                  <a
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-b-lg"
+                  >
                     Logout
                   </a>
                 </Link>
@@ -104,9 +127,9 @@ function Header() {
                 Register
               </button>
             </Link>
-            <Link to="/instructor/register">
+            <Link to="/tutor/register">
               <button className="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-600 transition duration-300">
-                Become a Instructor
+                Become a Tutor
               </button>
             </Link>
           </>

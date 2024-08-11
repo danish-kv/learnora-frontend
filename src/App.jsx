@@ -3,8 +3,8 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import StudentRoutes from "./routes/StudentRoutes";
-import InstructorRoutes from "./routes/InstructorRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
+import TutorRoutes from "./routes/TutorRoutes";
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
         <Routes>
           <Route path="/*" element={<StudentRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />
-          <Route path="/instructor/*" element={<InstructorRoutes />} />
+          <Route path="/tutor/*" element={<TutorRoutes />} />
         </Routes>
       </BrowserRouter>
     </>

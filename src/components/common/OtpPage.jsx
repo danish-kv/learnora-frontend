@@ -3,34 +3,50 @@ import api from "../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThreeDot } from "react-loading-indicators";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleOtpAccess } from "../../redux/slices/authSlice";
 
 const OtpPage = () => {
   const [otp, setOtp] = useState(new Array(5).fill(""));
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
   const [resendDisabled, setResendDisabled] = useState(true);
 
   const location = useLocation();
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const {is_access} = useSelector((state) => state.auth);
+  console.log("is_access", is_access);
+
   const { email } = location.state || {};
-  console.log(email);
+  const { is_tutor } = location.state || {};
+  const { is_forget } = location.state || {};
+  console.log('email ==',email);
+  console.log('is tutor ==',is_tutor);
+  console.log('is forget ==',is_forget);
 
   useEffect(() => {
-    if (timer > 0) {
+    if (!is_access || !email) {
+      if (is_tutor) {
+        navigate("/tutor/login");
+      } else {
+        navigate("/login");
+      }
+    } else {
       const intervalId = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
       }, 1000);
       return () => clearInterval(intervalId);
-    } else {
-      setResendDisabled(false);
     }
-  }, [timer]);
+  }, []);
 
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return false;
 
     setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+    setError("");
 
     // Focus next input
     if (element.nextSibling) {
@@ -42,11 +58,27 @@ const OtpPage = () => {
     e.preventDefault();
     console.log("Entered OTP is:", otp.join(""));
     const otpString = otp.join("");
+    if (otpString.length < 5) {
+      setError("Enter 5 digits OTP");
+      return;
+    }
     setLoading(true);
     try {
       const res = await api.post("otp-verify/", { email, otp: otpString });
-      toast.success("OTP verified successfully!");
-      navigate("/login");
+      if (res.status === 200) {
+        dispatch(toggleOtpAccess(false));
+        toast.success("OTP verified successfully!");
+
+        if (is_forget){
+          navigate('/password-reset', { state : { email, is_tutor, is_forget }})
+        }else if (is_tutor) {
+          navigate("/tutor/application ", { state : { email }});
+        } else {
+          navigate("/login");
+        }
+      } else {
+        console.log(res);
+      }
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -82,12 +114,15 @@ const OtpPage = () => {
                 key={index}
                 type="text"
                 maxLength="1"
-                className="w-12 h-12 m-2 text-center border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className={`w-12 h-12 m-2 text-center border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                  error ? "border-red-500" : ""
+                }`}
                 value={data}
                 onChange={(e) => handleChange(e.target, index)}
                 onFocus={(e) => e.target.select()}
               />
             ))}
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
           <button
             type="submit"
@@ -106,9 +141,14 @@ const OtpPage = () => {
           ) : (
             <button
               onClick={handleResendOtp}
-              className="mt-6 text-center bg-blue-500 p-1 border-red-50 border-2	rounded text-yellow-100"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+              disabled={resendDisabled}
             >
-              Resend OTP
+              {loading ? (
+                <ThreeDot color="#fff" size="medium" text="" textColor="" />
+              ) : (
+                "Resend OTP"
+              )}
             </button>
           )}
         </div>

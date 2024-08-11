@@ -66,6 +66,11 @@ export const logout = () => {
   localStorage.clear();
 };
 
+
+export const TutorSignup = (username, email, password, firstName, lastName, phone, headline, ) => {
+
+}
+
 export default {
   register,
   login,

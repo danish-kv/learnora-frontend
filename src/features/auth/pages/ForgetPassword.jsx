@@ -5,12 +5,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import LoadingDotStream from '../../../components/common/Loading';
 import api from '../../../services/api';
+import { useDispatch } from 'react-redux';
+import { toggleOtpAccess } from '../../../redux/slices/authSlice';
 
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const dispath = useDispatch()
 
     const navigate = useNavigate()
 
@@ -34,6 +37,9 @@ const ForgetPassword = () => {
 
         try {
             const res = await api.post('/forget-password/', {email})
+            console.log(res);
+            console.log(res.data.role);
+            
             console.log('hi');
             if(res.status === 200){
                 await Swal.fire({
@@ -41,7 +47,8 @@ const ForgetPassword = () => {
                     title : 'Resent OTP sented',
                     text : 'Please check your email for OTP'
                 })
-                navigate('/otp', {state : {email : email, forget_password : true}})
+                dispath(toggleOtpAccess(true))
+                navigate('/otp', {state : {email : email, is_forget : true, is_tutor : res.data.role === 'tutor'}})
             }else {
                 await Swal.fire({
                     icon : 'error',
