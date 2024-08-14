@@ -1,50 +1,62 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import LoadingDotStream from '../../../components/common/Loading'
-import { validateLogin } from '../../../utils/validation'
-import authService from '../../../services/authService'
-import { displayToastAlert } from '../../../utils/displayToastAlert'
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LoadingDotStream from "../../../components/common/Loading";
+import { validateLogin } from "../../../utils/validation";
+import authService from "../../../services/authService";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import { useDispatch } from "react-redux";
+import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 
 const TutorLogin = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState('')
-  const [errors, setErrors] = useState({})
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const navigate = useNavigate()
-  const handleSubmit = async(e) => {
-    e.preventDefault()
+  const dispatch = useDispatch()
 
-    const {isValid, errors} = validateLogin({
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { isValid, errors } = validateLogin({
       email,
-      password
-    })
+      password,
+    });
 
     if (isValid) {
-      setLoading(true)
-      console.log('from submited');
+      setLoading(true);
+      console.log("from submited");
 
       try {
-        const data = await authService.login(email,password)
-        if(data.role==='tutor'){
+        const res = await authService.login(email, password);
+        console.log(res);
+        
+        if (res.role === "tutor") {
+          if (!res.is_verified){
+            dispatch(toggleOtpAccess(true))
+            navigate('/otp', {state : { email, is_tutor : true }})
 
-          navigate('/tutor')
-          displayToastAlert(200,'Welcome back Tutor')
-        }else{
-          displayToastAlert(400, 'Not a Tutor')
+          }
+
+
+
+
+          navigate("/tutor");
+          displayToastAlert(200, "Welcome back Tutor");
+        } else {
+          displayToastAlert(400, "Not a Tutor");
         }
       } catch (error) {
         console.log(error);
-        
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
-    }else{
-      setErrors(errors)
-      displayToastAlert(400,'Please fix the validation errors')
+    } else {
+      setErrors(errors);
+      displayToastAlert(400, "Please fix the validation errors");
     }
-
-  }
+  };
   return (
     <div className="flex h-screen items-center justify-center bg-blue-100">
       <div className="flex bg-white shadow-lg rounded-lg overflow-hidden">
@@ -79,8 +91,8 @@ const TutorLogin = () => {
                 placeholder="Enter your email address"
               />
               {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Password</label>
@@ -96,8 +108,8 @@ const TutorLogin = () => {
               />
             </div>
             {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-                )}
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
             <div className="mb-4 flex items-center justify-between">
               <a href="#" className="text-sm text-blue-600 hover:underline">
                 Forgot Password?
@@ -108,21 +120,19 @@ const TutorLogin = () => {
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
               disabled={loading}
             >
-              {loading ? <LoadingDotStream /> : 'Log In'}
+              {loading ? <LoadingDotStream /> : "Log In"}
             </button>
           </form>
           <p className="mt-4 text-center text-gray-600">
-            Don't have an account?{' '}
-            <Link to='/tutor/register' >
-            <a className="text-blue-600 hover:underline">
-              Sign Up
-            </a>
+            Don't have an account?{" "}
+            <Link to="/tutor/register">
+              <a className="text-blue-600 hover:underline">Sign Up</a>
             </Link>
           </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TutorLogin
+export default TutorLogin;

@@ -1,22 +1,31 @@
-import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
 import Header from "../../../components/layout/Header";
 import api from "../../../services/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { validateTutorApplication } from "../../../utils/validationTutor";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import { useDispatch, useSelector } from "react-redux";
+import { tutorApplication } from "../../../redux/slices/authSlice";
 
 const TutorApplication = () => {
   const [step, setStep] = useState(1);
+  const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { tutorApplicationAccess } = useSelector((state) => state.auth);
+  console.log("applcaiton access", tutorApplicationAccess);
 
   const location = useLocation();
   const { email } = location.state || {};
+  console.log("email of ===", email);
 
   const [formData, setFormData] = useState({
     profilePhoto: null,
     firstName: "",
     lastName: "",
-    email: 'tutor@gmail.com',
+    email: email,
     public_name: "",
     phone: "",
     headline: "",
@@ -28,137 +37,76 @@ const TutorApplication = () => {
     cv: null,
   });
 
-
-
-  
-
-  
-
+  // useEffect(() => {
+  //   if (!tutorApplicationAccess){
+  //     navigate('/tutor/register')
+  //   }
+  // }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newData = new FormData();
 
-    newData.append('first_name', formData.firstName)
-    newData.append('last_name', formData.lastName)
-    newData.append('email', formData.email)
-    newData.append('display_name', formData.public_name)
-    newData.append('phone', formData.phone)
-    newData.append('headline', formData.headline)
-    newData.append('bio', formData.bio)
-    newData.append('dob', formData.dateOfBirth)
-    newData.append('cv', formData.cv)
-    newData.append('profile', formData.profilePhoto)
-    
-    
-    // const educationData = formData.education.map(edu => ({
-    //   highestQualification: edu.highestQualification,
-    //   name_of_institution: edu.institute,
-    //   year_of_qualification: edu.year
-    // }));
-    // newData.append('education', JSON.stringify(educationData));
-  
-    // // Handle experiences
-    // const experiencesData = formData.experiences.map(exp => ({
-    //   company_name: exp.workplace,
-    //   position: exp.position,
-    //   start_date: exp.startDate,
-    //   end_date: exp.endDate
-    // }));
-    // newData.append('experiences', JSON.stringify(experiencesData));
+    newData.append("first_name", formData.firstName);
+    newData.append("last_name", formData.lastName);
+    newData.append("email", formData.email);
+    newData.append("display_name", formData.public_name);
+    newData.append("phone", formData.phone);
+    newData.append("headline", formData.headline);
+    newData.append("bio", formData.bio);
+    newData.append("dob", formData.dateOfBirth);
+    newData.append("cv", formData.cv);
+    newData.append("profile", formData.profilePhoto);
+    newData.append("skills", formData.skills.split(","));
 
-    newData.append('skills', formData.skills.split(','));
-    // console.log('educationData:', educationData);
-    // console.log('experiencesData:', experiencesData);
-
-newData.append('education', JSON.stringify(formData.education));
-newData.append('experiences', JSON.stringify(formData.experiences));
-
+    newData.append("education", JSON.stringify(formData.education));
+    newData.append("experiences", JSON.stringify(formData.experiences));
 
     try {
-      const res = await api.post("tutor/", newData);
-      console.log(res);
+      const { isValid, errors } = validateTutorApplication(formData);
+
+      if (isValid) {
+        console.log('form submitedd');
+        
+        const res = await api.post("tutor/", newData);
+        console.log(res);
+        if (res.status === 201) {
+          await displayToastAlert(200, "Account Created Succussfully");
+          dispatch(tutorApplication(false));
+          navigate("/tutor/login");
+        }
+      }else{
+        setErrors(errors)
+        displayToastAlert(400, 'Please complete your application')
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error creating account", error);
+      await displayToastAlert(
+        error.response?.status || 500,
+        "Failed to create account"
+      );
     }
   };
-
-  const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    const { isValid, errors } = validateTutorApplication({
-      ...formData,
-      [name]: value,
-    });
-    setErrors(errors);
   };
 
-
-
-
-  
-
-  const handleFileChange = async(e) => {
-    console.log(e);
-
+  const handleFileChange = async (e) => {
     const { name, files } = e.target;
-    console.log('name',name, files);
+    console.log("name", name, files);
 
     setFormData({ ...formData, [name]: files[0] });
-    console.log(formData);
-    // const { isValid, errors } = validateTutorApplication({
-    //   ...formData,
-    //   [name]: files[0],
-    // });
-    // setErrors(errors);
-
-
-    console.log(e);
-    newData.forEach(obj=> (console.log(obj)));
-    
-    // try {
-    //   const res = await api.patch("profile-image/", newData);
-    //   console.log(res);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-
+    newData.forEach((obj) => console.log(obj));
   };
 
   const handleArrayInputChange = (index, field, subfield, value) => {
     const newArray = [...formData[field]];
     newArray[index][subfield] = value;
     setFormData({ ...formData, [field]: newArray });
-
-    const { is_valid, errors } = validateTutorApplication({
-      ...formData,
-      [field]: newArray,
-    });
-
-    setErrors(errors);
   };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    // Validate field on blur
-    const { isValid, errors } = validateTutorApplication({
-      ...formData,
-      [name]: value,
-    });
-    setErrors(errors);
-  };
-
-
-
-
-
-
-
-
 
   const addArrayField = (field) => {
     if (field === "experiences") {
@@ -179,13 +127,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
       });
     }
   };
-
-
-
-
-
-
-
 
   const removeArrayField = (index, field) => {
     const newArray = [...formData[field]];
@@ -225,6 +166,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                   className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
               </div>
+                {errors.profilePhoto && (
+                    <p className="text-red-500 text-sm">{errors.profilePhoto}</p>
+                  )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -235,11 +179,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border ${
                       errors.firstName ? "border-red-500" : "border-gray-300"
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                     
                   />
                   {errors.firstName && (
                     <p className="text-red-500 text-sm">{errors.firstName}</p>
@@ -254,11 +196,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border ${
                       errors.lastName ? "border-red-500" : "border-gray-300"
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                     
                   />
                   {errors.lastName && (
                     <p className="text-red-500 text-sm">{errors.lastName}</p>
@@ -273,11 +213,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="public_name"
                     value={formData.public_name}
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border ${
                       errors.public_name ? "border-red-500" : "border-gray-300"
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                     
                   />
                   {errors.public_name && (
                     <p className="text-red-500 text-sm">{errors.public_name}</p>
@@ -292,7 +230,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="email"
                     value={formData.email}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                     
                     disabled
                     readOnly
                   />
@@ -306,11 +243,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border ${
                       errors.phone ? "border-red-500" : "border-gray-300"
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                     
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-sm">{errors.phone}</p>
@@ -325,11 +260,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                     name="dateOfBirth"
                     value={formData.dateOfBirth}
                     onChange={handleInputChange}
-                    onBlur={handleBlur}
                     className={`w-full px-3 py-2 border ${
                       errors.dateOfBirth ? "border-red-500" : "border-gray-300"
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                     
                   />
                   {errors.dateOfBirth && (
                     <p className="text-red-500 text-sm">{errors.dateOfBirth}</p>
@@ -352,11 +285,9 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                   name="headline"
                   value={formData.headline}
                   onChange={handleInputChange}
-                  onBlur={handleBlur}
                   className={`w-full px-3 py-2 border ${
                     errors.headline ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                   
                 />
                 {errors.headline && (
                   <p className="text-red-500 text-sm">{errors.headline}</p>
@@ -374,7 +305,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                   className={`w-full px-3 py-2 border ${
                     errors.bio ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                   
                 ></textarea>
                 {errors.bio && (
                   <p className="text-red-500 text-sm">{errors.bio}</p>
@@ -392,7 +322,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                   className={`w-full px-3 py-2 border ${
                     errors.skills ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                   
                 />
                 {errors.skills && (
                   <p className="text-red-500 text-sm">{errors.skills}</p>
@@ -449,7 +378,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                                 ? "border-red-500"
                                 : "border-gray-300"
                             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                             
                           />
                           {errors[`experiences[${index}].workplace`] && (
                             <p className="text-red-500 text-sm mt-1">
@@ -477,7 +405,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                                 ? "border-red-500"
                                 : "border-gray-300"
                             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                             
                           />
                           {errors[`experiences[${index}].position`] && (
                             <p className="text-red-500 text-sm mt-1">
@@ -505,7 +432,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                                 ? "border-red-500"
                                 : "border-gray-300"
                             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                             
                           />
                           {errors[`experiences[${index}].position`] && (
                             <p className="text-red-500 text-sm mt-1">
@@ -597,7 +523,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                               ? "border-red-500"
                               : ""
                           }`}
-                           
                         />
                         {errors[`education[${index}].highestQualification`] && (
                           <p className="text-red-500 text-sm mt-1">
@@ -625,7 +550,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                               ? "border-red-500"
                               : ""
                           }`}
-                           
                         />
                         {errors[`education[${index}].institute`] && (
                           <p className="text-red-500 text-sm mt-1">
@@ -653,7 +577,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
                               ? "border-red-500"
                               : ""
                           }`}
-                           
                         />
                         {errors[`education[${index}].year`] && (
                           <p className="text-red-500 text-sm mt-1">
@@ -777,7 +700,6 @@ newData.append('experiences', JSON.stringify(formData.experiences));
           </div>
         </main>
       </div>
-      <ToastContainer />
     </div>
   );
 };
