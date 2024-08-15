@@ -4,69 +4,69 @@ import AdminSidebar from "../components/AdminSidebar";
 import TutorCard from "../components/TutorCard";
 import { useNavigate } from "react-router-dom";
 import { fetchTutors } from "../services/adminService";
-// import { fetchTutors } from "../services/adminService";
+import api from "../../../services/api";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
 
+import { ToastContainer } from "react-toastify";
+import useFetchTutor from "../hooks/useFetchTutor";
 const AdminTutor = () => {
-  const [tutors, setTutors] = useState([]);
+  // const [tutors, setTutors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const navigate = useNavigate();
 
-  // const fetchedTutors = [
-  //   {
-  //     id: 1,
-  //     name: "John Doe",
-  //     status: "Active",
-  //     email: "john.doe@example.com",
-  //     role: "Tutor",
-  //     qualification: "Bachelor's",
-  //     courses: 12,
-  //     students: 45,
-  //     registered: "2023-04-15",
-  //     profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
-  //     verified: true,
-  //     blocked: false,
-  //   },
-  //   // Additional tutor data here
-  // ];
-
-  useEffect(() => {
-    const loadTutors = async () => {
-      const fetchedTutors = await fetchTutors();
-      console.log('tutorer ks ====',fetchTutors);
-      
-      setTutors(fetchedTutors);
-    };
-    loadTutors();
-  }, []);
-
+  const { tutors, refech } = useFetchTutor();
   console.log(tutors);
-  
 
-  const handleStatusChange = (id, newStatus) => {
-    
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await api.patch(`tutor/${id}/`, {
+        status: newStatus,
+      });
+      displayToastAlert(200, "succuss");
+      refech();
+      console.log(res);
+      
+    } catch (error) {
+      console.log("change status error ===", error);
+
+      const status = error?.response?.status || 400;
+      const message =
+        error?.response?.data?.status?.[0] ||
+        "We are facing some issue. Please try again";
+      displayToastAlert(status, message);
+
+    }
   };
 
-  const handleBlockToggle = (id) => {
-    
+  const handleBlockToggle = async (id, currect_status) => {
+    try {
+      const res = await api.patch(`user/${id}/status/`, {
+        is_active: !currect_status,
+      });
+      console.log(res);
+      refech();
+    } catch (error) {
+      console.log("error == ", error);
+    }
   };
 
   const handleCardClick = (tutorId) => {
     navigate(`/admin/tutor/${tutorId}`);
   };
 
-
-
   return (
     <div className="flex h-screen bg-gray-800">
       <AdminSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <AdminHeader />
+        <ToastContainer />
+
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
           <div className="container mx-auto px-6 py-8">
             <h3 className="text-gray-700 text-3xl font-medium">Tutors</h3>
-            
+
             {/* Search and Filter Section */}
             <div className="mt-4 flex justify-between">
               <input
@@ -84,18 +84,10 @@ const AdminTutor = () => {
                 >
                   <option value="">All Statuses</option>
                   <option value="Active">Active</option>
+                  <option value="Requested">Requested</option>
                   <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
                   <option value="Blocked">Blocked</option>
-                </select>
-                <select
-                  value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
-                  className="border border-gray-300 rounded-md p-2"
-                >
-                  <option value="">All Roles</option>
-                  <option value="Tutor">Tutor</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Student">Student</option>
                 </select>
               </div>
             </div>

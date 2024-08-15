@@ -7,21 +7,22 @@ import api from "../../../services/api";
 
 
 const AdminStudent = () => {
-  const { students, error } = useFetchStudnet();
+  const { students, refetch } = useFetchStudnet();
   console.log(students);
   
 
-  if (error) {
-    return <div>Error loading students: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error loading students: {error.message}</div>;
+  // }
 
-  const handleBlock = (id, status) => {
-    console.log(`${status} student with ID:`, id);
+  const handleBlock = async(id, currect_status) => {
+    console.log(`${currect_status} student with ID:`, id);
 
     try {
       
-      const res = api.post(`students/${id}`, { value: status })
+      const res = await api.patch(`user/${id}/status/`, { is_active: !currect_status })
       console.log(res);
+      refetch()
       
     } catch (error) {
       console.log(error);
@@ -29,8 +30,6 @@ const AdminStudent = () => {
       
     }
   };
-
-
 
   return (
     <div className="h-screen bg-gray-100">
@@ -52,9 +51,11 @@ const AdminStudent = () => {
                 <tr>
                   <th className="py-2 px-4 border-b">No</th>
                   <th className="py-2 px-4 border-b">Username</th>
+                  <th className="py-2 px-4 border-b">First Name</th>
+                  <th className="py-2 px-4 border-b">Last Name</th>
                   <th className="py-2 px-4 border-b">Email</th>
                   <th className="py-2 px-4 border-b">Created At</th>
-                  {/* <th className="py-2 px-4 border-b">Last Login</th> */}
+                  <th className="py-2 px-4 border-b">Last Login</th>
                   <th className="py-2 px-4 border-b">Actions</th>
                 </tr>
               </thead>
@@ -63,14 +64,16 @@ const AdminStudent = () => {
                   <tr key={student.id} className="hover:bg-gray-100">
                     <td className="py-2 px-4 border-b text-center">{index + 1}</td>
                     <td className="py-2 px-4 border-b">{student.username}</td>
+                    <td className="py-2 px-4 border-b">{student.first_name || 'Nill' }</td>
+                    <td className="py-2 px-4 border-b">{student.last_name || 'Nill'}</td>
                     <td className="py-2 px-4 border-b">{student.email}</td>
                     <td className="py-2 px-4 border-b">{new Date(student.date_joined).toLocaleDateString()}</td>
-                    {/* <td className="py-2 px-4 border-b">{new Date(student.last_login).toLocaleDateString()}</td> */}
+                    <td className="py-2 px-4 border-b">{new Date(student.last_login).toLocaleDateString()}</td>
                     <td className="py-2 px-4 border-b text-center">
-                    {student.status ? (
+                    {student.is_active ? (
                         
                       <button
-                        onClick={() => handleBlock(student.id, 'block')}
+                        onClick={() => handleBlock(student.id, student.is_active)}
                         className="bg-red-500 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg mr-2"
                       >
                         Block
@@ -78,7 +81,7 @@ const AdminStudent = () => {
 
                     ) : (
                       <button
-                        onClick={() => handleBlock(student.id, 'unblock')}
+                        onClick={() => handleBlock(student.id, student.is_active)}
                         className="bg-green-500 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg"
                       >
                         Unblock
