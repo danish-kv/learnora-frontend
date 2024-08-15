@@ -6,17 +6,49 @@ import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
 import ForgetPassword from "../features/auth/pages/ForgetPassword";
 import ResetPassword from "../features/auth/pages/ResetPassword";
+import NotFound from "../components/common/NotFound";
+import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
+import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 
 const StudentRoutes = () => {
   return (
     <Routes>
-      <Route path="register" element={<RegisterPage />} />
-      <Route path="forget-reset" element={<ForgetPassword />} />
-      <Route path="password-reset" element={<ResetPassword />} />
-      <Route path="otp" element={<OtpPage />} />
-      <Route path="login" element={<LoginPage />} />
-      <Route path="forget-password" element={<ForgetPassword/>} />
-      <Route path="/" element={<HomePage />} />
+       <Route
+        path="register"
+        element={
+          <AuthRouteProtection element={<RegisterPage />} redirectTo={"/"} />
+        }
+      />
+      <Route
+        path="password-reset"
+        element={
+          <AuthRouteProtection element={<ResetPassword />} redirectTo={"/"} />
+        }
+      />
+      <Route
+        path="otp"
+        element={<OtpPage />}       />
+      <Route
+        path="login"
+        element={
+          <AuthRouteProtection element={<LoginPage />} redirectTo={"/"} />
+        }
+      />
+      <Route
+        path="forget-password"
+        element={
+          <AuthRouteProtection element={<ForgetPassword />} redirectTo={"/"} />
+        }
+      />
+
+
+
+      <Route
+        path="/"
+        element={<ProtectedRoute element={<HomePage />} role="student" />}
+      />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
