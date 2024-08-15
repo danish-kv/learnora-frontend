@@ -3,18 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { validateLogin } from "../../../utils/validation";
 import authService from "../../../services/authService";
 import { toast } from "react-toastify";
-import { ThreeDot } from "react-loading-indicators";
 import LoadingDotStream from "../../../components/common/Loading";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { loginThunk } from "../../../redux/thunk/authThunks";
+import { Login } from "../../../redux/thunk/authThunks";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
 import Header from "../../../components/layout/Header";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email : '',
+    password : '',
+    role : 'student'
+  });
   const [errors, setErrors] = useState({});
   const { handleSignInWithGoogle } = useGoogleAuth();
   const navigate = useNavigate();
@@ -40,13 +42,25 @@ const LoginPage = () => {
     await handleSignInWithGoogle(res, "student", "login");
   };
 
+
+
+  const handleOnChange = (e) => {
+    console.log(formData);
+    
+    setFormData({
+      ...formData,
+      [e.target.name] : e.target.value
+    })
+  }
+
+
   const handleSubmit = async (e) => {
     console.log("handleSubmit called");
     e.preventDefault();
 
-    console.log(email, password);
+    console.log(formData.email, formData.password);
 
-    const { isValid, errors } = validateLogin({ email, password });
+    const { isValid, errors } = validateLogin(formData);
     console.log(isValid, errors);
 
     if (isValid) {
@@ -54,7 +68,7 @@ const LoginPage = () => {
       console.log("form submitted");
 
       try {
-        const res = await dispath(loginThunk({ email, password })).unwrap();
+        const res = await dispath(Login(formData)).unwrap();
         console.log("res of res ====>", res);
 
         if (res.role === "student") {
@@ -101,9 +115,10 @@ const LoginPage = () => {
           <div className="mb-4">
             <input
               type="email"
+              name="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
+              onChange={handleOnChange}
+              value={formData.email}
               placeholder="Email address"
               className={`w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
                 errors.email ? "border-red-500" : ""
@@ -117,9 +132,10 @@ const LoginPage = () => {
           <div className="mb-4">
             <input
               type="password"
+              name="password"
               required
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
+              onChange={handleOnChange}
+              value={formData.password}
               placeholder="Password"
               className={`w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
                 errors.password ? "border-red-500" : ""
@@ -131,7 +147,7 @@ const LoginPage = () => {
           </div>
           <div className="mb-4 text-right">
             <Link to="/forget-reset">
-              <a className="text-indigo-500">Forgot Password</a>
+              <p className="text-indigo-500">Forgot Password</p>
             </Link>
           </div>
           <button className="w-full bg-indigo-500 text-white p-2 rounded mb-4">
@@ -147,9 +163,9 @@ const LoginPage = () => {
         <div className="mt-6 text-center">
           <Link to="/register">
             Don't have an account?{" "}
-            <a href="#" className="text-indigo-500">
+            <p className="text-indigo-500">
               Sign Up
-            </a>
+            </p>
           </Link>
         </div>
       </div>

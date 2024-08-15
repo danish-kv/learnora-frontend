@@ -6,7 +6,7 @@ import authService from "../../../services/authService";
 import { validateRegistration } from "../../../utils/validation";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { signupStudent } from "../../../redux/thunk/authThunks";
+import { Signup } from "../../../redux/thunk/authThunks";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 import swal from "sweetalert";
@@ -53,14 +53,19 @@ const RegisterPage = () => {
     if (isValid) {
       console.log("Form submitted");
 
+      const role = 'studnet'
+
       try {
         const res = await dispath(
-          signupStudent({ email, password, username })
+          Signup({ email, password, username, role })
         ).unwrap();
+        console.log(res);
+        
         dispath(toggleOtpAccess(true));
         navigate("/otp", { state: { email } });
       } catch (error) {
         console.log("Signup error: ", error);
+        displayToastAlert()
       }
     } else {
       setErrors(errors);

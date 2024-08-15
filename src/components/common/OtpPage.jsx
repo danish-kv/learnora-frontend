@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThreeDot } from "react-loading-indicators";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleOtpAccess } from "../../redux/slices/authSlice";
+import { toggleOtpAccess, tutorApplication } from "../../redux/slices/authSlice";
 
 const OtpPage = () => {
   const [otp, setOtp] = useState(new Array(5).fill(""));
@@ -17,18 +17,19 @@ const OtpPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const {is_access} = useSelector((state) => state.auth);
-  console.log("is_access", is_access);
+  const {otp_access} = useSelector((state) => state.auth);
+  console.log("otp_access", otp_access);
 
   const { email } = location.state || {};
   const { is_tutor } = location.state || {};
   const { is_forget } = location.state || {};
+  const { for_verify } = location.state || {};
   console.log('email ==',email);
   console.log('is tutor ==',is_tutor);
   console.log('is forget ==',is_forget);
 
   useEffect(() => {
-    if (!is_access || !email) {
+    if (!otp_access || !email) {
       if (is_tutor) {
         navigate("/tutor/login");
       } else {
@@ -49,7 +50,7 @@ const OtpPage = () => {
     setError("");
 
     // Focus next input
-    if (element.nextSibling) {
+    if (element.nextSibling && element.value) {
       element.nextSibling.focus();
     }
   };
@@ -71,7 +72,10 @@ const OtpPage = () => {
 
         if (is_forget){
           navigate('/password-reset', { state : { email, is_tutor, is_forget }})
+        }else if (is_tutor,for_verify) {
+          navigate("/tutor/login ");
         }else if (is_tutor) {
+          dispatch(tutorApplication(true))
           navigate("/tutor/application ", { state : { email }});
         } else {
           navigate("/login");
@@ -120,6 +124,13 @@ const OtpPage = () => {
                 value={data}
                 onChange={(e) => handleChange(e.target, index)}
                 onFocus={(e) => e.target.select()}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace" && !otp[index]) {
+                    if (e.target.previousSibling) {
+                      e.target.previousSibling.focus();
+                    }
+                  }
+                }}
               />
             ))}
             {error && <p className="text-red-500 text-xs mt-1">{error}</p>}

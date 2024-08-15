@@ -5,20 +5,21 @@ const useFetchStudent = () => {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState(null);
 
+  const getStudents = async () => {
+    try {
+      const data = await fetchStudents();
+      setStudents(data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      setError(error);
+    }
+  };
+  
   useEffect(() => {
-    const getStudents = async () => {
-      try {
-        const data = await fetchStudents();
-        setStudents(data);
-      } catch (error) {
-        console.error('Error fetching students:', error);
-        setError(error);
-      }
-    };
     getStudents();
   }, []);
 
-  return { students, error };
+  return { students, refetch : getStudents };
 };
 
 export default useFetchStudent;

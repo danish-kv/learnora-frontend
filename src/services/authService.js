@@ -1,3 +1,4 @@
+import { displayToastAlert } from "../utils/displayToastAlert";
 import api from "./api";
 import { toast } from "react-toastify";
 
@@ -14,6 +15,7 @@ export const register = async (email, password, username, role) => {
   } catch (error) {
     console.error("catch error signup ===>", error);
     console.error("catch  ===>", error.response);
+    await displayToastAlert(error.response.status || 400, error.response.data.email || 'Facing some issue please try later')
 
     if (error.response && error.response.data) {
       const errorMessages = error.response.data;
@@ -31,48 +33,44 @@ export const register = async (email, password, username, role) => {
   }
 };
 
-export const login = async (email, password) => {
+export const login = async ({email, password, role}) => {
   try {
-    console.log("login ===> ", email, password);
+    console.log("login ===> ", email, password, role);
 
-    const res = await api.post("login/token/", { email, password });
+    const res = await api.post("login/token/", { email, password, role });
     console.log("res from login ====>", res);
 
     return res.data;
   } catch (error) {
     console.log("catch error in login", error);
-    console.log("catch error in login", error.response);
+    console.log("catch error in login", error.response.data?.detail);
+    displayToastAlert(400, error.response.data?.detail)
 
     if (error.response) {
       if (error.response.status === 401) {
-        toast.error('Incorrect email or password');
+        displayToastAlert(400,'Incorrect email or password');
       } else if (error.response.data) {
-        const errorMessages = error.response.data;
-        for (let key in errorMessages) {
-          if (errorMessages.hasOwnProperty(key)) {
-            toast.error(`${key}: ${errorMessages[key]}`);
-            console.error(`${key}: ${errorMessages[key]}`);
+        const errorMess = error.response.data;
+        for (let key in errorMess) {
+          if (errorMess.hasOwnProperty(key)) {
+            toast.error(`${key}: ${errorMess[key]}`);
+            console.error(`${key}: ${errorMess[key]}`);
           }
         }
       } else {
         toast.error('An unexpected error occurred.');
       }
     }
-    throw error.response ? error.response.data : error;
+    console.log('eeerrroro', error);
+    
+    // throw error.response ? error.response.data : error;
   }
 };
 
-export const logout = () => {
-  localStorage.clear();
-};
 
 
-export const TutorSignup = (username, email, password, firstName, lastName, phone, headline, ) => {
-
-}
 
 export default {
   register,
   login,
-  logout,
 };

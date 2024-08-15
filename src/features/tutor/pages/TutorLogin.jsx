@@ -4,57 +4,71 @@ import LoadingDotStream from "../../../components/common/Loading";
 import { validateLogin } from "../../../utils/validation";
 import authService from "../../../services/authService";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
+import { Login } from "../../../redux/thunk/authThunks";
+import { jwtDecode } from "jwt-decode";
 
 const TutorLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    role: "tutor",
+  });
   const [errors, setErrors] = useState({});
 
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loading = useSelector((state) => state.auth.loading);
+
+  const handleOnChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { isValid, errors } = validateLogin({
-      email,
-      password,
-    });
+    setErrors("");
+    const { isValid, errors } = validateLogin(formData);
 
     if (isValid) {
-      setLoading(true);
       console.log("from submited");
 
       try {
-        const res = await authService.login(email, password);
+        const res = await dispatch(Login(formData)).unwrap();
         console.log(res);
-        
+        console.log(res.res.access_token);
+        const token = jwtDecode(res.access_token);
+        console.log("token ===> ", token);
+
         if (res.role === "tutor") {
-          if (!res.is_verified){
-            dispatch(toggleOtpAccess(true))
-            navigate('/otp', {state : { email, is_tutor : true }})
-
+          if (!token.is_verified) {
+            dispatch(toggleOtpAccess(true));
+            navigate("/otp", { state: { email : formData.email, is_tutor: true, for_verify : true } });
+          } else {
+            navigate("/tutor");
+            displayToastAlert(200, "Welcome back Tutor");
           }
-
-
-
-
-          navigate("/tutor");
-          displayToastAlert(200, "Welcome back Tutor");
         } else {
-          displayToastAlert(400, "Not a Tutor");
+          console.log("not a tutor");
+
+          // displayToastAlert(400, "Not a Tutor");
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
+        if (error.error === 'User not verified'){
+          dispatch(toggleOtpAccess(true))
+          navigate("/otp", { state: { email : formData.email, is_tutor: true, for_verify :true } });
+          
+        }
       }
     } else {
       setErrors(errors);
-      displayToastAlert(400, "Please fix the validation errors");
+      displayToastAlert(300, "Please fix the validation errors");
     }
   };
   return (
@@ -82,8 +96,9 @@ const TutorLogin = () => {
               <label className="block text-gray-700">Email</label>
               <input
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                name="email"
+                onChange={handleOnChange}
+                value={formData.email}
                 required
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
                   errors.email ? "border-red-500" : ""
@@ -98,8 +113,9 @@ const TutorLogin = () => {
               <label className="block text-gray-700">Password</label>
               <input
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
+                name="password"
+                onChange={handleOnChange}
+                value={formData.password}
                 required
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
                   errors.password ? "border-red-500" : ""

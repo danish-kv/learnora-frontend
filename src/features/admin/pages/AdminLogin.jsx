@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import api from "../../../services/api";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { Login } from "../../../redux/thunk/authThunks";
+import LoadingDotStream from "../../../components/common/Loading";
+import { jwtDecode } from "jwt-decode";
+import { validateLogin } from "../../../utils/validation";
 
 const AdminLogin = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
+    role: "admin",
   });
   const [error, setError] = useState({});
+
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.auth.loading);
 
   const navigate = useNavigate();
 
@@ -18,43 +26,40 @@ const AdminLogin = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const validate = () => {
-    const errors = {};
-
-    if (!user.email.trim()) {
-      errors.email = "Email cannot be empty";
-    } else if (!/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(user.email)) {
-      errors.email = "Email must be valid";
-    }
-
-    if (!user.password.trim()) {
-      errors.password = "Password cannot be empty";
-    }
-
-    setError(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(user);
+    setError('')
 
-    if (validate()) {
+    const { isValid, errors } = validateLogin(user);
+
+    if (isValid) {
       try {
-        const res = await api.post("/login/token/", user);
-        console.log(res.data);
-        if (res.data.role === 'admin') {
-          swal("Success", "Logged in successfully", "success");
+        const res = await dispatch(Login(user)).unwrap();
+        console.log(res);
+        
+
+        const token = jwtDecode(res.access_token);
+        console.log("token jwt ", token);
+
+
+        if (token?.is_admin) {
+          await swal("Success", "Logged in successfully", "success");
           navigate("/admin/");
         } else {
-          toast.error('You are not authorized');
+          toast.error("You are not authorized");
           navigate("/admin/login");
         }
       } catch (error) {
         console.error("Login error:", error);
-        swal("Error", "Failed to log in. Please check your credentials.", "error");
+        swal(
+          "Error",
+          "Failed to log in. Please check your credentials.",
+          "error"
+        );
       }
     } else {
-      toast.error("Validation Error");
+      setError(errors);
     }
   };
 
@@ -121,10 +126,15 @@ const AdminLogin = () => {
                 <p className="text-red-500 text-xs mt-1">{error.password}</p>
               )}
             </div>
-
-            <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
-              Login
-            </button>
+            {loading ? (
+              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                <LoadingDotStream />
+              </button>
+            ) : (
+              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                Login
+              </button>
+            )}
           </form>
         </div>
       </div>

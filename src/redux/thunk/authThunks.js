@@ -1,30 +1,38 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api";
 import authService from "../../services/authService";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-export const  loginThunk = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }, { rejectWithValue }) => {
+export const Login = createAsyncThunk(
+  "auth/Login",
+  async (data, { rejectWithValue }) => {
     console.log("in login async thunk");
-    console.log(email, password);
-    
+    console.log(data);
+
     try {
-      const res = await authService.login(email, password);
-
-      const { access_token, refresh_token, role, username } = res;
+      const res = await authService.login(data);
       console.log(res);
-      console.log(res.username);
-      console.log(res.access_token);
-      console.log(res.refresh_token);
-      console.log(res.role);
-      
 
-      localStorage.setItem("access", access_token);
-      localStorage.setItem("refresh", refresh_token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("user", username);
+      if (res.access_token) {
+        const token = jwtDecode(res.access_token);
+        console.log("token ===", token);
 
-      return res;
+        if (!token.is_verified) {
+          return rejectWithValue({ error: "User not verified", res });
+        } else {
+          const { access_token, refresh_token, role, user } = res;
+          
+          localStorage.setItem("access", access_token);
+          localStorage.setItem("refresh", refresh_token);
+          localStorage.setItem("role", role);
+          localStorage.setItem("user", user);
+          
+          return res;
+        }
+      } else {
+        return rejectWithValue("Invalid response from server");
+      }
     } catch (error) {
       console.log("login thunk error ===> ", error);
 
@@ -33,34 +41,14 @@ export const  loginThunk = createAsyncThunk(
   }
 );
 
-export const signupTutor = createAsyncThunk(
-  "auth/signupTutor ",
-  async ({ email, password, username }, { rejectWithValue }) => {
+export const Signup = createAsyncThunk(
+  "auth/Signup",
+  async ({ email, password, username, role }, { rejectWithValue }) => {
     try {
-      const res = await authService.register(
-        email,
-        password,
-        username,
-        "tutor"
-      );
-      return res;
-    } catch (error) {
-      console.log("signup thunk catch error ==>  ", error.data);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+      const res = await authService.register(email, password, username, role);
 
-export const signupStudent = createAsyncThunk(
-  "auth/signupStudent ",
-  async ({ email, password, username }, { rejectWithValue }) => {
-    try {
-      const res = await authService.register(
-        email,
-        password,
-        username,
-        "student"
-      );
+      console.log("res from signup", res);
+
       return res;
     } catch (error) {
       console.log("signup thunk catch error ==>  ", error.response.data);
@@ -70,7 +58,7 @@ export const signupStudent = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const Logout = createAsyncThunk("auth/Logout", async () => {
   try {
     const refresh = localStorage.getItem("refresh");
     const response = await api.post("logout/", { refresh });
@@ -78,10 +66,10 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     delete api.defaults.headers.common["Authorization"];
     return response.data;
   } catch (error) {
+    console.log("error in logout time ==== ", error);
+
     localStorage.clear();
     delete api.defaults.headers.common["Authorization"];
     throw error;
   }
 });
-
-

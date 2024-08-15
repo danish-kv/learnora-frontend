@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../../redux/thunk/authThunks";
+import { Logout } from "../../redux/thunk/authThunks";
 import { capitalizeFirstLetter } from "../../utils/capitalize";
+import { jwtDecode } from "jwt-decode";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -20,7 +21,7 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await dispath(logout()).unwrap();
+      await dispath(Logout()).unwrap();
       navigate("/");
     } catch (error) {
       console.log("logout error", error);
@@ -68,11 +69,14 @@ function Header() {
               onClick={toggleDropdown}
               className="flex items-center space-x-2 focus:outline-none"
             >
+              {
+
               <img
-                src="/prodfile-image.jpg"
-                alt="Profile"
-                className="w-8 h-8 rounded-full"
+                src="/profile-image.jpg"
+                className="h-10 w-10 rounded-full overflow-hidden bg-gray-100"
               />
+              }
+
               <span className="text-gray-700 font-medium">
                 {capitalizeFirstLetter(user)}
               </span>
@@ -94,23 +98,23 @@ function Header() {
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <Link to="/profile">
-                  <a className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-t-lg">
+                  <p className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-t-lg">
                     Profile
-                  </a>
+                  </p>
                 </Link>
-                <a
+                <p
                   href="/"
                   className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white"
                 >
                   Settings
-                </a>
+                </p>
                 <Link to="/logout">
-                  <a
+                  <p
                     onClick={handleLogout}
                     className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-b-lg"
                   >
                     Logout
-                  </a>
+                  </p>
                 </Link>
               </div>
             )}
