@@ -67,8 +67,8 @@ const TutorApplication = () => {
       const { isValid, errors } = validateTutorApplication(formData);
 
       if (isValid) {
-        console.log('form submitedd');
-        
+        console.log("form submitedd");
+
         const res = await api.post("tutor/", newData);
         console.log(res);
         if (res.status === 201) {
@@ -76,9 +76,9 @@ const TutorApplication = () => {
           dispatch(tutorApplication(false));
           navigate("/tutor/login");
         }
-      }else{
-        setErrors(errors)
-        displayToastAlert(400, 'Please complete your application')
+      } else {
+        setErrors(errors);
+        displayToastAlert(400, "Please complete your application");
       }
     } catch (error) {
       console.error("Error creating account", error);
@@ -166,9 +166,9 @@ const TutorApplication = () => {
                   className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
               </div>
-                {errors.profilePhoto && (
-                    <p className="text-red-500 text-sm">{errors.profilePhoto}</p>
-                  )}
+              {errors.profilePhoto && (
+                <p className="text-red-500 text-sm">{errors.profilePhoto}</p>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -44,6 +44,14 @@ const AdminSidebar = () => {
               Courses
             </Link>
           </li>
+          <li>
+            <Link
+              to="/admin/category"
+              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
+            >
+              Category
+            </Link>
+          </li>
         </ul>
       </nav>
       <div className="p-4">

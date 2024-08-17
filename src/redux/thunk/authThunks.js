@@ -18,7 +18,7 @@ export const Login = createAsyncThunk(
         const token = jwtDecode(res.access_token);
         console.log("token ===", token);
 
-        if (!token.is_verified) {
+        if (!token.is_verified && !token.is_admin) {
           return rejectWithValue({ error: "User not verified", res });
         } else {
           const { access_token, refresh_token, role, user } = res;

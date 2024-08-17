@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { fetchCourses } from '../services/adminService'
+import React, { useEffect, useState } from "react";
+import { fetchCourses } from "../services/adminService";
 
 const useFetchCourse = () => {
-    const [courses, setCourses] = useState()
-    const [error, setError] = useState(null)
+  const [courses, setCourses] = useState();
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const getCourses = async () => {
-            try {
-                const data = await fetchCourses()
-                setCourses(data)
-            } catch (error) {
-                console.log(error);
-                setError(error)
-                
-                
-            }
-        }
-        getCourses()
-    },[])
-  return ( courses, error)
-}
+  const getCourses = async () => {
+    try {
+      const data = await fetchCourses();
+      setCourses(data);
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    }
+  };
 
-export default useFetchCourse
+  useEffect(() => {
+    getCourses();
+  }, []);
+  return {courses, error, getCourses};
+};
+
+export default useFetchCourse;

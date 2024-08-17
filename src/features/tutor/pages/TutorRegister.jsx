@@ -136,11 +136,7 @@ const TutorRegister = () => {
                 )}
               </button>
             </form>
-            {/* <div className="my-4 text-center text-gray-600">OR</div>
-            <button className="w-full bg-white border border-gray-300 text-gray-600 py-2 rounded-md hover:bg-gray-50 transition duration-200 flex items-center justify-center">
-              <img src="google-logo.png" alt="Google" className="h-6 w-6 mr-2" />
-              Sign up with Google
-            </button> */}
+            
             <p className="mt-4 text-center text-gray-600">
               Already have an account?{" "}
               <Link to="/tutor/login">

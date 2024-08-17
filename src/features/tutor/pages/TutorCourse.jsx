@@ -1,16 +1,76 @@
-import React from 'react'
-import TutorSidebar from '../../tutor/components/TutorSidebar'
+import React, { useState } from "react";
+import CourseCard from "../components/CourseCard";
+import TutorSidebar from "../components/TutorSidebar";
+import { Link } from "react-router-dom";
+import useFetchCourse from "../../admin/hooks/useFetchCourse";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import api from "../../../services/api";
 
 const TutorCourse = () => {
+  const { courses, error, getCourses } = useFetchCourse();
+  console.log(courses);
+
+  const handleBlock = async (id, current_status) => {
+    console.log(id, current_status);
+
+    try {
+      await api.patch(`courses/${id}/`, { is_active: !current_status });
+      getCourses()
+    } catch (error) {
+      console.log(error);
+      displayToastAlert(
+        400,
+        "Failed to Fetch COurse. We are facing some issue"
+      );
+    }
+  };
+
+  // const courses = [
+  //   {
+  //     title: "Data Structure and Algorithms",
+  //     description:
+  //       "Explore the fundamental lksajdflkajswdlkfasjdflasdfkasdflaskdflkasdfklaksfjksadfksasdf asdf asdfasdfas asdddddddddddasdfsadfdfsdfsdfsadfsadfsadf.",
+  //     thumbnail: "https://via.placeholder.com/150",
+  //     enrollments: 320,
+  //     status: "Published",
+  //   },
+  //   {
+  //     title: "Introduction to Python",
+  //     description:
+  //       "Learn Python from scratch and build your programming skills.",
+  //     thumbnail: "https://via.placeholder.com/150",
+  //     enrollments: 200,
+  //     status: "Draft",
+  //   },
+  // ];
+
   return (
-    <div className="h-screen bg-gray-100">
-      {/* <AdminHeader /> */}
-      <div className="flex h-full">
-        <TutorSidebar />
-        <h2>Tutor course</h2>
+    <div className="h-screen flex">
+      <TutorSidebar />
+
+      {/* Main Content */}
+      <div className="ml-64 flex-grow p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-semibold">My Courses</h2>
+          <Link to="/tutor/new-course">
+            <button className="bg-black text-white px-6 py-2 rounded-lg">
+              Add New Courses
+            </button>
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {courses &&
+            courses.map((course, index) => (
+              <CourseCard
+                key={index}
+                course={course}
+                onBlockToggle={handleBlock}
+              />
+            ))}
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TutorCourse
+export default TutorCourse;

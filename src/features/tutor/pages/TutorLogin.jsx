@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 import { Login } from "../../../redux/thunk/authThunks";
 import { jwtDecode } from "jwt-decode";
+import swal from "sweetalert";
 
 const TutorLogin = () => {
   const [formData, setFormData] = useState({
@@ -46,9 +47,12 @@ const TutorLogin = () => {
         console.log("token ===> ", token);
 
         if (res.role === "tutor") {
-          if (!token.is_verified) {
-            dispatch(toggleOtpAccess(true));
-            navigate("/otp", { state: { email : formData.email, is_tutor: true, for_verify : true } });
+          if (!token.is_active) {
+            await swal(
+              "Blocked",
+              "Admin blocked you.",
+              "error"
+            );
           } else {
             navigate("/tutor");
             displayToastAlert(200, "Welcome back Tutor");
@@ -61,6 +65,11 @@ const TutorLogin = () => {
       } catch (error) {
         console.log(error);
         if (error.error === 'User not verified'){
+          await swal(
+            "Email Not Verified",
+            "Please verify your email. Check your email for an OTP.",
+            "error"
+          );
           dispatch(toggleOtpAccess(true))
           navigate("/otp", { state: { email : formData.email, is_tutor: true, for_verify :true } });
           
