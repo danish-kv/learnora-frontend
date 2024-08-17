@@ -27,3 +27,9 @@ export const fetchCourses = async () => {
   const res = await api.get("courses/");
   return res.data;
 };
+
+
+export const fetchCategory = async () => {
+  const res = await api.get('category/')
+  return res.data
+}

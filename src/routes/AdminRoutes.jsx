@@ -9,6 +9,7 @@ import NotFound from "../components/common/NotFound";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AdminTutorDetails from "../features/admin/pages/AdminTutorDetails";
+import AdminCategory from "../features/admin/pages/AdminCategory";
 
 const AdminRoutes = () => {
   return (
@@ -43,6 +44,10 @@ const AdminRoutes = () => {
       <Route
         path="course"
         element={<ProtectedRoute element={<AdminCourse />} role={"admin"} />}
+      />
+      <Route
+        path="category"
+        element={<ProtectedRoute element={<AdminCategory />} role={"admin"} />}
       />
 
       <Route path="*" element={<NotFound />} />
