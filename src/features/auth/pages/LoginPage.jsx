@@ -13,9 +13,9 @@ import Header from "../../../components/layout/Header";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    email : '',
-    password : '',
-    role : 'student'
+    email: "",
+    password: "",
+    role: "student",
   });
   const [errors, setErrors] = useState({});
   const { handleSignInWithGoogle } = useGoogleAuth();
@@ -42,17 +42,14 @@ const LoginPage = () => {
     await handleSignInWithGoogle(res, "student", "login");
   };
 
-
-
   const handleOnChange = (e) => {
     console.log(formData);
-    
+
     setFormData({
       ...formData,
-      [e.target.name] : e.target.value
-    })
-  }
-
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     console.log("handleSubmit called");
@@ -146,7 +143,7 @@ const LoginPage = () => {
             )}
           </div>
           <div className="mb-4 text-right">
-            <Link to="/forget-reset">
+            <Link to="/forget-password">
               <p className="text-indigo-500">Forgot Password</p>
             </Link>
           </div>
@@ -162,10 +159,7 @@ const LoginPage = () => {
 
         <div className="mt-6 text-center">
           <Link to="/register">
-            Don't have an account?{" "}
-            <p className="text-indigo-500">
-              Sign Up
-            </p>
+            Don't have an account? <p className="text-indigo-500">Sign Up</p>
           </Link>
         </div>
       </div>

@@ -13,7 +13,10 @@ function Header() {
   const isAuthenticated = useSelector((state) => state.auth.role);
   const user = useSelector((state) => state.auth.user);
   console.log(isAuthenticated);
+  console.log("username ;", user);
 
+  const username = capitalizeFirstLetter(user || "");
+  console.log(username);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -70,16 +73,13 @@ function Header() {
               className="flex items-center space-x-2 focus:outline-none"
             >
               {
-
-              <img
-                src="/profile-image.jpg"
-                className="h-10 w-10 rounded-full overflow-hidden bg-gray-100"
-              />
+                <img
+                  src="/profile-image.jpg"
+                  className="h-10 w-10 rounded-full overflow-hidden bg-gray-100"
+                />
               }
 
-              <span className="text-gray-700 font-medium">
-                {capitalizeFirstLetter(user)}
-              </span>
+              <span className="text-gray-700 font-medium">{username}</span>
               <svg
                 className="w-4 h-4 text-gray-500"
                 fill="none"

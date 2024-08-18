@@ -18,9 +18,13 @@ export const Login = createAsyncThunk(
         const token = jwtDecode(res.access_token);
         console.log("token ===", token);
 
-        if (!token.is_verified && !token.is_admin) {
+        if (!token.is_verified && !token.is_admin ) {
           return rejectWithValue({ error: "User not verified", res });
-        } else {
+        } else if (token.is_tutor && token.status === 'Pending'){
+          
+          return rejectWithValue({ error: "Application status is pending", res });
+        }
+        else {
           const { access_token, refresh_token, role, user } = res;
           
           localStorage.setItem("access", access_token);

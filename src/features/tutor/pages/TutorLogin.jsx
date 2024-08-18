@@ -5,7 +5,10 @@ import { validateLogin } from "../../../utils/validation";
 import authService from "../../../services/authService";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleOtpAccess } from "../../../redux/slices/authSlice";
+import {
+  toggleOtpAccess,
+  tutorApplication,
+} from "../../../redux/slices/authSlice";
 import { Login } from "../../../redux/thunk/authThunks";
 import { jwtDecode } from "jwt-decode";
 import swal from "sweetalert";
@@ -22,14 +25,14 @@ const TutorLogin = () => {
   const navigate = useNavigate();
   const loading = useSelector((state) => state.auth.loading);
 
+  dispatch(tutorApplication(false));
+
   const handleOnChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,11 +51,7 @@ const TutorLogin = () => {
 
         if (res.role === "tutor") {
           if (!token.is_active) {
-            await swal(
-              "Blocked",
-              "Admin blocked you.",
-              "error"
-            );
+            await swal("Blocked", "Admin blocked you.", "error");
           } else {
             navigate("/tutor");
             displayToastAlert(200, "Welcome back Tutor");
@@ -64,15 +63,24 @@ const TutorLogin = () => {
         }
       } catch (error) {
         console.log(error);
-        if (error.error === 'User not verified'){
+        if (error.error === "User not verified") {
           await swal(
             "Email Not Verified",
             "Please verify your email. Check your email for an OTP.",
             "error"
           );
-          dispatch(toggleOtpAccess(true))
-          navigate("/otp", { state: { email : formData.email, is_tutor: true, for_verify :true } });
-          
+          dispatch(toggleOtpAccess(true));
+          navigate("/otp", {
+            state: { email: formData.email, is_tutor: true, for_verify: true },
+          });
+        } else if (error.error === "Application status is pending") {
+          await swal(
+            "Application Incomplete",
+            "Please complete your tutor application to proceed.",
+            "info"
+          );
+          dispatch(tutorApplication(true));
+          navigate("/tutor/application", { state: { email: formData.email } });
         }
       }
     } else {
@@ -136,9 +144,11 @@ const TutorLogin = () => {
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
             <div className="mb-4 flex items-center justify-between">
-              <a href="#" className="text-sm text-blue-600 hover:underline">
-                Forgot Password?
-              </a>
+              <Link to={"/forget-password"}>
+                <p className="text-sm text-blue-600 hover:underline">
+                  Forgot Password?
+                </p>
+              </Link>
             </div>
             <button
               type="submit"

@@ -4,29 +4,34 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ThreeDot } from "react-loading-indicators";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleOtpAccess, tutorApplication } from "../../redux/slices/authSlice";
+import {
+  toggleOtpAccess,
+  tutorApplication,
+} from "../../redux/slices/authSlice";
+import LoadingDotStream from "./Loading";
 
 const OtpPage = () => {
   const [otp, setOtp] = useState(new Array(5).fill(""));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
-  const [resendDisabled, setResendDisabled] = useState(true);
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const {otp_access} = useSelector((state) => state.auth);
+  const { otp_access } = useSelector((state) => state.auth);
   console.log("otp_access", otp_access);
 
   const { email } = location.state || {};
   const { is_tutor } = location.state || {};
   const { is_forget } = location.state || {};
   const { for_verify } = location.state || {};
-  console.log('email ==',email);
-  console.log('is tutor ==',is_tutor);
-  console.log('is forget ==',is_forget);
+  console.log("email ==", email);
+  console.log("is tutor ==", is_tutor);
+  console.log("is forget ==", is_forget);
 
   useEffect(() => {
     if (!otp_access || !email) {
@@ -49,7 +54,6 @@ const OtpPage = () => {
     setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
     setError("");
 
-    // Focus next input
     if (element.nextSibling && element.value) {
       element.nextSibling.focus();
     }
@@ -70,13 +74,15 @@ const OtpPage = () => {
         dispatch(toggleOtpAccess(false));
         toast.success("OTP verified successfully!");
 
-        if (is_forget){
-          navigate('/password-reset', { state : { email, is_tutor, is_forget }})
-        }else if (is_tutor,for_verify) {
+        if (is_forget) {
+          navigate("/password-reset", {
+            state: { email, is_tutor, is_forget },
+          });
+        } else if ((is_tutor, for_verify)) {
           navigate("/tutor/login ");
-        }else if (is_tutor) {
-          dispatch(tutorApplication(true))
-          navigate("/tutor/application ", { state : { email }});
+        } else if (is_tutor) {
+          dispatch(tutorApplication(true));
+          navigate("/tutor/application ", { state: { email } });
         } else {
           navigate("/login");
         }
@@ -93,7 +99,7 @@ const OtpPage = () => {
   };
 
   const handleResendOtp = async () => {
-    setLoading(true);
+    setResendLoading(true);
     try {
       await api.post("otp-resend/", { email });
       toast.success("OTP resend successfully");
@@ -103,7 +109,7 @@ const OtpPage = () => {
       console.log(error);
       toast.error("Failed to resend otp, please try again");
     } finally {
-      setLoading(false);
+      setResendLoading(false);
     }
   };
 
@@ -133,17 +139,15 @@ const OtpPage = () => {
                 }}
               />
             ))}
-            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
+          {error && (
+            <p className="text-red-500 text-xs text-center mt-1">{error}</p>
+          )}
           <button
             type="submit"
             className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-200"
           >
-            {loading ? (
-              <ThreeDot color="#fff" size="medium" text="" textColor="" />
-            ) : (
-              "Submit"
-            )}
+            {loading ? <LoadingDotStream /> : "Submit"}
           </button>
         </form>
         <div className="text-center mt-3">
@@ -153,13 +157,9 @@ const OtpPage = () => {
             <button
               onClick={handleResendOtp}
               className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
-              disabled={resendDisabled}
+              disabled={resendDisabled || resendLoading}
             >
-              {loading ? (
-                <ThreeDot color="#fff" size="medium" text="" textColor="" />
-              ) : (
-                "Resend OTP"
-              )}
+              {resendLoading ? <LoadingDotStream /> : "Resend OTP"}
             </button>
           )}
         </div>

@@ -1,19 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api";
-import {
-  Login,
-  Signup,
-  Logout,
-} from "../thunk/authThunks";
+import { Login, Signup, Logout } from "../thunk/authThunks";
 
 const initialState = {
   user: null,
   role: null,
-  email : null,
+  email: null,
   loading: false,
   error: null,
   otp_access: false,
-  tutorApplicationAccess : false
+  tutorApplicationAccess: false,
 };
 
 const authSlice = createSlice({
@@ -24,6 +20,7 @@ const authSlice = createSlice({
       state.otp_access = action.payload;
     },
     googleSignin: (state, action) => {
+      print(action.payload);
       state.user = action.payload.user;
       state.role = action.payload.role;
     },
@@ -52,20 +49,20 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       .addCase(Login.pending, (state) => {
         state.loading = true;
         console.log("loginThunk loading pending", state.loading, state.user);
       })
       .addCase(Login.fulfilled, (state, action) => {
-        console.log('action payload filfilled', action.payload);
-        
+        console.log("action payload filfilled", action.payload);
+
         state.user = action.payload.user;
         state.email = action.payload.email;
         state.role = action.payload.role;
         state.loading = false;
       })
-      .addCase(Login.rejected, (state, action) => {        
+      .addCase(Login.rejected, (state, action) => {
         state.loading = false;
       })
       .addCase(Logout.pending, (state) => {
@@ -83,5 +80,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { toggleOtpAccess, googleSignin, tutorApplication } = authSlice.actions;
+export const { toggleOtpAccess, googleSignin, tutorApplication } =
+  authSlice.actions;
 export default authSlice.reducer;

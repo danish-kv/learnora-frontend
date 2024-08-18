@@ -6,7 +6,7 @@ import { googleSignin } from "../../../redux/slices/authSlice";
 
 export const useGoogleAuth = () => {
   const navigate = useNavigate();
-  const dispath = useDispatch()
+  const dispath = useDispatch();
 
   const handleSignInWithGoogle = async (res, role, from) => {
     console.log(res);
@@ -23,7 +23,7 @@ export const useGoogleAuth = () => {
       if (response.status === 200) {
         localStorage.setItem("access", response.data.access_token);
         localStorage.setItem("refresh", response.data.refresh_token);
-        localStorage.setItem("user", response.data.username);
+        localStorage.setItem("user", response.data.user);
         localStorage.setItem("role", role);
 
         console.log("res data", response.data);
@@ -31,19 +31,19 @@ export const useGoogleAuth = () => {
         await swal("Success", "Logged in successfully", "success");
 
         const payload = {
-          username : response.data.username,
-          role : response.data.role
-        }
-        dispath(googleSignin(payload))
+          user: response.data.user,
+          role: response.data.role,
+        };
+        dispath(googleSignin(payload));
 
         if (from === "register") {
           navigate("/login");
         } else if (from === "login") {
           navigate("/");
-        }else if('tutor/register'){
-          navigate('tutor/login')
-        }else if('tutor/login'){
-          navigate('tutor/')
+        } else if ("tutor/register") {
+          navigate("tutor/login");
+        } else if ("tutor/login") {
+          navigate("tutor/");
         }
       }
     } catch (error) {

@@ -11,6 +11,7 @@ import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
 import swal from "sweetalert";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import LoadingDotStream from "../../../components/common/Loading";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -53,19 +54,19 @@ const RegisterPage = () => {
     if (isValid) {
       console.log("Form submitted");
 
-      const role = 'studnet'
+      const role = "student";
 
       try {
         const res = await dispath(
           Signup({ email, password, username, role })
         ).unwrap();
         console.log(res);
-        
+
         dispath(toggleOtpAccess(true));
         navigate("/otp", { state: { email } });
       } catch (error) {
         console.log("Signup error: ", error);
-        displayToastAlert()
+        displayToastAlert();
       }
     } else {
       setErrors(errors);
@@ -145,18 +146,14 @@ const RegisterPage = () => {
               )}
             </div>
             <div className="mb-4 flex items-center justify-between">
-              <Link to={'/forget-reset'}>
-              <p  className="text-sm text-indigo-600 hover:underline">
-                Forgot Password?
+              <Link to={"/forget-reset"}>
+                <p className="text-sm text-indigo-600 hover:underline">
+                  Forgot Password?
                 </p>
               </Link>
             </div>
             <button className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-200">
-              {loading ? (
-                <ThreeDot color="#fff" size="medium" text="" textColor="" />
-              ) : (
-                "Register"
-              )}
+              {loading ? <LoadingDotStream /> : "Register"}
             </button>
           </form>
           <div className="my-4 text-center text-gray-600">OR</div>
