@@ -33,7 +33,7 @@ export const register = async (email, password, username, role) => {
   }
 };
 
-export const login = async ({email, password, role}) => {
+export const login = async ({ email, password, role }) => {
   try {
     console.log("login ===> ", email, password, role);
 
@@ -43,12 +43,17 @@ export const login = async ({email, password, role}) => {
     return res.data;
   } catch (error) {
     console.log("catch error in login", error);
-    console.log("catch error in login", error.response.data?.detail);
-    displayToastAlert(400, error.response.data?.detail)
 
     if (error.response) {
-      if (error.response.status === 401) {
-        displayToastAlert(400,'Incorrect email or password');
+      const status = error.response.status;
+      const detail = error.response.data?.detail;
+
+      if (status === 401) {
+        await swal(
+          "Access Denied",
+          "Your account has been blocked by the admin.",
+          "info"
+        );
       } else if (error.response.data) {
         const errorMess = error.response.data;
         for (let key in errorMess) {
@@ -58,14 +63,17 @@ export const login = async ({email, password, role}) => {
           }
         }
       } else {
-        toast.error('An unexpected error occurred.');
+        displayToastAlert('An unexpected error occurred.');
+        displayToastAlert(status, detail )
       }
+    } else {
+      displayToastAlert('An error occurred');
+      console.error('Error: ', error);
     }
-    console.log('eeerrroro', error);
-    
-    // throw error.response ? error.response.data : error;
+    throw error;
   }
 };
+
 
 
 

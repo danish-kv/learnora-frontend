@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchCourseDetails } from "../services/tutorService";
 
-const useFetchCourseDetails = (id) => {
+const useFetchCourseDetails = (slug) => {
   const [courseDetails, setCourseDetails] = useState();
   const [error, setError] = useState(null);
 
   const getCourseDetails = async () => {
     try {
-      const data = await fetchCourseDetails(id);
+      const data = await fetchCourseDetails(slug);
       setCourseDetails(data);
     } catch (error) {
       console.log(error);
@@ -16,7 +16,7 @@ const useFetchCourseDetails = (id) => {
   };
   useEffect(() => {
     getCourseDetails();
-  }, []);
+  }, [slug]);
 
   return { courseDetails, error };
 };

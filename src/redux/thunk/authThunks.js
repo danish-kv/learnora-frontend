@@ -24,6 +24,14 @@ export const Login = createAsyncThunk(
           
           return rejectWithValue({ error: "Application status is pending", res });
         }
+        else if (token.is_tutor && token.status === 'Requested'){
+          
+          return rejectWithValue({ error: "Application status is requested", res });
+        }
+        else if (token.is_tutor && token.status === 'Rejected'){
+          
+          return rejectWithValue({ error: "Application status is rejected", res });
+        }
         else {
           const { access_token, refresh_token, role, user } = res;
           

@@ -41,6 +41,7 @@ api.interceptors.response.use(
     console.log("Response error:", error);
 
     const originalRequest = error.config;
+    displayToastAlert(400, error.response.data)
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

@@ -21,6 +21,12 @@ const TutorApplication = () => {
   const { email } = location.state || {};
   console.log("email of ===", email);
 
+  useEffect(() => {
+    if (!tutorApplicationAccess) {
+      navigate("/tutor/register");
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     profilePhoto: null,
     firstName: "",
@@ -36,12 +42,6 @@ const TutorApplication = () => {
     skills: "",
     cv: null,
   });
-
-  // useEffect(() => {
-  //   if (!tutorApplicationAccess){
-  //     navigate('/tutor/register')
-  //   }
-  // }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,7 +99,7 @@ const TutorApplication = () => {
     console.log("name", name, files);
 
     setFormData({ ...formData, [name]: files[0] });
-    newData.forEach((obj) => console.log(obj));
+    // newData.forEach((obj) => console.log(obj));
   };
 
   const handleArrayInputChange = (index, field, subfield, value) => {

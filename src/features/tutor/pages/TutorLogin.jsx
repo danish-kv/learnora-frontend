@@ -81,6 +81,19 @@ const TutorLogin = () => {
           );
           dispatch(tutorApplication(true));
           navigate("/tutor/application", { state: { email: formData.email } });
+
+        }else if (error.error === "Application status is requested") {
+          navigate("/tutor/application/done");
+          console.log('not accepted applcaitoin');
+          
+        }else if (error.error === "Application status is rejected") {
+          await swal(
+            "Application Rejected",
+            "Unfortunately, your application has been rejected by the admin.",
+            "info"
+        );
+        console.log('Application has been rejected by the admin.');
+          
         }
       }
     } else {
@@ -153,7 +166,7 @@ const TutorLogin = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-              disabled={loading}
+             
             >
               {loading ? <LoadingDotStream /> : "Log In"}
             </button>

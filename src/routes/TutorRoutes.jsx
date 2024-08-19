@@ -11,6 +11,7 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import TutorNewCourse from "../features/tutor/pages/TutorNewCourse";
 import TutorCourseDetails from "../features/tutor/pages/TutorCourseDetails";
+import TutorApplicationDone from "../features/tutor/pages/TutorApplicationDone";
 
 const TutorRoutes = () => {
   return (
@@ -40,8 +41,11 @@ const TutorRoutes = () => {
         }
       />
 
-
-
+      <Route
+        path="application/done"
+        element={
+          <TutorApplicationDone />} 
+      />
       <Route
         path=""
         element={<ProtectedRoute element={<TutorDashboard />} role={"tutor"} />}
@@ -59,13 +63,11 @@ const TutorRoutes = () => {
         element={<ProtectedRoute element={<TutorNewCourse />} role={"tutor"} />}
       />
       <Route
-        path="course-detail"
-        element={<ProtectedRoute element={<TutorCourseDetails />} role={"tutor"} />}
+        path="course/:slug"
+        element={
+          <ProtectedRoute element={<TutorCourseDetails />} role={"tutor"} />
+        }
       />
-
-
-
-      
 
       <Route path="*" element={<NotFound />} />
     </Routes>
