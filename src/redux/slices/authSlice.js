@@ -10,6 +10,7 @@ const initialState = {
   error: null,
   otp_access: false,
   tutorApplicationAccess: false,
+  tutorApplicationDoneAccess : false
 };
 
 const authSlice = createSlice({
@@ -26,6 +27,9 @@ const authSlice = createSlice({
     },
     tutorApplication: (state, action) => {
       state.tutorApplicationAccess = action.payload;
+    },
+    tutorApplicationDone: (state, action) => {
+      state.tutorApplicationDoneAccess = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -80,6 +84,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { toggleOtpAccess, googleSignin, tutorApplication } =
+export const { toggleOtpAccess, googleSignin, tutorApplication, tutorApplicationDone } =
   authSlice.actions;
 export default authSlice.reducer;

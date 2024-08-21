@@ -9,9 +9,12 @@ import TutorProfile from "../features/tutor/pages/TutorProfile";
 import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
-import TutorNewCourse from "../features/tutor/pages/TutorNewCourse";
 import TutorCourseDetails from "../features/tutor/pages/TutorCourseDetails";
 import TutorApplicationDone from "../features/tutor/pages/TutorApplicationDone";
+import TutorEditCourse from "../features/tutor/pages/TutorEditCourse";
+import TutorCreateCourse from "../features/tutor/pages/TutorCreateCourse";
+import TutorCreateModule from "../features/tutor/pages/TutorCreateModule";
+import TutorEditModule from "../features/tutor/pages/TutorEditModule";
 
 const TutorRoutes = () => {
   return (
@@ -60,12 +63,28 @@ const TutorRoutes = () => {
       />
       <Route
         path="new-course"
-        element={<ProtectedRoute element={<TutorNewCourse />} role={"tutor"} />}
+        element={<ProtectedRoute element={<TutorCreateCourse />} role={"tutor"} />}
+      />
+        <Route
+          path="course/:slug"
+          element={
+            <ProtectedRoute element={<TutorCourseDetails />} role={"tutor"} />
+          }
+        />
+      <Route
+        path="new-module/:id"
+        element={<ProtectedRoute element={<TutorCreateModule />} role={"tutor"} />}
       />
       <Route
-        path="course/:slug"
+        path="course/edit/:slug"
         element={
-          <ProtectedRoute element={<TutorCourseDetails />} role={"tutor"} />
+          <ProtectedRoute element={<TutorEditCourse />} role={"tutor"} />
+        }
+      />
+      <Route
+        path="module/edit/:id"
+        element={
+          <ProtectedRoute element={<TutorEditModule />} role={"tutor"} />
         }
       />
 

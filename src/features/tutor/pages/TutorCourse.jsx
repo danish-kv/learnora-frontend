@@ -10,12 +10,17 @@ const TutorCourse = () => {
   const { courses, error, getCourses } = useFetchCourse();
   console.log(courses);
 
-  const handleBlock = async (id, current_status) => {
-    console.log(id, current_status);
+  const handleBlock = async (slug, current_status) => {
+    console.log(slug, current_status);
 
     try {
-      await api.patch(`courses/${id}/`, { is_active: !current_status });
-      getCourses()
+      await api.patch(`courses/${slug}/`, { is_active: !current_status });
+      getCourses();
+      if (current_status) {
+        swal("Blocked", "Course Blocked successfully", "success");
+      } else {
+        swal("UnBlocked", "Course Unblocked successfully", "success");
+      }
     } catch (error) {
       console.log(error);
       displayToastAlert(
@@ -24,25 +29,6 @@ const TutorCourse = () => {
       );
     }
   };
-
-  // const courses = [
-  //   {
-  //     title: "Data Structure and Algorithms",
-  //     description:
-  //       "Explore the fundamental lksajdflkajswdlkfasjdflasdfkasdflaskdflkasdfklaksfjksadfksasdf asdf asdfasdfas asdddddddddddasdfsadfdfsdfsdfsadfsadfsadf.",
-  //     thumbnail: "https://via.placeholder.com/150",
-  //     enrollments: 320,
-  //     status: "Published",
-  //   },
-  //   {
-  //     title: "Introduction to Python",
-  //     description:
-  //       "Learn Python from scratch and build your programming skills.",
-  //     thumbnail: "https://via.placeholder.com/150",
-  //     enrollments: 200,
-  //     status: "Draft",
-  //   },
-  // ];
 
   return (
     <div className="h-screen flex">

@@ -41,7 +41,7 @@ const CourseCard = ({ course, onBlockToggle }) => {
                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
               />
             </svg>
-            {course.enrollments} enrollments
+            {course.total_enrollment} enrollments
           </span>
           <div className="text-ellipsis overflow-clip">
             <Link to={`/tutor/course/${course.slug}`}>
@@ -51,7 +51,7 @@ const CourseCard = ({ course, onBlockToggle }) => {
             </Link>
             <Link>
               <button
-                onClick={() => onBlockToggle(course.id, course.is_active)}
+                onClick={() => onBlockToggle(course.slug, course.is_active)}
                 className={`${
                   course.is_active
                     ? "bg-red-500 hover:bg-red-600"

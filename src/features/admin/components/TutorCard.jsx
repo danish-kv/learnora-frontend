@@ -10,13 +10,13 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
       <div className="p-6">
         <div className="flex items-center mb-4" onClick={onClick}>
           <img
-            src={`${BASE_URL}${tutor.user.profile}`}
-            alt={`${tutor.user.username}'s profile`}
+            src={`${BASE_URL}${tutor.user?.profile}`}
+            alt={`${tutor.user?.username}'s profile`}
             className="w-16 h-16 rounded-full mr-4 object-cover border-2 border-blue-500"
           />
           <div>
             <h2 className="text-xl font-semibold text-gray-800">
-              {tutor.user.first_name.concat(tutor.user.last_name)}
+              {tutor.user?.first_name.concat(tutor.user?.last_name)}
             </h2>
             <span
               className={`px-2 py-1 rounded text-xs font-semibold ${
@@ -29,16 +29,16 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
                   : "bg-gray-100 text-gray-800"
               }`}
             >
-              {tutor.status}
+              {tutor?.status}
             </span>
           </div>
         </div>
         <div className="space-y-2 text-sm mb-4 text-gray-600">
           <p>
-            <span className="font-medium">Email:</span> {tutor.user.email}
+            <span className="font-medium">Email:</span> {tutor.user?.email}
           </p>
           <p>
-            <span className="font-medium">Phone:</span> {tutor.user.phone}
+            <span className="font-medium">Phone:</span> {tutor.user?.phone}
           </p>
           <p>
             <span className="font-medium">Courses:</span>{" "}
@@ -50,11 +50,11 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
           </p>
           <p>
             <span className="font-medium">Registered:</span>{" "}
-            {new Date(tutor.user.date_joined).toLocaleDateString()}
+            {new Date(tutor.user?.date_joined).toLocaleDateString()}
           </p>
           <p>
             <span className="font-medium">Last Login:</span>{" "}
-            {new Date(tutor.user.last_login).toLocaleDateString()}
+            {new Date(tutor.user?.last_login).toLocaleDateString()}
           </p>
         </div>
         <div className="flex justify-between gap-2">
@@ -95,12 +95,12 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
               onBlockToggle(tutor.user.id, tutor.user.is_active);
             }}
             className={`${
-              tutor.user.is_active
+              tutor.user?.is_active
                 ? "bg-yellow-500 hover:bg-yellow-700"
                 : "bg-gray-500 hover:bg-gray-700"
             } text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out`}
           >
-            {tutor.user.is_active ? "Block" : "Unblock"}
+            {tutor.user?.is_active ? "Block" : "Unblock"}
           </button>
           }
         </div>

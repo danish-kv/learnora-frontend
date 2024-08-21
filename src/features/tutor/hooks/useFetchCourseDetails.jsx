@@ -18,7 +18,7 @@ const useFetchCourseDetails = (slug) => {
     getCourseDetails();
   }, [slug]);
 
-  return { courseDetails, error };
+  return { courseDetails, error, refetch : getCourseDetails };
 };
 
 export default useFetchCourseDetails;
