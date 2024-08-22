@@ -1,42 +1,19 @@
 import React, { useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import useFetchCourseDetails from "../hooks/useFetchCourseDetails";
-import api from "../../../services/api";
+import { Link, useParams } from "react-router-dom";
+import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
 import { formatDuration } from "../../../utils/formatDuration";
-const TutorCourseDetails = () => {
+
+const AdminCourseDetails = () => {
   const [expandedModule, setExpandedModule] = useState(null);
   const { slug } = useParams();
-  console.log("slug === ", slug);
 
   const { courseDetails, error, refetch } = useFetchCourseDetails(slug);
-  console.log(`course details of ${slug}`, courseDetails);
 
-  const handleDeleteModule = async(id) => {
-    console.log(id);
-    try {
-
-      const res = await api.delete(`modules/${id}/`)
-      console.log(res);
-      if(res.status === 204){
-        swal({
-          title: "Deleted!",
-          text: "Modules have been deleted successfully.",
-          icon: "success",
-          button: "Okay",
-        });
-      }
-      refetch()
-      
-    } catch (error) {
-      
-      console.log(error);
-      
-    }
-    
-  }
+  if (error) return <div>Error fetching course details.</div>;
 
   return (
     <div className="container mx-auto px-5 py-8">
+      {/* Course Thumbnail */}
       <div className="mb-6">
         <img
           src={courseDetails?.thumbnail}
@@ -45,18 +22,10 @@ const TutorCourseDetails = () => {
         />
       </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">{courseDetails?.title}</h1>
-          <Link to={`/tutor/course/edit/${slug}`}>
-            <button className="text-blue-600 hover:text-blue-800">Edit</button>
-          </Link>
-        </div>
-
-        <div className="mb-4">
-          <h2 className="font-semibold mb-2">Description</h2>
-          <p className="text-gray-700">{courseDetails?.description}</p>
-        </div>
+      {/* Course Info */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h1 className="text-2xl font-bold mb-4">{courseDetails?.title}</h1>
+        <p className="text-gray-700 mb-4">{courseDetails?.description}</p>
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -69,31 +38,89 @@ const TutorCourseDetails = () => {
           </div>
           <div>
             <h3 className="font-semibold text-gray-600">Rental Duration</h3>
-            <p>{courseDetails?.rental_duration}days</p>
+            <p>{courseDetails?.rental_duration} days</p>
           </div>
           <div>
             <h3 className="font-semibold text-gray-600">Category</h3>
-            <p>Web Development</p>
+            <p>{courseDetails?.category || "N/A"}</p>
           </div>
         </div>
 
         <div>
           <h3 className="font-semibold text-gray-600 mb-1">Status</h3>
-          <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          <span
+            className={`bg-${
+              courseDetails?.status === "Approved" ? "green" : "yellow"
+            }-100 text-${
+              courseDetails?.status === "Approved" ? "green" : "yellow"
+            }-800 text-xs font-medium px-2.5 py-0.5 rounded`}
+          >
             {courseDetails?.status}
           </span>
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Modules</h2>
-          <Link to={`/tutor/new-module/${courseDetails?.id}`}>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              Add Module
-            </button>
+      {/* Tutor Info */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6 flex items-start">
+        <Link to={`/admin/tutor/${courseDetails?.tutor?.id}`}>
+        <img
+          src={courseDetails?.tutor?.user.profile || "/path/to/default-profile.png"}
+          alt="Tutor"
+          className="w-24 h-24 rounded-full border-2 border-gray-300 mr-6"
+          />
           </Link>
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">
+            {courseDetails?.tutor?.display_name}
+          </h2>
+          <p className="text-gray-600 mb-2">{courseDetails?.tutor?.headline}</p>
+          <p className="text-gray-700 mb-4">{courseDetails?.tutor?.bio}</p>
+
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-600">Education</h3>
+            <ul>
+              {courseDetails?.tutor?.education?.map((edu, index) => (
+                <li key={index} className="text-gray-700">
+                  {edu.highest_qualification} from {edu.name_of_institution} (
+                  {edu.year_of_qualification})
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-600">Experience</h3>
+            <ul>
+              {courseDetails?.tutor?.experiences?.map((exp, index) => (
+                <li key={index} className="text-gray-700">
+                  {exp.position} at {exp.company_name} ({exp.start_date} -{" "}
+                  {exp.end_date})
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-600 mb-2">Skills</h3>
+            <div className="flex flex-wrap gap-2">
+              {courseDetails?.tutor?.skills?.map((skill, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 text-blue-800  font-medium px-3 py-1 rounded-full"
+                >
+                  {skill.skill_name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div></div>
         </div>
+      </div>
+
+      {/* Modules */}
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4">Modules</h2>
 
         {courseDetails?.modules?.map((module, index) => (
           <div key={index} className="mb-4">
@@ -109,48 +136,8 @@ const TutorCourseDetails = () => {
                 </span>
               </div>
               <div className="flex items-center">
-                  <Link to={`/tutor/module/edit/${module.id}`}>
-                    <button className="text-gray-600 hover:text-gray-800 mr-2">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                    </button>
-                </Link>
                 <button
-                  className="text-gray-600 hover:text-gray-800"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteModule(module.id);
-                  }}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                </button>
-                <button
-                  className={`text-gray-600 hover:text-gray-800 ml-2 ${
+                  className={`text-gray-600 hover:text-gray-800 ml-2 transform transition-transform ${
                     index === expandedModule ? "rotate-180" : ""
                   }`}
                 >
@@ -212,7 +199,7 @@ const TutorCourseDetails = () => {
                     <span className="font-semibold text-gray-600 mr-2">
                       Views:
                     </span>
-                    <span>100</span>
+                    <span>{module.views || "N/A"}</span>
                   </div>
                 </div>
               </div>
@@ -224,4 +211,4 @@ const TutorCourseDetails = () => {
   );
 };
 
-export default TutorCourseDetails;
+export default AdminCourseDetails;

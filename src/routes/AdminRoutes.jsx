@@ -10,6 +10,7 @@ import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AdminTutorDetails from "../features/admin/pages/AdminTutorDetails";
 import AdminCategory from "../features/admin/pages/AdminCategory";
+import AdminCourseDetails from "../features/admin/pages/AdminCourseDetails";
 
 const AdminRoutes = () => {
   return (
@@ -44,6 +45,10 @@ const AdminRoutes = () => {
       <Route
         path="course"
         element={<ProtectedRoute element={<AdminCourse />} role={"admin"} />}
+      />
+      <Route
+        path="course/:slug"
+        element={<ProtectedRoute element={<AdminCourseDetails />} role={"admin"} />}
       />
       <Route
         path="category"

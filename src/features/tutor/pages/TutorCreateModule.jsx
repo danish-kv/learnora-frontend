@@ -5,12 +5,13 @@ import api from "../../../services/api";
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
-    { title: "", description: "", video: "", notes: "" },
+    { title: "", description: "", video: "", notes: "", duration: "" },
   ]);
 
   const { id } = useParams();
 
   console.log("course id", id);
+  console.log(modules);
 
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const TutorCreateModule = () => {
     const modulesData = modules.map((module) => ({
       title: module.title,
       description: module.description,
+      duration: module.duration,
     }));
 
     const formData = new FormData();
@@ -58,7 +60,18 @@ const TutorCreateModule = () => {
     const { name, value, files } = e.target;
     const newModules = [...modules];
 
-    if (name === "video" || name === "notes") {
+    if (name === "video") {
+      const file = files[0];
+      const videoElement = document.createElement("video");
+      videoElement.preload = "metadata";
+      videoElement.onloadeddata = function () {
+        window.URL.revokeObjectURL(videoElement.src);
+        const duration = Math.round(videoElement.duration);
+        newModules[index] = { ...newModules[index], duration, video: file };
+        setModules(newModules);
+      };
+      videoElement.src = URL.createObjectURL(file);
+    } else if (name === "notes") {
       newModules[index] = { ...newModules[index], [name]: files[0] };
     } else {
       newModules[index] = { ...newModules[index], [name]: value };

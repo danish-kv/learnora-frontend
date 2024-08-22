@@ -1,51 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
 import TutorCard from "../components/TutorCard";
 import { useNavigate } from "react-router-dom";
-import { fetchTutors } from "../services/adminService";
 import api from "../../../services/api";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
-
 import { ToastContainer } from "react-toastify";
 import useFetchTutor from "../hooks/useFetchTutor";
+
 const AdminTutor = () => {
-  // const [tutors, setTutors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
   const navigate = useNavigate();
-
   const { tutors, refech } = useFetchTutor();
-  console.log(tutors);
 
   const handleStatusChange = async (id, newStatus) => {
     try {
       const res = await api.patch(`tutor/${id}/`, {
         status: newStatus,
       });
-      displayToastAlert(200, "succuss");
+      displayToastAlert(200, "success");
       refech();
-      console.log(res);
-      
     } catch (error) {
       console.log("change status error ===", error);
-
       const status = error?.response?.status || 400;
       const message =
         error?.response?.data?.status?.[0] ||
         "We are facing some issue. Please try again";
       displayToastAlert(status, message);
-
     }
   };
 
-  const handleBlockToggle = async (id, currect_status) => {
+  const handleBlockToggle = async (id, current_status) => {
     try {
       const res = await api.patch(`user/${id}/status/`, {
-        is_active: !currect_status,
+        is_active: !current_status,
       });
-      console.log(res);
       refech();
     } catch (error) {
       console.log("error == ", error);
@@ -57,16 +47,14 @@ const AdminTutor = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-800">
+    <div className="flex min-h-screen bg-gray-100">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col">
         <AdminHeader />
         <ToastContainer />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 ml-64">
           <div className="container mx-auto px-6 py-8">
             <h3 className="text-gray-700 text-3xl font-medium">Tutors</h3>
-
             {/* Search and Filter Section */}
             <div className="mt-4 flex justify-between">
               <input
@@ -91,7 +79,6 @@ const AdminTutor = () => {
                 </select>
               </div>
             </div>
-
             <div className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tutors.map((tutor) => (

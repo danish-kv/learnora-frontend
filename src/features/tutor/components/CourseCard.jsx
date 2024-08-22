@@ -49,7 +49,6 @@ const CourseCard = ({ course, onBlockToggle }) => {
                 View
               </button>
             </Link>
-            <Link>
               <button
                 onClick={() => onBlockToggle(course.slug, course.is_active)}
                 className={`${
@@ -60,7 +59,6 @@ const CourseCard = ({ course, onBlockToggle }) => {
               >
                 {course.is_active ? "Block" : "Unblock"}
               </button>
-            </Link>
           </div>
         </div>
       </div>

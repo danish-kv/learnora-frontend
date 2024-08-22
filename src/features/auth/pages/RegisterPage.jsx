@@ -18,7 +18,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleSignInWithGoogle } = useGoogleAuth();
 
@@ -39,7 +39,12 @@ const RegisterPage = () => {
   }, []);
 
   const onGoogleSignIn = async (res) => {
-    await handleSignInWithGoogle(res, "student", "register");
+    try {
+      await handleSignInWithGoogle(res, "student", "register");
+    } catch (error) {
+      console.error("Google Sign-In Error: ", error);
+      toast.error("Google Sign-In failed. Please try again.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -57,12 +62,12 @@ const RegisterPage = () => {
       const role = "student";
 
       try {
-        const res = await dispath(
+        const res = await dispatch(
           Signup({ email, password, username, role })
         ).unwrap();
         console.log(res);
 
-        dispath(toggleOtpAccess(true));
+        dispatch(toggleOtpAccess(true));
         navigate("/otp", { state: { email } });
       } catch (error) {
         console.log("Signup error: ", error);
