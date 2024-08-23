@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { validateTutorApplication } from "../../../utils/validationTutor";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { tutorApplication } from "../../../redux/slices/authSlice";
+import { tutorApplication, tutorApplicationDone } from "../../../redux/slices/authSlice";
 
 const TutorApplication = () => {
   const [step, setStep] = useState(1);
@@ -74,7 +74,8 @@ const TutorApplication = () => {
         if (res.status === 201) {
           await displayToastAlert(200, "Account Created Succussfully");
           dispatch(tutorApplication(false));
-          navigate("/tutor/login");
+          dispatch(tutorApplicationDone(true));
+          navigate("/tutor/application/done");
         }
       } else {
         setErrors(errors);

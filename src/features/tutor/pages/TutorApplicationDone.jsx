@@ -1,7 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { tutorApplicationDone } from '../../../redux/slices/authSlice';
 
 const TutorApplicationDone = () => {
+  const { tutorApplicationDoneAccess } = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    if(!tutorApplicationDoneAccess){
+      navigate('/')
+    }
+  }, [])
+
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md max-w-lg w-full p-6">
@@ -26,7 +40,7 @@ const TutorApplicationDone = () => {
           You will receive an email at your registered address with next steps.
         </p>
         <Link to={'/'} >
-        <button className="w-full bg-blue-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded">
+        <button onClick={dispatch(tutorApplicationDone())} className="w-full bg-blue-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded">
           ← Back to Home
         </button>
         </Link>
