@@ -15,15 +15,15 @@ const CourseDetails = () => {
     return <>Loading</>
   }
 
-  const totalDuration = courseDetails?.modules.reduce((total, module) => {
+  const total_duration = courseDetails?.modules.reduce((total, module) => {
     return total + module.duration;
   }, 0);
   
-  const time = formatDuration(totalDuration)
+  const time = formatDuration(total_duration)
   console.log(time);
   
 
-  console.log('total duration of ',totalDuration);
+  console.log('total duration of ',total_duration);
   
   const check = courseDetails?.modules.length
   console.log(check);

@@ -10,6 +10,8 @@ import NotFound from "../components/common/NotFound";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import Courses from "../features/courses/pages/Courses";
+import CourseDetailPage from "../features/courses/pages/CourseDetails";
+import CourseDetails from "../features/courses/pages/CourseDetails";
 
 
 const StudentRoutes = () => {
@@ -52,6 +54,10 @@ const StudentRoutes = () => {
       <Route
         path="course"
         element={<ProtectedRoute element={<Courses />} role="student" />}
+      />
+      <Route
+        path="course/:slug"
+        element={<ProtectedRoute element={<CourseDetails />} role="student" />}
       />
 
       <Route path="*" element={<NotFound />} />
