@@ -31,10 +31,10 @@ const CourseDetailsMain = ({ course }) => {
         </Link>
         <span className="mx-2">{">"}</span>
         <Link
-          to={`/category/${course.category.slug}`}
+          to={`/category/${course.category?.slug}`}
           className="hover:text-gray-700"
         >
-          {course.category.name}
+          {course.category?.name}
         </Link>
         <span className="mx-2">{">"}</span>
         <span className="text-gray-600">{course.title}</span>

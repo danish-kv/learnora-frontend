@@ -25,12 +25,14 @@ api.interceptors.request.use(
 const refreshToken = async (refresh) => {
   try {
     const res = await api.post("token/refresh/", {
-      refresh: refreshToken,
+      refresh: refresh,
     });
     console.log("ress of ====", res);
 
     return res.data.access;
   } catch (error) {
+    console.log(error);
+    
     throw error;
   }
 };
@@ -41,13 +43,15 @@ api.interceptors.response.use(
     console.log("Response error:", error);
 
     const originalRequest = error.config;
-    displayToastAlert(400, error.response.data)
+    displayToastAlert(400, error.response?.data?.error)
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const refresh = localStorage.getItem(REFRESH_TOKEN);
       if (refresh) {
+        console.log('yes its here', refresh);
+        
         const newAccessToken = await refreshToken(refresh);
         localStorage.setItem(ACCESS_TOKEN, newAccessToken);
       

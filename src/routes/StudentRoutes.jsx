@@ -12,12 +12,14 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import Courses from "../features/courses/pages/Courses";
 import CourseDetailPage from "../features/courses/pages/CourseDetails";
 import CourseDetails from "../features/courses/pages/CourseDetails";
-
+import PaymentSuccess from "../features/courses/payment/PaymentSuccess";
+import PaymentFailed from "../features/courses/payment/PaymentFailed";
+import CourseVideoPlayer from "../features/courses/pages/CourseVideoPlayer";
 
 const StudentRoutes = () => {
   return (
     <Routes>
-       <Route
+      <Route
         path="register"
         element={
           <AuthRouteProtection element={<RegisterPage />} redirectTo={"/"} />
@@ -29,9 +31,7 @@ const StudentRoutes = () => {
           <AuthRouteProtection element={<ResetPassword />} redirectTo={"/"} />
         }
       />
-      <Route
-        path="otp"
-        element={<OtpPage />}       />
+      <Route path="otp" element={<OtpPage />} />
       <Route
         path="login"
         element={
@@ -45,8 +45,6 @@ const StudentRoutes = () => {
         }
       />
 
-
-
       <Route
         path="/"
         element={<ProtectedRoute element={<HomePage />} role="student" />}
@@ -58,6 +56,23 @@ const StudentRoutes = () => {
       <Route
         path="course/:slug"
         element={<ProtectedRoute element={<CourseDetails />} role="student" />}
+      />
+      <Route
+        path="course/play/:slug"
+        element={<ProtectedRoute element={<CourseVideoPlayer />} role="student" />}
+      />
+
+      <Route
+        path="/payment_success"
+        element={
+          <ProtectedRoute element={<PaymentSuccess />} role={"student"} />
+        }
+      />
+      <Route
+        path="/payment_failed"
+        element={
+          <ProtectedRoute element={<PaymentFailed />} role={"student"} />
+        }
       />
 
       <Route path="*" element={<NotFound />} />
