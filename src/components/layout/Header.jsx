@@ -72,12 +72,12 @@ function Header() {
               onClick={toggleDropdown}
               className="flex items-center space-x-2 focus:outline-none"
             >
-              {
+              {/* {
                 <img
                   src="/profile-image.jpg"
                   className="h-10 w-10 rounded-full overflow-hidden bg-gray-100"
                 />
-              }
+              } */}
 
               <span className="text-gray-700 font-medium">{username}</span>
               <svg
