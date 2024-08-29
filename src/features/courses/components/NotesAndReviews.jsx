@@ -1,5 +1,22 @@
 import React, { useState } from "react";
-import { FaEdit, FaStar, FaTrash, FaStickyNote } from "react-icons/fa";
+import {
+  FaEdit,
+  FaStar,
+  FaTrash,
+  FaStickyNote,
+  FaUserCircle,
+  FaPlus,
+} from "react-icons/fa";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import swal from "sweetalert";
 import api from "../../../services/api";
 
@@ -12,7 +29,7 @@ const NotesAndReviews = ({
   setNoteToEdit,
   refetch,
 }) => {
-  const [showNotes, setShowNotes] = useState(false);
+  const [activeTab, setActiveTab] = useState("reviews");
 
   if (!reviews && !notes) {
     return null;
@@ -30,8 +47,6 @@ const NotesAndReviews = ({
     if (willDelete) {
       try {
         const res = await api.delete(`reviews/${id}/`);
-        console.log(res);
-
         if (res.status === 204) {
           swal("Poof! Your review has been deleted!", {
             icon: "success",
@@ -42,7 +57,6 @@ const NotesAndReviews = ({
             icon: "error",
           });
         }
-        console.log(res);
       } catch (error) {
         console.log(error);
         swal("Failed to delete the review. Please try again later.", {
@@ -53,137 +67,147 @@ const NotesAndReviews = ({
   };
 
   const handleEditNote = (note) => {
-    console.log("notes to edit :", note);
-
     setNoteToEdit(note);
     handleNotesModal();
   };
 
   const handleDeleteNote = async (id) => {
-    console.log("note delete buttton clicked");
     try {
       const res = await api.delete(`notes/${id}/`);
       if (res.status === 204) {
-        swal("Deleted", `${notes.content} has deleted!`, "success");
+        swal("Deleted", "The note has been deleted!", "success");
         refetch();
       } else {
         swal("Failed", "Could not delete the note", "error");
       }
-      console.log(res);
     } catch (error) {
       console.log(error);
-
       swal("Failed", "An error occurred. Please try again.", "error");
     }
   };
 
   return (
-    <div className="mt-4 bg-white p-4 rounded-md shadow">
-      <div className="flex space-x-4 mb-4">
-        <button
-          onClick={handleNotesModal}
-          className="flex items-center text-blue-600 hover:text-blue-700"
-        >
-          <FaEdit className="mr-2" /> Add Note
-        </button>
-        {!reviews.is_my_review && (
-          <button
-            onClick={handleReviewModal}
-            className="flex items-center text-green-600 hover:text-green-700"
-          >
-            <FaStar className="mr-2" /> Add Review
-          </button>
-        )}
-        <button
-          onClick={() => setShowNotes(!showNotes)}
-          className="flex items-center text-gray-600 hover:text-gray-700"
-        >
-          <FaStickyNote className="mr-2" />{" "}
-          {showNotes ? "Hide Notes" : "Show Notes"}
-        </button>
-      </div>
-
-      {/* Display reviews */}
-      {reviews.map((review, index) => (
-        <div key={review.id} className="mt-4 bg-gray-100 p-4 rounded-md">
-          <div className="flex justify-between items-center">
-            <div>
-              <h4 className="font-semibold">
-                {review.is_my_review ? "My Review" : `Review #${index + 1}`}
-              </h4>
-              <p>{review.feedback}</p>
-              <p className="text-gray-600 text-sm">
-                {new Date(review.created_at).toLocaleDateString()}{" "}
-                {new Date(review.created_at).toLocaleTimeString()}
-              </p>
-              <div className="flex items-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FaStar
-                    key={star}
-                    className={`cursor-pointer ${
-                      star <= review.rating
-                        ? "text-yellow-500"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {review.is_my_review && (
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => {
-                    setReviewToEdit(review);
-                    handleReviewModal();
-                  }}
-                  className="flex items-center text-blue-600 hover:text-blue-700"
-                >
-                  <FaEdit className="ml-2" /> Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(review.id)}
-                  className="flex items-center text-red-600 hover:text-red-700"
-                >
-                  <FaTrash className="ml-2" /> Delete
-                </button>
-              </div>
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Notes & Reviews</h2>
+          <div className="space-x-2">
+            <Button onClick={handleNotesModal} variant="outline">
+              <FaPlus className="mr-2" /> Add Note
+            </Button>
+            {!reviews.some((review) => review.is_my_review) && (
+              <Button onClick={handleReviewModal} variant="default">
+                <FaStar className="mr-2" /> Add Review
+              </Button>
             )}
           </div>
         </div>
-      ))}
+      </CardHeader>
+      <CardContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+            <TabsTrigger value="notes">Notes</TabsTrigger>
+          </TabsList>
+          <TabsContent value="reviews">
+            <div className="space-y-6 mt-4">
+              {reviews.map((review, index) => (
+                <Card
+                  key={review.id}
+                  className="overflow-hidden transition-all duration-300 hover:shadow-lg"
+                >
+                  <CardHeader className="bg-gray-50">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-4">
+                        <Avatar>
+                          <FaUserCircle className="w-10 h-10 text-gray-400" />
+                        </Avatar>
+                        <div>
+                          <h4 className="font-semibold text-lg">
+                            {review.is_my_review
+                              ? "My Review"
+                              : `Review #${index + 1}`}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {new Date(review.created_at).toLocaleDateString()}{" "}
+                            at{" "}
+                            {new Date(review.created_at).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge
+                        variant={
+                          review.rating >= 4
+                            ? "success"
+                            : review.rating >= 3
+                            ? "warning"
+                            : "destructive"
+                        }
+                      >
+                        {review.rating}/5
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex justify-between items-center p-4">
+                    <p className="text-gray-700">{review.feedback}</p>
 
-      {/* Display notes */}
-      {showNotes && notes.length > 0 && (
-        <div className="mt-4 bg-gray-100 p-4 rounded-md">
-          <h4 className="font-semibold mb-2">My Notes</h4>
-          <ul>
-            {notes.map((note) => (
-              <li
-                key={note.id}
-                className="mb-2 flex justify-between items-center"
-              >
-                <p>{note.content}</p>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleEditNote(note)}
-                    className="flex items-center text-blue-600 hover:text-blue-700"
-                  >
-                    <FaEdit className="ml-2" /> Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteNote(note.id)}
-                    className="flex items-center text-red-600 hover:text-red-700"
-                  >
-                    <FaTrash className="ml-2" /> Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+                    {review.is_my_review && (
+                      <div className=" flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setReviewToEdit(review);
+                            handleReviewModal();
+                          }}
+                        >
+                          <FaEdit className="mr-2" /> Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDelete(review.id)}
+                        >
+                          <FaTrash className="mr-2" /> Delete
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="notes">
+            <div className="space-y-4 mt-4">
+              {notes &&
+                notes.map((note) => (
+                  <Card key={note.id}>
+                    <CardContent className="flex justify-between items-center p-4">
+                      <p className="text-gray-700">{note.content}</p>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditNote(note)}
+                        >
+                          <FaEdit className="mr-2" /> Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteNote(note.id)}
+                        >
+                          <FaTrash className="mr-2" /> Delete
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 };
 
