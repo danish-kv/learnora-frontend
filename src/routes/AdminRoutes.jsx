@@ -1,16 +1,24 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminLogin from "../features/admin/pages/AdminLogin";
-import AdminDashboard from "../features/admin/pages/AdminDashboard";
-import AdminStudent from "../features/admin/pages/AdminStudent";
-import AdminTutor from "../features/admin/pages/AdminTutor";
-import AdminCourse from "../features/admin/pages/AdminCourse";
 import NotFound from "../components/common/NotFound";
-import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
-import AdminTutorDetails from "../features/admin/pages/AdminTutorDetails";
-import AdminCategory from "../features/admin/pages/AdminCategory";
-import AdminCourseDetails from "../features/admin/pages/AdminCourseDetails";
+import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
+const AdminDashboard = lazy(() =>
+  import("../features/admin/pages/AdminDashboard")
+);
+const AdminStudent = lazy(() => import("../features/admin/pages/AdminStudent"));
+const AdminTutor = lazy(() => import("../features/admin/pages/AdminTutor"));
+const AdminCourse = lazy(() => import("../features/admin/pages/AdminCourse"));
+const AdminTutorDetails = lazy(() =>
+  import("../features/admin/pages/AdminTutorDetails")
+);
+const AdminCategory = lazy(() =>
+  import("../features/admin/pages/AdminCategory")
+);
+const AdminCourseDetails = lazy(() =>
+  import("../features/admin/pages/AdminCourseDetails")
+);
 
 const AdminRoutes = () => {
   return (
@@ -21,8 +29,6 @@ const AdminRoutes = () => {
           <AuthRouteProtection element={<AdminLogin />} redirectTo={"/admin"} />
         }
       />
-
-
 
       <Route
         path=""
@@ -48,7 +54,9 @@ const AdminRoutes = () => {
       />
       <Route
         path="course/:slug"
-        element={<ProtectedRoute element={<AdminCourseDetails />} role={"admin"} />}
+        element={
+          <ProtectedRoute element={<AdminCourseDetails />} role={"admin"} />
+        }
       />
       <Route
         path="category"

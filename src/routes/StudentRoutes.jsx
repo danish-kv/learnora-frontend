@@ -4,17 +4,17 @@ import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
 import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
-import ForgetPassword from "../features/auth/pages/ForgetPassword";
-import ResetPassword from "../features/auth/pages/ResetPassword";
-import NotFound from "../components/common/NotFound";
-import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
-import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
-import Courses from "../features/courses/pages/Courses";
-import CourseDetailPage from "../features/courses/pages/CourseDetails";
-import CourseDetails from "../features/courses/pages/CourseDetails";
-import PaymentSuccess from "../features/courses/payment/PaymentSuccess";
-import PaymentFailed from "../features/courses/payment/PaymentFailed";
-import CourseVideoPlayer from "../features/courses/pages/CourseVideoPlayer";
+
+const ForgetPassword = lazy(() => import("../features/auth/pages/ForgetPassword"));
+const ResetPassword = lazy(() => import("../features/auth/pages/ResetPassword"));
+const NotFound = lazy(() => import("../components/common/NotFound"));
+const AuthRouteProtection = lazy(() => import("./protectedRoutes/AuthRouteProtection"));
+const ProtectedRoute = lazy(() => import("./protectedRoutes/ProtectedRoute"));
+const Courses = lazy(() => import("../features/courses/pages/Courses"));
+const CourseDetails = lazy(() => import("../features/courses/pages/CourseDetails"));
+const PaymentSuccess = lazy(() => import("../features/courses/payment/PaymentSuccess"));
+const PaymentFailed = lazy(() => import("../features/courses/payment/PaymentFailed"));
+const CourseVideoPlayer = lazy(() => import("../features/courses/pages/CourseVideoPlayer"));
 
 const StudentRoutes = () => {
   return (
@@ -59,7 +59,9 @@ const StudentRoutes = () => {
       />
       <Route
         path="course/:slug/:id/"
-        element={<ProtectedRoute element={<CourseVideoPlayer />} role="student" />}
+        element={
+          <ProtectedRoute element={<CourseVideoPlayer />} role="student" />
+        }
       />
 
       <Route
