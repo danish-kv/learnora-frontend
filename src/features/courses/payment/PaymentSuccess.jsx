@@ -40,7 +40,7 @@ const PaymentSuccess = () => {
       displayToastAlert(400, "Invalid payment request")
       navigate('/course')
     }
-  },[location]); 
+  },[]); 
 
   return <div>Payment Success</div>;
 };

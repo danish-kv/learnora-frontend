@@ -9,25 +9,27 @@ import CourseDetailsMain from "../components/CourseDetailsMain";
 import { formatDuration } from "../../../utils/formatDuration";
 
 const CourseDetails = () => {
-  const { slug } = useParams()
-  const {courseDetails, error, refetch, loading} = useFetchCourseDetails(slug)
-  if (loading){
-    return <>Loading</>
+  const { slug } = useParams();
+  const { courseDetails, error, refetch, loading } =
+    useFetchCourseDetails(slug);
+  if (loading) {
+    return <>Loading</>;
   }
+
+  console.log('eerroorr',error);
+  
 
   const total_duration = courseDetails?.modules.reduce((total, module) => {
     return total + module.duration;
   }, 0);
-  
-  const time = formatDuration(total_duration)
-  console.log(time);
-  
 
-  console.log('total duration of ',total_duration);
-  
-  const check = courseDetails?.modules.length
+  const time = formatDuration(total_duration);
+  console.log(time);
+
+  console.log("total duration of ", total_duration);
+
+  const check = courseDetails?.modules.length;
   console.log(check);
-  
 
   return (
     <div className="bg-[#f2e9ff]">

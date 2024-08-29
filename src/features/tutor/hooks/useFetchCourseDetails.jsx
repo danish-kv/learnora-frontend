@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchCourseDetails } from "../services/tutorService";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import { useNavigate } from "react-router-dom";
 
 const useFetchCourseDetails = (slug) => {
   const [loading, setLoading] = useState(false);
   const [courseDetails, setCourseDetails] = useState();
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate()
 
   const getCourseDetails = async () => {
     setLoading(true);
@@ -13,8 +17,10 @@ const useFetchCourseDetails = (slug) => {
       setCourseDetails(data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log('errosddddddr',error);
       setError(error);
+      displayToastAlert(404, error.response.data.details)
+      navigate(`/course/`)
     }
   };
   useEffect(() => {

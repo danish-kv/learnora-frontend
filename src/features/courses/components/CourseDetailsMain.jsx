@@ -26,7 +26,7 @@ const CourseDetailsMain = ({ course }) => {
         </Link>
 
         <span className="mx-2">{">"}</span>
-        <Link to="/courses" className="hover:text-gray-700">
+        <Link to="/course" className="hover:text-gray-700">
           Courses
         </Link>
         <span className="mx-2">{">"}</span>

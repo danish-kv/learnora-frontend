@@ -58,7 +58,7 @@ const StudentRoutes = () => {
         element={<ProtectedRoute element={<CourseDetails />} role="student" />}
       />
       <Route
-        path="course/play/:slug"
+        path="course/:slug/:id/"
         element={<ProtectedRoute element={<CourseVideoPlayer />} role="student" />}
       />
 
