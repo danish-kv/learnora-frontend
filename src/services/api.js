@@ -68,7 +68,7 @@ api.interceptors.response.use(
         console.log("refresh token fialed", err);
       }
     }
-    } else if (error.response.status === 403) {
+    } else if (error.response && error.response.status === 403) {
       console.error("403 Forbidden error:", error.response.data?.detail);
       
       displayToastAlert(403,error.response.data?.detail|| 'permission error')

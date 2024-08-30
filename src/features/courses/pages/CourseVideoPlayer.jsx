@@ -25,7 +25,7 @@ const CourseVideoPlayer = () => {
 
   useEffect(() => {
     if(courseDetails && !courseDetails?.progress){
-      navigate('/course/')
+      navigate('/courses/')
     }
   },[])
 

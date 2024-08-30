@@ -23,9 +23,8 @@ const CourseModules = ({ course }) => {
           {expandAll ? "Collapse all sections" : "Expand all sections"}
         </button>
       </div>
-      {/* <p className="text-sm text-gray-500 mb-6">14 lessons • 13 projects • 13 quizzes</p> */}
       <p className="text-sm text-gray-500 mb-6">
-        {Object.keys(course.modules).length} lessons
+      {course.modules.length > 0 ? `${Object.keys(course.modules).length} lessons` : "No modules available"}
       </p>
       {course.modules.map((module, index) => (
         <ModuleItems

@@ -10,7 +10,7 @@ const CourseCard = ({ course }) => {
   }
   const total_duration = course.modules.reduce((total, module) => {
     return total += module.duration
-  }, 0)
+  }, 0) || 0
   const time = formatDuration(total_duration)
 
   return (

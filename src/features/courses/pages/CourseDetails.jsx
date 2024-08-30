@@ -7,14 +7,22 @@ import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
 import { useParams } from "react-router-dom";
 import CourseDetailsMain from "../components/CourseDetailsMain";
 import { formatDuration } from "../../../utils/formatDuration";
+import CourseReview from "../components/CourseReview";
+import CourseDetailTutorData from "../components/CourseDetailTutorData";
 
 const CourseDetails = () => {
   const { slug } = useParams();
   const { courseDetails, error, refetch, loading } =
     useFetchCourseDetails(slug);
-  if (loading) {
-    return <>Loading</>;
-  }
+
+    if (loading) {
+      return (
+        <div >
+          <p>Loading course details...</p>
+        </div>
+      );
+    }
+    
 
   console.log('eerroorr',error);
   
@@ -30,6 +38,11 @@ const CourseDetails = () => {
 
   const check = courseDetails?.modules.length;
   console.log(check);
+
+
+
+
+
 
   return (
     <div className="bg-[#f2e9ff]">
@@ -53,15 +66,13 @@ const CourseDetails = () => {
                   <p className="text-sm font-semibold">Modules</p>
                   <p className="text-sm">{courseDetails?.modules.length}</p>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold">Prerequisites</p>
-                  <p className="text-sm">None</p>
-                </div>
               </div>
             </div>
 
             <CourseDetailsAbout course={courseDetails} />
             <CourseModules course={courseDetails} />
+          <CourseReview reviews = {courseDetails?.reviews} />
+        <CourseDetailTutorData data={courseDetails} />
           </div>
           <CourseDetailsCard course={courseDetails} />
         </div>

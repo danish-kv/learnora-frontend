@@ -23,13 +23,19 @@ export const fetchTutorDetails = async (id) => {
   return res.data;
 };
 
-export const fetchCourses = async () => {
-  const res = await api.get("courses/");
+export const fetchCourses = async (page, category) => {
+  const categoryParams = category ? `&category=${category}` : ''
+  const res = await api.get(`courses/?page=${page}${categoryParams}`);
   return res.data;
 };
 
 
 export const fetchCategory = async () => {
   const res = await api.get('category/')
+  return res.data
+}
+
+export const fetchRequestedCourses = async () => {
+  const res = await api.get('requested-courses/')
   return res.data
 }

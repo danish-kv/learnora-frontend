@@ -9,8 +9,8 @@ const UseFetchCategory = () => {
     try {
       const data = await fetchCategory();
       console.log(data);
-      
-      setCategories(data)
+
+      setCategories(data);
     } catch (error) {
       console.log(error);
       setError(error);
@@ -18,10 +18,10 @@ const UseFetchCategory = () => {
   };
 
   useEffect(() => {
-    getCategory()
+    getCategory();
   }, []);
 
-  return {categories, error,  getCategory}
+  return { categories, error, getCategory };
 };
 
 export default UseFetchCategory;

@@ -38,7 +38,7 @@ const PaymentSuccess = () => {
       confirmCoursePurchase();
     }else{
       displayToastAlert(400, "Invalid payment request")
-      navigate('/course')
+      navigate('/courses')
     }
   },[]); 
 

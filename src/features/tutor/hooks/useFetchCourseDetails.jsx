@@ -20,7 +20,7 @@ const useFetchCourseDetails = (slug) => {
       console.log('errosddddddr',error);
       setError(error);
       displayToastAlert(404, error.response.data.details)
-      navigate(`/course/`)
+      navigate(`/courses/`)
     }
   };
   useEffect(() => {
