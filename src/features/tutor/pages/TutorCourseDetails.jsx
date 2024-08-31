@@ -73,7 +73,7 @@ const TutorCourseDetails = () => {
           </div>
           <div>
             <h3 className="font-semibold text-gray-600">Category</h3>
-            <p>Web Development</p>
+            <p>{courseDetails?.category_data?.name}</p>
           </div>
         </div>
 

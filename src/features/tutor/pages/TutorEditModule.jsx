@@ -51,7 +51,7 @@ const TutorEditModule = () => {
           icon: "success",
           button: "Okay",
         });
-        navigate("/tutor/course");
+        navigate("/tutor/courses");
       }
     } catch (error) {
       console.log(error);

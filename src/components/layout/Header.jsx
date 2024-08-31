@@ -43,7 +43,7 @@ function Header() {
             Home
           </p>
         </Link>
-        <Link to="/course">
+        <Link to="/courses">
           <p className="text-gray-600 hover:text-indigo-600 transition-colors duration-300">
             Courses
           </p>

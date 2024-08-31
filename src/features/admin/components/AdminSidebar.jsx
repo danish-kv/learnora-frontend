@@ -38,7 +38,7 @@ const AdminSidebar = () => {
           </li>
           <li>
             <Link
-              to="/admin/course"
+              to="/admin/courses"
               className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
             >
               Courses

@@ -19,7 +19,7 @@ const TutorSidebar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/tutor/course" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-400">
+              <Link to="/tutor/courses" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-400">
                 My Course
               </Link>
             </li>

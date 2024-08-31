@@ -21,7 +21,6 @@ const authSlice = createSlice({
       state.otp_access = action.payload;
     },
     googleSignin: (state, action) => {
-      print(action.payload);
       state.user = action.payload.user;
       state.role = action.payload.role;
     },

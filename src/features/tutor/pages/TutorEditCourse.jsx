@@ -16,6 +16,8 @@ const TutorEditCourse = () => {
     category: "",
   });
 
+  
+
   const { slug } = useParams();
   console.log(slug);
 
@@ -43,17 +45,20 @@ const TutorEditCourse = () => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(courseData);
+    console.log('course sumbit data',courseData);
 
     const formData = new FormData();
     formData.append("title", courseData.title);
     formData.append("description", courseData.description);
-    formData.append("thumbnail", courseData.thumbnail);
     formData.append("price", courseData.price);
     formData.append("rental_price", courseData.rental_price);
     formData.append("rental_duration", courseData.rental_duration);
     formData.append("category", courseData.category);
+    
+    if(courseData.thumbnail && typeof courseData.thumbnail !== 'string'){
 
+      formData.append("thumbnail", courseData.thumbnail);
+    }
     try {
       const res = await api.put(`courses/${slug}/`, formData, {
         headers: {
@@ -68,7 +73,7 @@ const TutorEditCourse = () => {
           icon: "success",
           button: "Okay",
         });
-        navigate('/tutor/course');
+        navigate('/tutor/courses');
       }
     } catch (error) {
       console.log(error);
@@ -166,6 +171,9 @@ const TutorEditCourse = () => {
                 className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 placeholder="Thumbnail"
               />
+              {courseData.thumbnail && typeof courseData.thumbnail === 'string' && (
+                <p className="mt-2 text-gray-600">Current file: {courseData.thumbnail.split('/').pop()}</p>
+              )}
             </div>
           </div>
 
@@ -226,7 +234,7 @@ const TutorEditCourse = () => {
             type="submit"
             className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
           >
-            Create Course
+            Update Course
           </button>
         </form>
       </div>
