@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchCategory } from "../services/adminService";
 
 const UseFetchCategory = () => {
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
 
   const getCategory = async () => {

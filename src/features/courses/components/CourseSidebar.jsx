@@ -1,11 +1,7 @@
 import React from "react";
 
 const Sidebar = ({ categories, onSelectCategory,selectedCategory }) => {
-  if (!categories  ) {
-    return <p>No categories available</p>;
-  }
-  
-  
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Categories</h2>
