@@ -25,7 +25,8 @@ export const fetchTutorDetails = async (id) => {
 
 export const fetchCourses = async (page, category) => {
   const categoryParams = category ? `&category=${category}` : ''
-  const res = await api.get(`courses/?page=${page}${categoryParams}`);
+  const pageParams = page ? `?page=${page}` : ''
+  const res = await api.get(`courses/${pageParams}${categoryParams}`);
   return res.data;
 };
 

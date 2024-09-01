@@ -28,12 +28,12 @@ const AdminCourse = () => {
   const handleStatus = async (slug, new_status) => {
     console.log(slug, new_status);
     try {
-      res = await api.patch(`courses/${slug}/`, {
+      const res = await api.patch(`courses/${slug}/`, {
         status: new_status,
       });
       console.log(res);
 
-      getCourses();
+      getCourses(page);
     } catch (error) {
       console.log(error);
     }

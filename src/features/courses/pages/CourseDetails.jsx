@@ -15,17 +15,15 @@ const CourseDetails = () => {
   const { courseDetails, error, refetch, loading } =
     useFetchCourseDetails(slug);
 
-    if (loading) {
-      return (
-        <div >
-          <p>Loading course details...</p>
-        </div>
-      );
-    }
-    
+  if (loading) {
+    return (
+      <div>
+        <p>Loading course details...</p>
+      </div>
+    );
+  }
 
-  console.log('eerroorr',error);
-  
+  console.log("eerroorr", error);
 
   const total_duration = courseDetails?.modules.reduce((total, module) => {
     return total + module.duration;
@@ -38,11 +36,6 @@ const CourseDetails = () => {
 
   const check = courseDetails?.modules.length;
   console.log(check);
-
-
-
-
-
 
   return (
     <div className="bg-[#f2e9ff]">
@@ -71,8 +64,8 @@ const CourseDetails = () => {
 
             <CourseDetailsAbout course={courseDetails} />
             <CourseModules course={courseDetails} />
-          <CourseReview reviews = {courseDetails?.reviews} />
-        <CourseDetailTutorData data={courseDetails} />
+            <CourseReview reviews={courseDetails?.reviews} />
+            <CourseDetailTutorData data={courseDetails} />
           </div>
           <CourseDetailsCard course={courseDetails} />
         </div>

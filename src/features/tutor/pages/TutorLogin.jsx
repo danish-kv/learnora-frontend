@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleOtpAccess,
   tutorApplication,
+  tutorApplicationDone,
 } from "../../../redux/slices/authSlice";
 import { Login } from "../../../redux/thunk/authThunks";
 import { jwtDecode } from "jwt-decode";
@@ -83,6 +84,7 @@ const TutorLogin = () => {
           navigate("/tutor/application", { state: { email: formData.email } });
 
         }else if (error.error === "Application status is requested") {
+          dispatch(tutorApplicationDone(true))
           navigate("/tutor/application/done");
           console.log('not accepted applcaitoin');
           

@@ -40,7 +40,7 @@ const CourseCard = ({ course }) => {
             </div>
             <div className="text-right">
               <span className="text-gray-400 line-through text-sm">${course.price}</span>
-              <span className="text-purple-600 font-bold text-lg ml-2">${course.price - 890}</span>
+              <span className="text-purple-600 font-bold text-lg ml-2">${course.price - 159}</span>
               {course.rental_price > 0 && (
                 <div className="text-sm text-blue-500 mt-1">
                   Rental option available

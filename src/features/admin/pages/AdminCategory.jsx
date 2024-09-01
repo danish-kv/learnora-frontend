@@ -20,10 +20,10 @@ const AdminCategory = () => {
 
   const handleCreateCategory = async () => {
     try {
-      res = await api.post("category/", { name: newCategoryName });
+      const res = await api.post("category/", { name: newCategoryName });
       console.log(res);
 
-      toast.success("Category created successfully!");
+      displayToastAlert(200, "Category created successfully!");
       setIsCreateModalOpen(false);
       setNewCategoryName("");
       getCategory();
