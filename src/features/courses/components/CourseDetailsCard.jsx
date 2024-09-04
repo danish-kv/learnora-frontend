@@ -9,7 +9,7 @@ const CourseDetailsCard = ({ course }) => {
   }
   const navigate = useNavigate();
 
-  // Helper function to format date
+  
   const formatDate = (date) => {
     if (!date) return "N/A";
     return formatDistanceToNow(new Date(date), { addSuffix: true });
@@ -50,10 +50,10 @@ const CourseDetailsCard = ({ course }) => {
           <div className="flex justify-between items-center mb-2">
             <div>
               <span className="text-xl font-bold text-gray-800">
-                ${course.price}
+                {course.price}
               </span>
               <span className="text-sm text-gray-500 line-through ml-2">
-                ${course.price + 100}
+                {(course.price * 1.08).toFixed(2) }
               </span>
             </div>
           </div>

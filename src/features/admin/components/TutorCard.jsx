@@ -3,7 +3,6 @@ import React from "react";
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
-  const handleDownloadCv = (file, name) => {};
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer">
@@ -42,11 +41,7 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
           </p>
           <p>
             <span className="font-medium">Courses:</span>{" "}
-            {tutor.students ? tutor.students : "Nill"}
-          </p>
-          <p>
-            <span className="font-medium">Students:</span>{" "}
-            {tutor.students ? tutor.students : "Nill"}
+            {tutor.total_courses ? tutor.total_courses : "Nill"}
           </p>
           <p>
             <span className="font-medium">Registered:</span>{" "}

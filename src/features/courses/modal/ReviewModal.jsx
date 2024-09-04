@@ -32,7 +32,7 @@ const ReviewModal = ({
 
   const handleSubmit = async () => {
     if (!rating || !feedback.trim()) {
-      displayToastAlert(100, "Please provide a rating and write a review");
+      displayToastAlert(300, "Please provide a rating or write a review");
       return;
     }
 

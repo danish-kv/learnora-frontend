@@ -19,6 +19,8 @@ const AdminTutor = () => {
       const res = await api.patch(`tutor/${id}/`, {
         status: newStatus,
       });
+      console.log(res);
+
       displayToastAlert(200, "success");
       refech();
     } catch (error) {
@@ -36,9 +38,17 @@ const AdminTutor = () => {
       const res = await api.patch(`user/${id}/status/`, {
         is_active: !current_status,
       });
+      console.log(res);
       refech();
+
+      if (current_status) {
+        swal("Blocked", "Student Blocked successfully", "success");
+      } else {
+        swal("Unblocked", "Student Unlocked successfully", "success");
+      }
     } catch (error) {
       console.log("error == ", error);
+      swal("Failed", "Please try again later", "error");
     }
   };
 

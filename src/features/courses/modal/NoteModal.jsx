@@ -95,7 +95,7 @@ const NoteModal = ({
             ? `${Math.floor(noteToEdit.timeline / 60)}:${
                 noteToEdit.timeline % 60
               }`
-            : `${Math.floor(currentTime / 60)}:${currentTime % 60}`}
+            : `${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60)}`}
         </p>
 
         <textarea

@@ -46,7 +46,7 @@ const TutorLogin = () => {
       try {
         const res = await dispatch(Login(formData)).unwrap();
         console.log(res);
-        console.log(res.res.access_token);
+        console.log(res.access_token);
         const token = jwtDecode(res.access_token);
         console.log("token ===> ", token);
 
@@ -55,12 +55,10 @@ const TutorLogin = () => {
             await swal("Blocked", "Admin blocked you.", "error");
           } else {
             navigate("/tutor");
-            displayToastAlert(200, "Welcome back Tutor");
+            await swal("Welcome Back!", "Logged in successfully", "success");
           }
         } else {
           console.log("not a tutor");
-
-          // displayToastAlert(400, "Not a Tutor");
         }
       } catch (error) {
         console.log(error);
@@ -82,20 +80,17 @@ const TutorLogin = () => {
           );
           dispatch(tutorApplication(true));
           navigate("/tutor/application", { state: { email: formData.email } });
-
-        }else if (error.error === "Application status is requested") {
-          dispatch(tutorApplicationDone(true))
+        } else if (error.error === "Application status is requested") {
+          dispatch(tutorApplicationDone(true));
           navigate("/tutor/application/done");
-          console.log('not accepted applcaitoin');
-          
-        }else if (error.error === "Application status is rejected") {
+          console.log("not accepted applcaitoin");
+        } else if (error.error === "Application status is rejected") {
           await swal(
             "Application Rejected",
             "Unfortunately, your application has been rejected by the admin.",
             "info"
-        );
-        console.log('Application has been rejected by the admin.');
-          
+          );
+          console.log("Application has been rejected by the admin.");
         }
       }
     } else {
@@ -168,7 +163,6 @@ const TutorLogin = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-             
             >
               {loading ? <LoadingDotStream /> : "Log In"}
             </button>

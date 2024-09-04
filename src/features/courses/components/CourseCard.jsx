@@ -19,7 +19,7 @@ const CourseCard = ({ course }) => {
         <img src={course.thumbnail} alt={course.title} className="w-full h-48 object-cover" />
         <div className="p-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-500">{course.category?.name}</span>
+            <span className="text-sm text-gray-500">{course.category_data?.name}</span>
             <span className="text-sm text-gray-500 flex items-center">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -39,8 +39,8 @@ const CourseCard = ({ course }) => {
               <span className="text-sm text-gray-700">{course.tutor.display_name}</span>
             </div>
             <div className="text-right">
-              <span className="text-gray-400 line-through text-sm">${course.price}</span>
-              <span className="text-purple-600 font-bold text-lg ml-2">${course.price - 159}</span>
+              <span className="text-gray-400 line-through text-sm">${(course.price * 1.08).toFixed(2)}</span>
+              <span className="text-purple-600 font-bold text-lg ml-2">${course.price}</span>
               {course.rental_price > 0 && (
                 <div className="text-sm text-blue-500 mt-1">
                   Rental option available

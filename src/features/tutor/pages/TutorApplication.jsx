@@ -5,7 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { validateTutorApplication } from "../../../utils/validationTutor";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { tutorApplication, tutorApplicationDone } from "../../../redux/slices/authSlice";
+import {
+  tutorApplication,
+  tutorApplicationDone,
+} from "../../../redux/slices/authSlice";
 
 const TutorApplication = () => {
   const [step, setStep] = useState(1);
@@ -65,6 +68,7 @@ const TutorApplication = () => {
 
     try {
       const { isValid, errors } = validateTutorApplication(formData);
+      console.log(errors);
 
       if (isValid) {
         console.log("form submitedd");
@@ -72,18 +76,18 @@ const TutorApplication = () => {
         const res = await api.post("tutor/", newData);
         console.log(res);
         if (res.status === 201) {
-          await displayToastAlert(200, "Account Created Succussfully");
+          await swal("Done!", "Account Created Succussfully", "success");
           dispatch(tutorApplication(false));
           dispatch(tutorApplicationDone(true));
           navigate("/tutor/application/done");
         }
       } else {
         setErrors(errors);
-        displayToastAlert(400, "Please complete your application");
+        await swal("Failed", "Please complete your application", "error");
       }
     } catch (error) {
       console.error("Error creating account", error);
-      await displayToastAlert(
+      displayToastAlert(
         error.response?.status || 500,
         "Failed to create account"
       );
@@ -434,9 +438,9 @@ const TutorApplication = () => {
                                 : "border-gray-300"
                             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
                           />
-                          {errors[`experiences[${index}].position`] && (
+                          {errors[`experiences[${index}].startDate`] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {errors[`experiences[${index}].position`]}
+                              {errors[`experiences[${index}].startDate`]}
                             </p>
                           )}
                         </div>
@@ -461,9 +465,9 @@ const TutorApplication = () => {
                                 : "border-gray-300"
                             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
                           />
-                          {errors[`experiences[${index}].position`] && (
+                          {errors[`experiences[${index}].endDate`] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {errors[`experiences[${index}].position`]}
+                              {errors[`experiences[${index}].endDate`]}
                             </p>
                           )}
                         </div>

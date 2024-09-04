@@ -10,7 +10,7 @@ const TutorEditModule = () => {
     title: "",
     description: "",
     video: "",
-    notes: ""
+    notes: "",
   });
 
   const { id } = useParams();
@@ -31,10 +31,10 @@ const TutorEditModule = () => {
     formData.append("title", module.title);
     formData.append("description", module.description);
 
-    if (module.video) {
+    if (module.video && typeof module.video !== "string") {
       formData.append("video", module.video);
     }
-    if (module.notes) {
+    if (module.notes && typeof module.notes !== "string") {
       formData.append("notes", module.notes);
     }
 
@@ -61,9 +61,9 @@ const TutorEditModule = () => {
 
   const handleModuleChange = (e) => {
     const { name, value, files } = e.target;
-    setModule(prevModule => ({
+    setModule((prevModule) => ({
       ...prevModule,
-      [name]: name === "video" || name === "notes" ? files[0] : value
+      [name]: name === "video" || name === "notes" ? files[0] : value,
     }));
   };
 
@@ -133,6 +133,11 @@ const TutorEditModule = () => {
                     className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                     placeholder="Video URL"
                   />
+                  {module.video && typeof module.video == "string" && (
+                    <p className="mt-2 text-gray-600">
+                      Current file: {module.video.split("/").pop()}
+                    </p>
+                  )}
                 </div>
                 <div className="flex-1">
                   <label
@@ -149,6 +154,11 @@ const TutorEditModule = () => {
                     className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                     placeholder="Study Notes"
                   />
+                  {module.notes && typeof module.notes === "string" && (
+                    <p className="mt-2 text-gray-600">
+                      Current file: {module.notes.split("/").pop()}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

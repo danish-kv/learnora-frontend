@@ -50,8 +50,8 @@ export const login = async ({ email, password, role }) => {
 
       if (status === 401) {
         await swal(
-          "Access Denied",
-          "Your account has been blocked by the admin.",
+          "Wrong credentails",
+          "Data not found given credentails.",
           "info"
         );
       } else if (error.response.data) {

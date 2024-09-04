@@ -108,14 +108,12 @@ function Header() {
                 >
                   Settings
                 </p>
-                <Link to="/logout">
                   <p
                     onClick={handleLogout}
                     className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-b-lg"
                   >
                     Logout
                   </p>
-                </Link>
               </div>
             )}
           </div>

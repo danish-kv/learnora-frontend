@@ -44,7 +44,7 @@ const CourseReview = ({ reviews }) => {
             <div className="flex justify-between items-start">
               <div className="flex items-center">
                 <div className="bg-gray-800 text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-lg">
-                  {review.user.username[0].toUpperCase()}
+                  {review.user?.username[0]?.toUpperCase()}
                 </div>
                 <div className="ml-4">
                   <p className="font-semibold text-lg">

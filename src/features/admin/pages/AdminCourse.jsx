@@ -71,7 +71,7 @@ const AdminCourse = () => {
               </button>
 
               <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white rounded-full text-xs px-2 py-1 font-semibold shadow-lg">
-                {courses?.length}
+                {courses[0]?.requested_course_count}
               </span>
             </Link>
           </div>
