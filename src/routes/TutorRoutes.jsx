@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
+import TutorCategories from "@/features/tutor/pages/TutorCategories";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -110,6 +111,12 @@ const TutorRoutes = () => {
           path="module/edit/:id"
           element={
             <ProtectedRoute element={<TutorEditModule />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute element={<TutorCategories />} role={"tutor"} />
           }
         />
 
