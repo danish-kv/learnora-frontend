@@ -9,29 +9,27 @@ import CourseVideoSidebar from "../components/CourseVideoSidebar";
 import NotesAndReviews from "../components/NotesAndReviews";
 import NoteModal from "../modal/NoteModal";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
+import api from "@/services/api";
 
 const CourseVideoPlayer = () => {
   const { slug, id } = useParams();
-  const { courseDetails, refetch,error } = useFetchCourseDetails(slug);
+  const { courseDetails, refetch, error } = useFetchCourseDetails(slug);
   const [activeModule, setActiveModule] = useState(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewToEdit, setReviewToEdit] = useState(null);
   const [noteToEdit, setNoteToEdit] = useState(null);
+  const [currentTime, setCurrentTime] = useState(0)
+  const [player, setPlayer] = useState(null)
   const navigate = useNavigate();
   console.log(courseDetails?.reviews);
 
-
   useEffect(() => {
-    if(courseDetails && !courseDetails?.progress){
-      navigate('/courses/')
+    if (courseDetails && !courseDetails?.progress) {
+      navigate("/courses/");
     }
-  },[])
-
-
-
-
+  }, []);
 
   useEffect(() => {
     if (courseDetails && courseDetails.modules.length > 0) {
@@ -43,6 +41,8 @@ const CourseVideoPlayer = () => {
   }, [courseDetails, id]);
 
   const handleNotesModal = () => {
+    console.log('hadnle notes clicke');
+    
     setShowNoteModal(true);
   };
 
@@ -51,17 +51,36 @@ const CourseVideoPlayer = () => {
     setShowReviewModal(true);
   };
 
-  const handleModuleClick = (module) => {
+  const handleModuleClick = async (module) => {
     setActiveModule(module);
     navigate(`/course/${slug}/${module.id}`);
+    if (!module.is_watched) {
+      try {
+        const res = await api.patch(`modules/${module.id}/mark-watched/`);
+        console.log(res);
+        console.log('marked as watched');
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }else{
+      console.log('already watched video');
+      
+    }
   };
+
+  const handleProgress = (playTime) => {
+    setCurrentTime(playTime)
+    console.log('playt ime ',playTime);
+    
+  }
 
   return (
     <div>
       <Header />
       <div className="container mx-auto flex justify-between mt-4">
         <div className="flex-grow ml-4">
-          <VideoPlayer url={activeModule ? activeModule.video : null} />
+          <VideoPlayer url={activeModule ? activeModule.video : null} onProgress={handleProgress} />
           <CourseVideoInfo
             courseDetails={courseDetails}
             currentVideo={activeModule}
@@ -99,7 +118,7 @@ const CourseVideoPlayer = () => {
         setShowNoteModal={setShowNoteModal}
         noteToEdit={noteToEdit}
         setNoteToEdit={setNoteToEdit}
-        currentTime={0}
+        currentTime={currentTime}
         data={courseDetails}
         refetch={refetch}
       />

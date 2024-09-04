@@ -1,9 +1,9 @@
 import React from "react";
 import ReactPlayer from "react-player";
 
-const VideoPlayer = ({ url }) => {
+const VideoPlayer = ({ url, onProgress }) => {
   return (
-    <div className="bg-black aspect-video relative">
+    <div className="bg-black aspect-video max-w-4xl relative">
       <ReactPlayer
         url={url}
         className="absolute top-0 left-0 w-full h-full"
@@ -12,6 +12,7 @@ const VideoPlayer = ({ url }) => {
         controls
         volume={1}
         playbackRate={1}
+        onProgress={({ playedSeconds }) => onProgress(playedSeconds)}
         config={{
           youtube: {
             playerVars: { showinfo: 1, modestbranding: 1 },

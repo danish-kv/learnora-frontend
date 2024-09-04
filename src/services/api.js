@@ -32,7 +32,7 @@ const refreshToken = async (refresh) => {
     return res.data.access;
   } catch (error) {
     console.log(error);
-    
+
     throw error;
   }
 };
@@ -42,37 +42,51 @@ api.interceptors.response.use(
   async (error) => {
     console.log("Response error:", error);
 
+    if (error.code === "ERR_NETWORK") {
+      displayToastAlert(400, "Server Error, Please try later");
+    }
     const originalRequest = error.config;
-    displayToastAlert(400, error.response?.data?.error)
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const refresh = localStorage.getItem(REFRESH_TOKEN);
       if (refresh) {
-        console.log('yes its here', refresh);
-        
-        const newAccessToken = await refreshToken(refresh);
-        localStorage.setItem(ACCESS_TOKEN, newAccessToken);
-      
-      try {
         const newAccessToken = await refreshToken(refresh);
         localStorage.setItem(ACCESS_TOKEN, newAccessToken);
 
-        api.defaults.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-
-        return api(originalRequest);
-      } catch (err) {
-        localStorage.clear();
-        console.log("refresh token fialed", err);
+        try {
+          const newAccessToken = await refreshToken(refresh);
+          localStorage.setItem(ACCESS_TOKEN, newAccessToken);
+          api.defaults.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          return api(originalRequest);
+        } catch (err) {
+          localStorage.clear();
+          console.log("refresh token fialed", err);
+          window.location.href ='/login'
+          return Promise.reject(err)
+        }
       }
-    }
     } else if (error.response && error.response.status === 403) {
       console.error("403 Forbidden error:", error.response.data?.detail);
-      
-      displayToastAlert(403,error.response.data?.detail|| 'permission error')
+      displayToastAlert(403, error.response.data?.detail || "permission error");
     }
+    
+    // if (error.response && error.response.data) {
+    //   const errorData = error.response.data;
+    //   Object.keys(errorData).forEach((key) => {
+    //     const messages = errorData[key];
+    //     if (Array.isArray(messages)) {
+    //       messages.forEach((message) => {
+    //         displayToastAlert(400, `${key}: ${message}`);
+    //       });
+    //     } else {
+    //       displayToastAlert(400, `${key}: ${messages}`);
+    //     }
+    //   });
+    // }
+
     return Promise.reject(error);
   }
 );

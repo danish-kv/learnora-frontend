@@ -11,13 +11,12 @@ const TutorCourseDetails = () => {
   const { courseDetails, error, refetch } = useFetchCourseDetails(slug);
   console.log(`course details of ${slug}`, courseDetails);
 
-  const handleDeleteModule = async(id) => {
+  const handleDeleteModule = async (id) => {
     console.log(id);
     try {
-
-      const res = await api.delete(`modules/${id}/`)
+      const res = await api.delete(`modules/${id}/`);
       console.log(res);
-      if(res.status === 204){
+      if (res.status === 204) {
         swal({
           title: "Deleted!",
           text: "Modules have been deleted successfully.",
@@ -25,15 +24,11 @@ const TutorCourseDetails = () => {
           button: "Okay",
         });
       }
-      refetch()
-      
+      refetch();
     } catch (error) {
-      
       console.log(error);
-      
     }
-    
-  }
+  };
 
   return (
     <div className="container mx-auto px-5 py-8">
@@ -69,7 +64,7 @@ const TutorCourseDetails = () => {
           </div>
           <div>
             <h3 className="font-semibold text-gray-600">Rental Duration</h3>
-            <p>{courseDetails?.rental_duration}days</p>
+            <p>{courseDetails?.rental_duration} days</p>
           </div>
           <div>
             <h3 className="font-semibold text-gray-600">Category</h3>
@@ -79,7 +74,13 @@ const TutorCourseDetails = () => {
 
         <div>
           <h3 className="font-semibold text-gray-600 mb-1">Status</h3>
-          <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          <span
+            className={`px-3 py-1 text-xs font-semibold rounded-full ${
+              courseDetails?.status === "Published"
+                ? "bg-green-100 text-green-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
             {courseDetails?.status}
           </span>
         </div>
@@ -109,23 +110,23 @@ const TutorCourseDetails = () => {
                 </span>
               </div>
               <div className="flex items-center">
-                  <Link to={`/tutor/module/edit/${module.id}`}>
-                    <button className="text-gray-600 hover:text-gray-800 mr-2">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                    </button>
+                <Link to={`/tutor/module/edit/${module.id}`}>
+                  <button className="text-gray-600 hover:text-gray-800 mr-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                  </button>
                 </Link>
                 <button
                   className="text-gray-600 hover:text-gray-800"
@@ -212,7 +213,7 @@ const TutorCourseDetails = () => {
                     <span className="font-semibold text-gray-600 mr-2">
                       Views:
                     </span>
-                    <span>100</span>
+                    <span>{module.views_count}</span>
                   </div>
                 </div>
               </div>
