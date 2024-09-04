@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import {
-  FaEdit,
-  FaStar,
-  FaTrash,
-  FaStickyNote,
-  FaUserCircle,
-  FaPlus,
-} from "react-icons/fa";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { FaEdit, FaStar, FaTrash, FaUserCircle, FaPlus } from "react-icons/fa";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -87,7 +75,7 @@ const NotesAndReviews = ({
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-4xl mt-4 p-4 rounded-md">
       <CardHeader>
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Notes & Reviews</h2>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
+import { validateModules } from "@/utils/moduleValidation";
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
@@ -17,6 +18,9 @@ const TutorCreateModule = () => {
 
   const handleModuleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!validateModules(modules)) return;
+
     const modulesData = modules.map((module) => ({
       title: module.title,
       description: module.description,
@@ -157,7 +161,6 @@ const TutorCreateModule = () => {
                       name="video"
                       onChange={(e) => handleModuleChange(index, e)}
                       className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                      placeholder="Video URL"
                     />
                   </div>
                   <div className="flex-1">
@@ -173,7 +176,7 @@ const TutorCreateModule = () => {
                       type="file"
                       onChange={(e) => handleModuleChange(index, e)}
                       className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                      placeholder="Study Notes"
+                  
                     />
                   </div>
                 </div>

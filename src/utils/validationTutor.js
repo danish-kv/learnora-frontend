@@ -109,8 +109,7 @@ export const validateTutorApplication = ({
         isValid = false;
       }
       if (exp.endDate && new Date(exp.endDate) < new Date(exp.startDate)) {
-        errors[`experiences[${index}].endDate`] =
-          "End date cannot be before start date";
+        errors[`experiences[${index}].endDate`] = "End date cannot be before start date";
         isValid = false;
       }
     });
@@ -123,8 +122,7 @@ export const validateTutorApplication = ({
   } else {
     education.forEach((edu, index) => {
       if (!edu.highestQualification.trim()) {
-        errors[`education[${index}].highestQualification`] =
-          "Highest qualification is required";
+        errors[`education[${index}].highestQualification`] = "Highest qualification is required";
         isValid = false;
       }
       if (!edu.institute.trim()) {

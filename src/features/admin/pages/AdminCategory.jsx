@@ -6,11 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import api from "../../../services/api";
 import UseFetchCategory from "../hooks/UseFetchCategory";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
+import { Link } from "react-router-dom";
 
 const AdminCategory = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editingCategoryId, setEditingCategoryId] = useState(null);
 
@@ -19,13 +20,17 @@ const AdminCategory = () => {
   console.log(categories);
 
   const handleCreateCategory = async () => {
+    if (!categoryName.trim()) {
+      displayToastAlert(300, "Category name cannot be empty");
+      return;
+    }
     try {
-      const res = await api.post("category/", { name: newCategoryName });
+      const res = await api.post("category/", { name: categoryName });
       console.log(res);
 
       displayToastAlert(200, "Category created successfully!");
       setIsCreateModalOpen(false);
-      setNewCategoryName("");
+      setCategoryName("");
       getCategory();
     } catch (error) {
       console.log(error);
@@ -37,12 +42,17 @@ const AdminCategory = () => {
   };
 
   const handleEditCategory = async () => {
+    if (!editCategoryName.trim()) {
+      displayToastAlert(300, "Category name cannot be empty");
+      return;
+    }
     try {
-      await api.put(`category/${editingCategoryId}/`, {
+      const res = await api.put(`category/${editingCategoryId}/`, {
         name: editCategoryName,
       });
+      console.log(res);
 
-      toast.success("Category updated successfully!");
+      displayToastAlert(200, "Category updated successfully!");
       setIsEditModalOpen(false);
       setEditCategoryName("");
       getCategory();
@@ -54,7 +64,7 @@ const AdminCategory = () => {
   const handleBlockCategory = async (id, current_status) => {
     try {
       await api.patch(`category/${id}/`, { is_active: !current_status });
-      toast.info("Category blocked!");
+      displayToastAlert(200, "Category blocked!");
       getCategory();
     } catch (error) {
       console.log(error);
@@ -69,48 +79,56 @@ const AdminCategory = () => {
         <div className="p-6 flex flex-col flex-1">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">Categories</h2>
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="bg-blue-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-700 transition duration-200"
-            >
-              Create New Category
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="bg-gray-800 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-950 transition duration-200"
+              >
+                Create
+              </button>
+              <Link to={"/admin/requested-category/"}>
+                <button className="bg-gray-800 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-950 transition duration-200">
+                  Requested
+                </button>
+              </Link>
+            </div>
           </div>
 
           {/* List of Categories */}
           <div className="flex flex-col space-y-4">
-            {categories && categories.map((category) => (
-              <div
-                key={category.id}
-                className="bg-white shadow-md rounded-md p-4 flex justify-between items-center"
-              >
-                <span className="text-gray-700 text-lg">{category.name}</span>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() =>
-                      handleBlockCategory(category.id, category.is_active)
-                    }
-                    className={`${
-                      category.is_active
-                        ? "bg-red-600 hover:bg-red-700"
-                        : "bg-green-600 hover:bg-green-700"
-                    } text-white px-3 py-1 rounded transition duration-200`}
-                  >
-                    {category.is_active ? "Block" : "Unblock"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditCategoryName(category.name);
-                      setEditingCategoryId(category.id);
-                      setIsEditModalOpen(true);
-                    }}
-                    className="bg-gray-200 text-gray-600 px-3 py-1 rounded hover:bg-gray-300 transition duration-200"
-                  >
-                    Edit
-                  </button>
+            {categories &&
+              categories.map((category) => (
+                <div
+                  key={category.id}
+                  className="bg-white shadow-md rounded-md p-4 flex justify-between items-center"
+                >
+                  <span className="text-gray-700 text-lg">{category.name}</span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() =>
+                        handleBlockCategory(category.id, category.is_active)
+                      }
+                      className={`${
+                        category.is_active
+                          ? "bg-red-600 hover:bg-red-700"
+                          : "bg-green-600 hover:bg-green-700"
+                      } text-white px-3 py-1 rounded transition duration-200`}
+                    >
+                      {category.is_active ? "Block" : "Unblock"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditCategoryName(category.name);
+                        setEditingCategoryId(category.id);
+                        setIsEditModalOpen(true);
+                      }}
+                      className="bg-gray-200 text-gray-600 px-3 py-1 rounded hover:bg-gray-300 transition duration-200"
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
@@ -118,12 +136,15 @@ const AdminCategory = () => {
         {isCreateModalOpen && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-sm">
-              <h3 className="text-lg font-semibold mb-4">Create New Category</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Create New Category
+              </h3>
               <input
                 type="text"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
                 placeholder="Category Name"
+                required
                 className="w-full p-2 border border-gray-300 rounded mb-4"
               />
               <div className="flex justify-end space-x-2">
@@ -155,6 +176,7 @@ const AdminCategory = () => {
                 value={editCategoryName}
                 onChange={(e) => setEditCategoryName(e.target.value)}
                 placeholder="Category Name"
+                required
                 className="w-full p-2 border border-gray-300 rounded mb-4"
               />
               <div className="flex justify-end space-x-2">

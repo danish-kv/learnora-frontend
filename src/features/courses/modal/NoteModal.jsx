@@ -22,6 +22,13 @@ const NoteModal = ({
 
   const handleSubmit = async () => {
     console.log(notes);
+
+    if (!notes.trim()){
+      displayToastAlert(300, 'Note content cannot be empty')
+      return
+    }
+
+    
     try {
       if (noteToEdit) {
         const res = await api.patch(`notes/${noteToEdit.id}/`, {

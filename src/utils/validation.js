@@ -1,4 +1,4 @@
-// /src/utils/validation.js
+
 
 export const validateRegistration = ({ username, email, password }) => {
     let errors = {};
