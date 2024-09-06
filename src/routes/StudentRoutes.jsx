@@ -5,9 +5,7 @@ import RegisterPage from "../features/auth/pages/RegisterPage";
 import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
 import StudentProfile from "@/features/profile/student/pages/StudentProfile";
-import EditProfile from "@/features/profile/student/components/EditProfile";
-import ChangePassword from "@/features/profile/student/components/ChangePassword";
-import SavedNotes from "@/features/profile/student/components/SavedNotes";
+import DiscussionPage from "@/features/discussion/pages/DiscussionPage";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -104,6 +102,12 @@ const StudentRoutes = () => {
           path="/payment_failed"
           element={
             <ProtectedRoute element={<PaymentFailed />} role={"student"} />
+          }
+        />
+        <Route
+          path="/discussion"
+          element={
+            <ProtectedRoute element={<DiscussionPage />} role={"student"} />
           }
         />
 
