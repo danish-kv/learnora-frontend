@@ -26,7 +26,7 @@ const CommentForm = ({discussion}) => {
       />
       <button
         onClick={handleSubmit}
-        className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+        className="mt-2 bg-indigo-500 text-white px-4 py-1 rounded hover:bg-indigo-600"
       >
         Post Comment
       </button>

@@ -5,10 +5,13 @@ import CreateDiscussionModal from "../components/CreateDiscussionModal";
 import UseFetchDiscussion from "../hooks/UseFetchDiscussion";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import Swal from "sweetalert2";
 
 const DiscussionPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
+
+  const [editDiscussion, setEditDiscussion] = useState(null);
 
   const { discussions, errors, loading, getDiscussion } = UseFetchDiscussion();
   console.log("data =========", discussions);
@@ -43,7 +46,7 @@ const DiscussionPage = () => {
       const res = await api.post(`discussion/${id}/upvote/`);
       console.log(res);
       displayToastAlert(200, "Liked");
-      getDiscussion()
+      getDiscussion();
     } catch (error) {
       console.log(error);
       displayToastAlert(400, "facing some problem");
@@ -54,12 +57,41 @@ const DiscussionPage = () => {
     try {
       const res = await api.post(`discussion/${id}/downvote/`);
       console.log(res);
-      displayToastAlert(200, "Liked");
+      displayToastAlert(200, "Unliked");
+      getDiscussion();
     } catch (error) {
       console.log(error);
       displayToastAlert(400, "facing some problem");
     }
   };
+
+  const handleDeleteDiscussion = async (discussion_id) => {
+    const result = await Swal.fire({
+      title: "Are You sure",
+      text: "you don't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await api.delete(`discussion/${discussion_id}/`);
+        displayToastAlert(200, "Discussion deleted succussfully");
+        getDiscussion();
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+        displayToastAlert(400, "Failed to delete discussion");
+      }
+    }
+  };
+
+  const handleEditDiscussion = (discussion) => {
+    setEditDiscussion(discussion)
+    toggleCreateForm()
+
+  }
 
   return (
     <div>
@@ -71,7 +103,7 @@ const DiscussionPage = () => {
           </h1>
           <button
             onClick={toggleCreateForm}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
           >
             New Discussion
           </button>
@@ -86,11 +118,23 @@ const DiscussionPage = () => {
             expanded={expandedComments[discussion.id]}
             onDownvote={handleDownVote}
             onUpvote={handleUpVote}
+            onDelete={handleDeleteDiscussion}
+            onEdit={handleEditDiscussion}
           />
         ))}
       </div>
 
-      <CreateDiscussionModal show={showCreateForm} onClose={toggleCreateForm} />
+      <CreateDiscussionModal
+        show={showCreateForm}
+        getDiscussion={getDiscussion}
+        onClose={() => {
+          setEditDiscussion(null);
+          toggleCreateForm();
+        }
+      }
+      discussion = {editDiscussion}
+      isEditing={!!editDiscussion}
+      />
     </div>
   );
 };

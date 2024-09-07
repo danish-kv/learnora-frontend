@@ -32,7 +32,7 @@ const DiscussionComment = ({ comment, onReply }) => {
         <p className="mt-1">{comment?.comment}</p>
         <button
           onClick={() => setShowReplyForm(!showReplyForm)}
-          className="text-blue-500 text-sm mt-2"
+          className="text-indigo-500 text-sm mt-2"
         >
           Reply
         </button>
@@ -47,7 +47,7 @@ const DiscussionComment = ({ comment, onReply }) => {
             />
             <button
               onClick={handleReply}
-              className="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+              className="mt-2 bg-indigo-500 text-white px-4 py-1 rounded hover:bg-indigo-600"
             >
               Post Reply
             </button>
