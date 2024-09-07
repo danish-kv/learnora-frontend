@@ -7,11 +7,10 @@ import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const DiscussionPage = () => {
-  
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
 
-  const { discussions, errors, loading,getDiscussion } = UseFetchDiscussion();
+  const { discussions, errors, loading, getDiscussion } = UseFetchDiscussion();
   console.log("data =========", discussions);
 
   const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
@@ -27,15 +26,38 @@ const DiscussionPage = () => {
 
     try {
       const res = await api.post(`comment/`, {
-        discussion : discussionId,
+        discussion: discussionId,
         comment: replyContent,
-        parent : commentId
+        parent: commentId,
       });
       console.log(res);
-      getDiscussion()
-      displayToastAlert(200, 'Comment added succussfully')
+      getDiscussion();
+      displayToastAlert(200, "Comment added succussfully");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleUpVote = async (id) => {
+    try {
+      const res = await api.post(`discussion/${id}/upvote/`);
+      console.log(res);
+      displayToastAlert(200, "Liked");
+      getDiscussion()
+    } catch (error) {
+      console.log(error);
+      displayToastAlert(400, "facing some problem");
+    }
+  };
+
+  const handleDownVote = async (id) => {
+    try {
+      const res = await api.post(`discussion/${id}/downvote/`);
+      console.log(res);
+      displayToastAlert(200, "Liked");
+    } catch (error) {
+      console.log(error);
+      displayToastAlert(400, "facing some problem");
     }
   };
 
@@ -62,6 +84,8 @@ const DiscussionPage = () => {
             onReply={handleReply}
             toggleComments={toggleComments}
             expanded={expandedComments[discussion.id]}
+            onDownvote={handleDownVote}
+            onUpvote={handleUpVote}
           />
         ))}
       </div>
