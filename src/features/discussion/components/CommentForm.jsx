@@ -1,14 +1,24 @@
 import { Textarea } from "@/components/ui/textarea";
 import api from "@/services/api";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 import React, { useState } from "react";
 
-const CommentForm = ({discussion}) => {
+const CommentForm = ({ discussion, getDiscussion }) => {
   const [content, setContent] = useState("");
 
   const handleSubmit = async () => {
+    if (!content.trim()) {
+      displayToastAlert(400, "Please type something...");
+      return;
+    }
     try {
-      const res = await api.post("comment/", { discussion : discussion.id ,comment : content});
-      console.log(res);      
+      const res = await api.post("comment/", {
+        discussion: discussion.id,
+        comment: content,
+      });
+      setContent("");
+      getDiscussion();
+      console.log(res);
       console.log(discussion.id);
     } catch (error) {
       console.log(error);

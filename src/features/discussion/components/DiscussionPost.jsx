@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/tooltip";
 import CommentForm from "./CommentForm";
 import DiscussionComment from "./DiscussionComment";
+import api from "@/services/api";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const DiscussionPost = ({
   discussion,
@@ -26,6 +28,7 @@ const DiscussionPost = ({
   onDownvote,
   onEdit,
   onDelete,
+  getDiscussion,
 }) => {
   if (!discussion) {
     return (
@@ -55,6 +58,30 @@ const DiscussionPost = ({
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const handleUpdateCommet = async (id, editedcomment) => {
+    console.log("edit comment ==== ", id, comment);
+    try {
+      const res = await api.patch(`comment/${id}/`, { comment: editedcomment });
+      getDiscussion();
+      displayToastAlert(200, "comment updated succussfuly");
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      displayToastAlert(400, "comment delete Failed");
+    }
+  };
+
+  const handleDeleteComment = async (comment_id) => {
+    console.log(comment_id);
+    try {
+      const res = await api.delete(`comment/${comment_id}/`);
+      getDiscussion();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -189,6 +216,8 @@ const DiscussionPost = ({
               <DiscussionComment
                 key={comment.id}
                 comment={comment}
+                onDelete={handleDeleteComment}
+                onUpdate={handleUpdateCommet}
                 onReply={(commentId, replyContent) =>
                   onReply(id, commentId, replyContent)
                 }
@@ -199,7 +228,7 @@ const DiscussionPost = ({
               No comments yet. Be the first to comment!
             </p>
           )}
-          <CommentForm discussion={discussion} />
+          <CommentForm discussion={discussion} getDiscussion={getDiscussion} />
         </CardContent>
       )}
     </Card>

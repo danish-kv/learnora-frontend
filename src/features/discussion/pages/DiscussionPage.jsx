@@ -88,10 +88,10 @@ const DiscussionPage = () => {
   };
 
   const handleEditDiscussion = (discussion) => {
-    setEditDiscussion(discussion)
-    toggleCreateForm()
+    setEditDiscussion(discussion);
+    toggleCreateForm();
+  };
 
-  }
 
   return (
     <div>
@@ -120,6 +120,7 @@ const DiscussionPage = () => {
             onUpvote={handleUpVote}
             onDelete={handleDeleteDiscussion}
             onEdit={handleEditDiscussion}
+            getDiscussion={getDiscussion}
           />
         ))}
       </div>
@@ -130,10 +131,9 @@ const DiscussionPage = () => {
         onClose={() => {
           setEditDiscussion(null);
           toggleCreateForm();
-        }
-      }
-      discussion = {editDiscussion}
-      isEditing={!!editDiscussion}
+        }}
+        discussion={editDiscussion}
+        isEditing={!!editDiscussion}
       />
     </div>
   );
