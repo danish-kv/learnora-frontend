@@ -6,7 +6,7 @@ import CourseDetailsAbout from "../components/CourseDetailsAbout";
 import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
 import { useParams } from "react-router-dom";
 import CourseDetailsMain from "../components/CourseDetailsMain";
-import { formatDuration } from "../../../utils/formatDuration";
+import { formatDuration } from "../../../utils/format";
 import CourseReview from "../components/CourseReview";
 import CourseDetailTutorData from "../components/CourseDetailTutorData";
 

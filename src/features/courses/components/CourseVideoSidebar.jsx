@@ -7,7 +7,7 @@ import {
   FaTimes,
   FaBars,
 } from "react-icons/fa";
-import { formatDuration } from "../../../utils/formatDuration";
+import { formatDuration } from "../../../utils/format";
 
 const CourseVideoSidebar = ({
   modules,

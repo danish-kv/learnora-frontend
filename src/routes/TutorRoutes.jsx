@@ -4,6 +4,7 @@ import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import TutorCategories from "@/features/tutor/pages/TutorCategories";
+import LoadingDotStream from "@/components/common/Loading";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -38,7 +39,7 @@ const TutorEditModule = lazy(() =>
 
 const TutorRoutes = () => {
   return (
-    <Suspense fallback={<div>wait its cooming</div>}>
+    <Suspense fallback={<LoadingDotStream />}>
       <Routes>
         <Route
           path="register"

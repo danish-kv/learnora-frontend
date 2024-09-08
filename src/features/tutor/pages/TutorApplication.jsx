@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../../../components/layout/Header";
 import api from "../../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
-import { validateTutorApplication } from "../../../utils/validationTutor";
+import { validateTutorApplication } from "../../../utils/validation";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
 import {

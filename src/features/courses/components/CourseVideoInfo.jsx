@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaHeart, FaBook, FaRegHeart } from "react-icons/fa";
-import { formatDuration } from "../../../utils/formatDuration";
+import { formatDuration } from "../../../utils/format";
 import { useParams } from "react-router-dom";
 import api from "../../../services/api";
 

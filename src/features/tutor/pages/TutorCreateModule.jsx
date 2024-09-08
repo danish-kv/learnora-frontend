@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
-import { validateModules } from "@/utils/moduleValidation";
+import { validateModules } from "@/utils/validation"; 
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([

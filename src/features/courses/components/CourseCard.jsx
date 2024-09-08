@@ -1,7 +1,7 @@
 import { coreModule } from '@reduxjs/toolkit/query';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDuration } from '../../../utils/formatDuration';
+import { formatDuration } from '../../../utils/format';
 
 const CourseCard = ({ course }) => {
   if (!course) {

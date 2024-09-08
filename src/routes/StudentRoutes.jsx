@@ -6,6 +6,8 @@ import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
 import StudentProfile from "@/features/profile/student/pages/StudentProfile";
 import DiscussionPage from "@/features/discussion/pages/DiscussionPage";
+import LoadingDotStream from "@/components/common/Loading";
+import ContestPage from "@/features/contest/page/ContestPage";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -34,7 +36,7 @@ const CourseVideoPlayer = lazy(() =>
 
 const StudentRoutes = () => {
   return (
-    <Suspense fallback={<div>wait bro</div>}>
+    <Suspense fallback={<LoadingDotStream />}>
       <Routes>
         <Route
           path="register"
@@ -108,6 +110,12 @@ const StudentRoutes = () => {
           path="/discussion"
           element={
             <ProtectedRoute element={<DiscussionPage />} role={"student"} />
+          }
+        />
+        <Route
+          path="/contest"
+          element={
+            <ProtectedRoute element={<ContestPage />} role={"student"} />
           }
         />
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../../redux/thunk/authThunks";
-import { capitalizeFirstLetter } from "../../utils/capitalize";
+import { capitalizeFirstLetter } from "../../utils/format";
 import { jwtDecode } from "jwt-decode";
 
 function Header() {

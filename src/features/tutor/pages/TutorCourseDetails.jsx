@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import useFetchCourseDetails from "../hooks/useFetchCourseDetails";
 import api from "../../../services/api";
-import { formatDuration } from "../../../utils/formatDuration";
+import { formatDuration } from "../../../utils/format";
 const TutorCourseDetails = () => {
   const [expandedModule, setExpandedModule] = useState(null);
   const { slug } = useParams();

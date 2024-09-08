@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
-import { formatDuration } from "../../../utils/formatDuration";
+import { formatDuration } from "../../../utils/format";
 
 const AdminCourseDetails = () => {
   const [expandedModule, setExpandedModule] = useState(null);
