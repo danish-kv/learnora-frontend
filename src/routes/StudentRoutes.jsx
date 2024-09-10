@@ -4,8 +4,6 @@ import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
 import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
-import StudentProfile from "@/features/profile/student/pages/StudentProfile";
-import DiscussionPage from "@/features/discussion/pages/DiscussionPage";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -31,6 +29,22 @@ const PaymentFailed = lazy(() =>
 const CourseVideoPlayer = lazy(() =>
   import("../features/courses/pages/CourseVideoPlayer")
 );
+
+const StudentProfile = lazy(() =>
+  import("@/features/profile/student/pages/StudentProfile")
+);
+const DiscussionPage = lazy(() =>
+  import("@/features/discussion/pages/DiscussionPage")
+);
+const ContestPage = lazy(() => import("@/features/contest/page/ContestPage"));
+const ContestDetailsPage = lazy(() =>
+  import("@/features/contest/page/ContestDetailsPage")
+);
+const ContestParticipatePage = lazy(() =>
+  import("@/features/contest/page/ContestParticipatePage")
+);
+
+
 
 const StudentRoutes = () => {
   return (
@@ -108,6 +122,27 @@ const StudentRoutes = () => {
           path="/discussion"
           element={
             <ProtectedRoute element={<DiscussionPage />} role={"student"} />
+          }
+        />
+        <Route
+          path="/contest"
+          element={
+            <ProtectedRoute element={<ContestPage />} role={"student"} />
+          }
+        />
+        <Route
+          path="/contest/:id"
+          element={
+            <ProtectedRoute element={<ContestDetailsPage />} role={"student"} />
+          }
+        />
+        <Route
+          path="/contest/:id/participate/"
+          element={
+            <ProtectedRoute
+              element={<ContestParticipatePage />}
+              role={"student"}
+            />
           }
         />
 
