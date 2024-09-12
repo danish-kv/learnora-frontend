@@ -3,7 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
-import TutorCategories from "@/features/tutor/pages/TutorCategories";
+import TutorCreateQuestion from "@/features/tutor/pages/contest/TutorCreateQuestion";
+import TutorContestDetails from "@/features/tutor/pages/contest/TutorContestDetails";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -35,6 +36,15 @@ const TutorCreateModule = lazy(() =>
 const TutorEditModule = lazy(() =>
   import("../features/tutor/pages/TutorEditModule")
 );
+const TutorCategories = lazy(() =>
+  import("../features/tutor/pages/TutorCategories")
+);
+const TutorContest = lazy(() => import("../features/tutor/pages/contest/TutorContest"));
+const TutorCreateContest = lazy(() =>
+  import("../features/tutor/pages/contest/TutorCreateContest")
+);
+
+
 
 const TutorRoutes = () => {
   return (
@@ -117,6 +127,28 @@ const TutorRoutes = () => {
           path="/categories"
           element={
             <ProtectedRoute element={<TutorCategories />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/contest"
+          element={<ProtectedRoute element={<TutorContest />} role={"tutor"} />}
+        />
+        <Route
+          path="/contest/create"
+          element={
+            <ProtectedRoute element={<TutorCreateContest />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/contest/questions/create/:id"
+          element={
+            <ProtectedRoute element={<TutorCreateQuestion />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/contest/:id"
+          element={
+            <ProtectedRoute element={<TutorContestDetails />} role={"tutor"} />
           }
         />
 

@@ -1,41 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { Clock } from "lucide-react";
 import Header from "@/components/layout/Header";
 import useFetchContestDetails from "@/features/tutor/hooks/useFetchContestDetails";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api";
 import Swal from "sweetalert2";
-import CountdownTimer from "../components/CountDownTimer";
 
 const ContestParticipatePage = () => {
-  const [timeRemaining, setTimeRemaining] = useState(5340); // 1 hour, 29 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(null); // 1 hour, 29 minutes in seconds
   const [currentQuestion, setCurrentQuestion] = useState(0); // Start with the first question (index 0)
   const [selectedOption, setSelectedOption] = useState(null);
   const [submittedQuestions, setSubmittedQuestions] = useState([]);
+  const [failedToSubmit, setFailedToSubmit] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { contestDetails, error, loading } = useFetchContestDetails(id);
 
-  if (
-    !contestDetails ||
-    !contestDetails.questions ||
-    contestDetails.questions.length === 0
-  ) {
-    return <p>No questions available for this contest.</p>;
-  }
+  useEffect(() => {
+    if ( contestDetails.is_participated) {
+      navigate(`/contest/${id}`);
+    }
+  }, [id, contestDetails]);
 
-  const totalQuestions = contestDetails.questions.length;
-  const currentQuestionData = contestDetails.questions[currentQuestion];
-
-  
   const handleOptionSelect = (optionID) => {
     console.log("selected option ==", optionID);
 
     setSelectedOption(optionID);
     console.log(selectedOption);
+  };
+
+  const parseTimeLimit = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const submitAnswer = async (questionID, optionID) => {
@@ -49,18 +57,17 @@ const ContestParticipatePage = () => {
       setSubmittedQuestions((prev) => [...prev, questionID]);
     } catch (error) {
       console.log(error.response.data);
-      const info = error.response.data.info;
-      await swal("Oops", `${info ? info : "Failed to Submit"}`, "warning");
+      if (error.response.status === 307) {
+        console.log("time over");
+        await Swal.fire("Time up!", "Your time has already exceeded", "info");
+        handleFinish(true);
+        navigate(`/contest/${id}`);
+        return;
+      }
+      const info = error.response?.data?.info || "Failed to Submit";
+      await swal("Oops", info, "warning");
+      setFailedToSubmit((prev) => [...prev, questionID]);
     }
-  };
-
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleNextQuestion = async () => {
@@ -72,7 +79,6 @@ const ContestParticipatePage = () => {
         "warning"
       );
     } else {
-      submitAnswer(currentQuestionData.id, selectedOption);
       if (currentQuestion === totalQuestions - 1) {
         try {
           const res = await api.post("answer-submission/stop_or_complete/", {
@@ -89,9 +95,9 @@ const ContestParticipatePage = () => {
           );
           console.log(error);
         }
-      }
-      setSelectedOption(null);
-      if (currentQuestion < totalQuestions - 1) {
+      } else {
+        await submitAnswer(currentQuestionData.id, selectedOption);
+        setSelectedOption(null);
         setCurrentQuestion((prev) => prev + 1);
       }
     }
@@ -103,40 +109,76 @@ const ContestParticipatePage = () => {
     }
   };
 
-  const handleFinish = async () => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You haven't completed all the questions. Do you really want to finish the contest?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, finish it!",
-      cancelButtonText: "No, continue",
-    });
-
-    if (result.isConfirmed) {
-      try {
-        const res = await api.post("answer-submission/stop_or_complete/", {
-          participant_id: contestDetails.participant_id,
+  const handleFinish = useCallback(
+    async (TimeUP) => {
+      if (!TimeUP) {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You haven't completed all the questions. Do you really want to finish the contest?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, finish it!",
+          cancelButtonText: "No, continue",
         });
-        await Swal.fire(
-          "Finished!",
-          "Your contest has been submitted.",
-          "success"
-        );
-        navigate(`/contest/${id}`);
-        console.log(res);
-      } catch (error) {
-        await Swal.fire(
-          "Oops!",
-          "Something went wrong while finishing the contest.",
-          "error"
-        );
-        console.log(error);
+
+        if (result.isConfirmed) {
+        }
+        try {
+          const res = await api.post("answer-submission/stop_or_complete/", {
+            participant_id: contestDetails.participant_id,
+          });
+          await Swal.fire(
+            "Finished!",
+            "Your contest has been submitted.",
+            "success"
+          );
+          navigate(`/contest/${id}`);
+          console.log(res);
+        } catch (error) {
+          await Swal.fire(
+            "Oops!",
+            "Something went wrong while finishing the contest.",
+            "error"
+          );
+          console.log(error);
+        }
       }
+    },
+    [contestDetails, id, navigate]
+  );
+
+  useEffect(() => {
+    if (contestDetails && contestDetails.time_limit) {
+      const totalSeconds = parseTimeLimit(contestDetails.time_limit);
+      const endTime = Date.now() + totalSeconds * 1000;
+
+      const timer = setInterval(() => {
+        const now = Date.now();
+        const diff = Math.max(0, Math.floor((endTime - now) / 1000));
+
+        setTimeRemaining(diff);
+
+        if (diff <= 0) {
+          clearInterval(timer);
+          handleFinish(true);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
     }
-  };
+  }, [contestDetails, handleFinish]);
+
+  if (
+    !contestDetails ||
+    !contestDetails.questions ||
+    contestDetails.questions.length === 0
+  ) {
+    return <p>No questions available for this contest.</p>;
+  }
+
+  const totalQuestions = contestDetails.questions.length;
+  const currentQuestionData = contestDetails.questions[currentQuestion];
 
   console.log("current :", currentQuestion, "toal qeustion :", totalQuestions);
   return (
@@ -147,12 +189,11 @@ const ContestParticipatePage = () => {
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center space-x-2 text-gray-600">
               <Clock size={20} />
-              <CountdownTimer timeLimit={contestDetails.time_limit} />
 
-              {/* <span className="text-lg">{formatTime(timeRemaining)}</span> */}
+              <span className="text-lg">{formatTime(timeRemaining)}</span>
             </div>
             <button
-              onClick={handleFinish}
+              onClick={() => handleFinish(false)}
               className="bg-indigo-700 text-white px-4 py-2 rounded-md hover:bg-indigo-800 transition-colors text-sm"
             >
               Finish
@@ -195,7 +236,7 @@ const ContestParticipatePage = () => {
               <button
                 onClick={handlePrevQuestion}
                 className={`bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm  opacity-50`}
-                disabled={true}
+                disabled={failedToSubmit.includes(currentQuestion - 2)}
               >
                 Prev
               </button>
@@ -219,7 +260,7 @@ const ContestParticipatePage = () => {
                   currentQuestion === totalQuestions - 1 &&
                   "bg-indigo-300 text-stone-50"
                 }`}
-                disabled={currentQuestion === totalQuestions}
+                disabled={currentQuestion >= totalQuestions - 1}
               >
                 {currentQuestion === totalQuestions - 1 ? "Done" : "Next"}
               </button>

@@ -12,11 +12,9 @@ const ContestDetailsPage = () => {
   const navigate = useNavigate();
   const { contestDetails, error, loading } = useFetchContestDetails(id);
 
-  const mockParticipants = [
-    { username: "JohnDoe", score: 85, rank: 1 },
-    { username: "JaneSmith", score: 75, rank: 2 },
-    { username: "SamWilson", score: 65, rank: 3 },
-  ];
+  if (!contestDetails | (contestDetails.length == 0)) {
+    return;
+  }
 
   const handleParticipate = async () => {
     try {
@@ -28,7 +26,7 @@ const ContestDetailsPage = () => {
       }
     } catch (error) {
       console.log(error);
-      if (error.response.status === 400) {
+      if (error.response?.status === 400) {
         displayToastAlert(400, error.response.data.error);
       }
     }
@@ -97,19 +95,20 @@ const ContestDetailsPage = () => {
                   Top Participants
                 </h2>
                 <div className="bg-indigo-50 rounded-lg p-4">
-                  {mockParticipants.map((participant, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center mb-2 last:mb-0"
-                    >
-                      <span className="font-semibold">
-                        {participant.rank}. {participant.username}
-                      </span>
-                      <span className="bg-indigo-200 text-indigo-800 px-2 py-1 rounded">
-                        {participant.score} points
-                      </span>
-                    </div>
-                  ))}
+                  {contestDetails &&
+                    contestDetails?.leaderboard.map((participant, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center mb-2 last:mb-0"
+                      >
+                        <span className="font-semibold">
+                          {participant.rank}. {participant?.user?.username}
+                        </span>
+                        <span className="bg-indigo-200 text-indigo-800 px-2 py-1 rounded">
+                          {participant.score} points
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </div>
 
@@ -117,9 +116,14 @@ const ContestDetailsPage = () => {
                 contestDetails.status === "ongoing") && (
                 <button
                   onClick={handleParticipate}
-                  className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1"
+                  disabled={contestDetails.is_participated}
+                  className={`w-full ${
+                    contestDetails.is_participated && "opacity-70"
+                  } bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1`}
                 >
-                  Participate Now
+                  {contestDetails.is_participated
+                    ? "Completed"
+                    : "Participate Now"}
                 </button>
               )}
             </div>

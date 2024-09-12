@@ -12,63 +12,64 @@ const TutorCreateQuestion = () => {
   const [errors, setErrors] = useState({});
 
   const { id } = useParams();
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   const handleAddOption = () => {
-    setOptions([...options, { option_text: "", is_correct: false }]);
+    if(options.length < 4){
+
+      setOptions([...options, { option_text: "", is_correct: false }]);
+    }
   };
 
-//   const validateForm = () => {
-//     let formErrors = {};
+  const validateForm = () => {
+    let formErrors = {};
 
-//     // Check if question text is empty
-//     if (questionText.trim() === "") {
-//       formErrors.questionText = "Question text is required";
-//     }
+    //     // Check if question text is empty
+    if (questionText.trim() === "") {
+      formErrors.questionText = "Question text is required";
+    }
 
-//     // Validate options
-//     const optionErrors = options.map((option, index) => {
-//       if (option.option_text.trim() === "") {
-//         return `Option ${String.fromCharCode(65 + index)} is required`;
-//       }
-//       return null;
-//     });
+    //     // Validate options
+    //     const optionErrors = options.map((option, index) => {
+    //       if (option.option_text.trim() === "") {
+    //         return `Option ${String.fromCharCode(65 + index)} is required`;
+    //       }
+    //       return null;
+    //     });
 
-//     // If no options provided, add error
-//     if (options.length === 0) {
-//       formErrors.options = ["At least one option must be provided"];
-//     } else {
-//       formErrors.options = optionErrors.filter((err) => err !== null);
-//     }
+    //     // If no options provided, add error
+    //     if (options.length === 0) {
+    //       formErrors.options = ["At least one option must be provided"];
+    //     } else {
+    //       formErrors.options = optionErrors.filter((err) => err !== null);
+    //     }
 
-//     // Ensure at least one option is marked as correct
-//     if (!options.some((option) => option.is_correct)) {
-//       formErrors.correctOption =
-//         "At least one option must be marked as correct";
-//     }
+    //     // Ensure at least one option is marked as correct
+    if (!options.some((option) => option.is_correct)) {
+      formErrors.correctOption =
+        "At least one option must be marked as correct";
+    }
 
-//     return formErrors;
-//   };
+    return formErrors;
+  };
 
   const handleOnSubmit = async (e, actionType) => {
     e.preventDefault();
     console.log("buttoons clicked");
     console.log(questionText);
     console.log(options);
-    
 
-    // const formErrors = validateForm();
-    // setErrors(formErrors);
+    const formErrors = validateForm();
+    setErrors(formErrors);
     // console.log("validation completed");
     // console.log(Object.keys(formErrors).length);
     // console.log(formErrors);
     // console.log(Object.keys(formErrors).length);
 
-    // if (Object.keys(formErrors).length > 0) {
-    //   console.log("problems in if conditions");
-    //   return;
-    // }
+    if (Object.keys(formErrors).length > 0) {
+      console.log("problems in if conditions");
+      return;
+    }
 
     // options.forEach((option, index) => {
     //   formData.append(`options[${index}].option_text`, option.option_text);
@@ -76,18 +77,18 @@ const TutorCreateQuestion = () => {
     // });
 
     const payLoad = {
-        question_text : questionText,
-        contest : id,
-        options : options
-    }
-
+      question_text: questionText,
+      contest: id,
+      options: options,
+    };
+    console.log(payLoad);
 
     console.log("final thired");
     try {
-      const res = await api.post("question/", payLoad,{
-        headers :{
-            "Content-Type" : 'application/json'
-        }
+      const res = await api.post("question/", payLoad, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       if (res.status === 201) {
         displayToastAlert(200, "Question created successfully!");
@@ -95,13 +96,23 @@ const TutorCreateQuestion = () => {
           setQuestionText("");
           setOptions([{ option_text: "", is_correct: false }]);
         } else if (actionType === "finish") {
-          await swal("success", "Contest Question creation completed", "success");
-          navigate('/tutor/contest/')
+          await swal(
+            "success",
+            "Contest Question creation completed",
+            "success"
+          );
+          navigate("/tutor/contest/");
         }
       }
     } catch (error) {
       console.error(error);
-      displayToastAlert(400, "Error creating question");
+      if (error.response && error.response.data) {
+        Object.keys(error.response.data).forEach((key) => {
+          displayToastAlert(400, `${key} : ${error.response.data[key]}`);
+        });
+      } else {
+        displayToastAlert(400, "Error creating question");
+      }
     }
   };
 
