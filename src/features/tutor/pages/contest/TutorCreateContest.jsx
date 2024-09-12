@@ -7,13 +7,14 @@ import UseFetchCategory from "@/features/admin/hooks/UseFetchCategory";
 import LoadingDotStream from "@/components/common/Loading";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import { formatDateTime } from "@/utils/formatDuration";
 
 const TutorCreateContest = () => {
   const [contestData, setContestData] = useState({
     name: "",
     description: "",
-    start_date: "",
-    end_date: "",
+    start_time: "",
+    end_time: "",
     time_limit: "",
     difficulty_level: "",
     category: "",
@@ -29,12 +30,12 @@ const TutorCreateContest = () => {
     const formData = new FormData();
     formData.append("name", values.contest_title);
     formData.append("description", values.description);
-    formData.append("start_date", values.start_date);
-    formData.append("end_date", values.end_date);
+    formData.append("start_time", formatDateTime(values.start_time));
+    formData.append("end_time", formatDateTime(values.end_time));
     formData.append("time_limit", values.time_limit);
     formData.append("difficulty_level", values.difficulty_level);
     formData.append("max_points", values.max_points);
-    formData.append("category", values.category);
+    formData.append("category_id", values.category);
 
     try {
       const res = await api.post("contest/", formData, {
