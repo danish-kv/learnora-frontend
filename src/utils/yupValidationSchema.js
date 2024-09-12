@@ -30,7 +30,7 @@ export const validationContestSchema = Yup.object({
   category: Yup.string().required("Category is required"),
   description: Yup.string().required("Description is required"),
   start_time: Yup.date().required("Start time is required").nullable(),
-  
+
   end_time: Yup.date()
     .min(Yup.ref("start_time"), "End time must be after the start time")
     .required("End time is required")
@@ -50,4 +50,14 @@ export const validationContestSchema = Yup.object({
   max_points: Yup.number()
     .min(1, "Max points must be at least 1")
     .required("Max points are required"),
+});
+
+export const validationCommunitySchema = Yup.object({
+  name: Yup.string()
+    .min(5, "Title must be at least 5 character")
+    .max(200, "Name cannot be longer than 200 charaters")
+    .required("Contest Name is required"),
+  description: Yup.string().required("Description is required"),
+  banner: Yup.mixed().required("Banner is required"),
+  max_participants: Yup.number().required("Max Participants is required"),
 });

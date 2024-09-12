@@ -3,10 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
-import TutorCategories from "@/features/tutor/pages/TutorCategories";
 import LoadingDotStream from "@/components/common/Loading";
-import TutorCreateQuestion from "@/features/tutor/pages/contest/TutorCreateQuestion";
-import TutorContestDetails from "@/features/tutor/pages/contest/TutorContestDetails";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -41,12 +38,25 @@ const TutorEditModule = lazy(() =>
 const TutorCategories = lazy(() =>
   import("../features/tutor/pages/TutorCategories")
 );
-const TutorContest = lazy(() => import("../features/tutor/pages/contest/TutorContest"));
+const TutorContest = lazy(() =>
+  import("../features/tutor/pages/contest/TutorContest")
+);
 const TutorCreateContest = lazy(() =>
   import("../features/tutor/pages/contest/TutorCreateContest")
 );
 
-
+const TutorCreateQuestion = lazy(() =>
+  import("../features/tutor/pages/contest/TutorCreateQuestion")
+);
+const TutorContestDetails = lazy(() =>
+  import("../features/tutor/pages/contest/TutorContestDetails")
+);
+const TutorCreateCommunity = lazy(() =>
+  import("../features/tutor/pages/community/TutorCreateCommunity")
+);
+const TutorCommunity = lazy(() =>
+  import("@/features/tutor/pages/community/TutorCommunity")
+);
 
 const TutorRoutes = () => {
   return (
@@ -151,6 +161,18 @@ const TutorRoutes = () => {
           path="/contest/:id"
           element={
             <ProtectedRoute element={<TutorContestDetails />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/community"
+          element={
+            <ProtectedRoute element={<TutorCommunity />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/community/create"
+          element={
+            <ProtectedRoute element={<TutorCreateCommunity />} role={"tutor"} />
           }
         />
 

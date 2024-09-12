@@ -23,3 +23,9 @@ export const fetchContestDetails = async (id) => {
   console.log("res of contest details ==", res);
   return res.data;
 };
+
+export const fetchCommunity = async () => {
+  const res = await api.get("list-community/");
+  console.log("ref of community data", res);
+  return res.data;
+};
