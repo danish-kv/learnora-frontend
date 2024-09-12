@@ -8,6 +8,8 @@ import StudentProfile from "@/features/profile/student/pages/StudentProfile";
 import DiscussionPage from "@/features/discussion/pages/DiscussionPage";
 import LoadingDotStream from "@/components/common/Loading";
 import ContestPage from "@/features/contest/page/ContestPage";
+import ContestDetailsPage from "@/features/contest/page/ContestDetailsPage";
+import ContestParticipatePage from "@/features/contest/page/ContestParticipatePage";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -114,8 +116,21 @@ const StudentRoutes = () => {
         />
         <Route
           path="/contest"
+          element={<ProtectedRoute element={<ContestPage />} role={"student"} />}
+        />
+        <Route
+          path="/contest/:id"
           element={
-            <ProtectedRoute element={<ContestPage />} role={"student"} />
+            <ProtectedRoute element={<ContestDetailsPage />} role={"student"} />
+          }
+        />
+        <Route
+          path="/contest/:id/participate/"
+          element={
+            <ProtectedRoute
+              element={<ContestParticipatePage />}
+              role={"student"}
+            />
           }
         />
 
