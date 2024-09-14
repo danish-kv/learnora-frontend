@@ -11,6 +11,7 @@ import ContestPage from "@/features/contest/page/ContestPage";
 import ContestDetailsPage from "@/features/contest/page/ContestDetailsPage";
 import ContestParticipatePage from "@/features/contest/page/ContestParticipatePage";
 import CommunityPage from "@/features/community/pages/CommunityPage";
+import CommunityChat from "@/features/community/pages/CommunityChat";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -117,7 +118,9 @@ const StudentRoutes = () => {
         />
         <Route
           path="/contest"
-          element={<ProtectedRoute element={<ContestPage />} role={"student"} />}
+          element={
+            <ProtectedRoute element={<ContestPage />} role={"student"} />
+          }
         />
         <Route
           path="/contest/:id"
@@ -134,14 +137,18 @@ const StudentRoutes = () => {
             />
           }
         />
-    
+
         <Route
           path="/community/"
           element={
-            <ProtectedRoute
-              element={<CommunityPage />}
-              role={"student"}
-            />
+            <ProtectedRoute element={<CommunityPage />} role={"student"} />
+          }
+        />
+
+        <Route
+          path="/community/:slug"
+          element={
+            <ProtectedRoute element={<CommunityChat />} role={"student"} />
           }
         />
 

@@ -29,3 +29,9 @@ export const fetchCommunity = async () => {
   console.log("ref of community data", res);
   return res.data;
 };
+
+export const fetchCommunityDetails = async (slug) => {
+  const res = await api.get(`list-community/${slug}/`);
+  console.log("ref of community details", res);
+  return res.data;
+};
