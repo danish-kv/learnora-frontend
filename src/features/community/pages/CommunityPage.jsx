@@ -5,6 +5,7 @@ import CommunityCard from "../components/CommunityCard";
 import useFetchCommunity from "@/features/tutor/hooks/useFetchCommunity";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import api from "@/services/api";
 
 const CommunityPage = () => {
   const { communities, error, loading } = useFetchCommunity();
@@ -14,11 +15,33 @@ const CommunityPage = () => {
     community.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleJoinCommuntiy = async (slug, name) => {
+    try {
+      const res = await api.post(`community/${slug}/join/`);
+      if (res.status === 200) {
+        await swal(
+          "Joined",
+          `Successfully joined ${name} community`,
+          "success"
+        );
+        // navigate(`/community/${slug}`)
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      const ErrorMessage = error?.response?.data?.error || "Failed to join to community"
+      console.log(ErrorMessage);
+      
+      await swal("Error", ErrorMessage, "error");
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
       <div className="max-w-7xl mx-auto p-4">
-        {/* Enhanced Banner */}
+        {/*  Banner */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg p-12 mb-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-black opacity-20"></div>
           <div className="relative z-10">
@@ -28,7 +51,7 @@ const CommunityPage = () => {
               vibrant learning ecosystem.
             </p>
             <Button className="bg-white text-indigo-600 hover:bg-indigo-100">
-              Create a Community
+             Create a Community
             </Button>
           </div>
         </div>
@@ -63,7 +86,7 @@ const CommunityPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCommunities?.map((community) => (
-              <CommunityCard key={community.id} community={community} />
+              <CommunityCard onJoin={handleJoinCommuntiy} key={community.id} community={community} />
             ))}
           </div>
         )}

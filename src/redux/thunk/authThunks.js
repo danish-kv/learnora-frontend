@@ -16,6 +16,8 @@ export const Login = createAsyncThunk(
 
       if (res.access_token) {
         const token = jwtDecode(res.access_token);
+        const userId = token.user_id; 
+
         console.log("token ===", token);
 
         if (!token.is_verified && !token.is_admin ) {
@@ -33,14 +35,20 @@ export const Login = createAsyncThunk(
           return rejectWithValue({ error: "Application status is rejected", res });
         }
         else {
-          const { access_token, refresh_token, role, user } = res;
+          const { access_token, refresh_token, role, user, } = res;
           
           localStorage.setItem("access", access_token);
           localStorage.setItem("refresh", refresh_token);
           localStorage.setItem("role", role);
           localStorage.setItem("user", user);
           
-          return res;
+          return {
+            access_token,
+            refresh_token,
+            role,  
+            id: userId,  
+            user
+          };
         }
       } else {
         return rejectWithValue("Invalid response from server");

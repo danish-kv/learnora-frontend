@@ -4,6 +4,7 @@ import { Login, Signup, Logout } from "../thunk/authThunks";
 
 const initialState = {
   user: null,
+  id: null,
   role: null,
   email: null,
   loading: false,
@@ -61,6 +62,7 @@ const authSlice = createSlice({
         console.log("action payload filfilled", action.payload);
 
         state.user = action.payload.user;
+        state.id = action.payload.id;
         state.email = action.payload.email;
         state.role = action.payload.role;
         state.loading = false;
