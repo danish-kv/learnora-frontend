@@ -4,6 +4,7 @@ import NotFound from "../components/common/NotFound";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import LoadingDotStream from "@/components/common/Loading";
+import TutorCommunityChat from "@/features/tutor/pages/community/TutorCommunityChat";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -173,6 +174,12 @@ const TutorRoutes = () => {
           path="/community/create"
           element={
             <ProtectedRoute element={<TutorCreateCommunity />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/community/:slug"
+          element={
+            <ProtectedRoute element={<TutorCommunityChat />} role={"tutor"} />
           }
         />
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Users, Calendar, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const TutorCommunityCard = ({ community }) => {
+
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden w-full transition-all duration-300 hover:shadow-xl">
       <div className="relative">
@@ -26,10 +28,12 @@ const TutorCommunityCard = ({ community }) => {
             {new Date(community.created_at).toLocaleDateString()}
           </span>
         </div>
-        <button className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors duration-300 flex items-center justify-center">
+        <Link to={`/tutor/community/${community.slug}`}>
+        <button    className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors duration-300 flex items-center justify-center">
           View Details
           <ArrowRight size={16} className="ml-2" />
         </button>
+        </Link>
       </div>
     </div>
   );
