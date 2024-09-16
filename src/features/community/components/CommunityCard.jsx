@@ -3,6 +3,7 @@ import { Users, Calendar, MessageCircle, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { formatDate } from "date-fns";
 
 const CommunityCard = ({ community, onJoin }) => {
   if (!community) {
@@ -52,7 +53,9 @@ const CommunityCard = ({ community, onJoin }) => {
           </span>
           <span className="flex items-center">
             <Calendar size={16} className="mr-1" />
-            {new Date(community.created_at).toLocaleDateString()}
+            {community?.created_at
+              ? formatDate(new Date(community.created_at), "dd, MMMM, yyyy")
+              : "N/A"}
           </span>
         </div>
         <div className="flex items-center justify-between">

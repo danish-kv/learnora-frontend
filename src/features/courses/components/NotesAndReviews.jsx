@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import swal from "sweetalert";
 import api from "../../../services/api";
+import { formatDate } from "@/utils/format";
 
 const NotesAndReviews = ({
   handleNotesModal,
@@ -117,7 +118,12 @@ const NotesAndReviews = ({
                               : `Review #${index + 1}`}
                           </h4>
                           <p className="text-sm text-gray-500">
-                            {new Date(review.created_at).toLocaleDateString()}{" "}
+                            {review.created_at
+                              ? formatDate(
+                                  new Date(review.created_at),
+                                  "dd, mmmm, yyyy"
+                                )
+                              : "N/A"}{" "}
                             at{" "}
                             {new Date(review.created_at).toLocaleTimeString()}
                           </p>

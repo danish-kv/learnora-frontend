@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Star } from "lucide-react";
 import SeeMoreReviewModal from "../modal/SeeMoreReview";
+import { formatDate } from "@/utils/format";
 
 const CourseReview = ({ reviews }) => {
   const [expandedReview, setExpandedReview] = useState(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-
-  
 
   if (!reviews || reviews.length === 0) {
     return (
@@ -51,11 +50,12 @@ const CourseReview = ({ reviews }) => {
                     {review.user.username}
                   </p>
                   <p className="text-gray-500 text-sm">
-                    {new Date(review.updated_at).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {review.updated_at
+                      ? formatDate(
+                          new Date(review.updated_at),
+                          "dd, mmmm, yyyy"
+                        )
+                      : "N/A"}
                   </p>
                 </div>
               </div>
@@ -85,7 +85,7 @@ const CourseReview = ({ reviews }) => {
           </div>
         ))}
 
-{reviews.length > 1&& (
+        {reviews.length > 1 && (
           <button
             className="mt-4 text-blue-500 underline"
             onClick={() => setIsReviewModalOpen(true)}

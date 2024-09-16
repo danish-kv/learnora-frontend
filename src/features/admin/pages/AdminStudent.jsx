@@ -3,6 +3,7 @@ import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
 import useFetchStudnet from "../hooks/useFetchStudnet";
 import api from "../../../services/api";
+import { formatDate } from "@/utils/format";
 
 const AdminStudent = () => {
   const { students, refetch } = useFetchStudnet();
@@ -22,7 +23,7 @@ const AdminStudent = () => {
       }
     } catch (error) {
       console.log(error);
-      swal('Failed', 'please try again later', 'error')
+      swal("Failed", "please try again later", "error");
     }
   };
 
@@ -97,10 +98,20 @@ const AdminStudent = () => {
                         {student.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(student.date_joined).toLocaleDateString()}
+                        {student.date_joined
+                          ? formatDate(
+                              new Date(student.date_joined),
+                              "dd, mmmm, yyyy"
+                            )
+                          : "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(student.last_login).toLocaleDateString()}
+                        {student.last_login
+                          ? formatDate(
+                              new Date(student.last_login),
+                              "dd, mmmm, yyyy"
+                            )
+                          : "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button

@@ -1,9 +1,9 @@
+import { formatDate } from "@/utils/format";
 import React from "react";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
-
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer">
       <div className="p-6">
@@ -45,11 +45,15 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
           </p>
           <p>
             <span className="font-medium">Registered:</span>{" "}
-            {new Date(tutor.user?.date_joined).toLocaleDateString()}
+            {tutor.user?.date_joined
+              ? formatDate(new Date(tutor.user?.date_joined), "dd, mmmm, yyyy")
+              : "N/A"}
           </p>
           <p>
             <span className="font-medium">Last Login:</span>{" "}
-            {new Date(tutor.user?.last_login).toLocaleDateString()}
+            {tutor.user?.last_login
+              ? formatDate(new Date(tutor.user?.last_login), "dd, mmmm, yyyy")
+              : "N/A"}
           </p>
         </div>
         <div className="flex justify-between gap-2">
@@ -61,43 +65,43 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
             View CV
           </a>
 
-          { tutor.status === 'Requested' &&
+          {tutor.status === "Requested" && (
             <>
-            <button
-              onClick={(e) => {
-                onStatusChange(tutor.id, "Verified");
-              }}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out"
-            >
-              Accept
-            </button>
-          
-            <button
-              onClick={(e) => {
-                onStatusChange(tutor.id, "Rejected");
-              }}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out"
-            >
-              Reject
-            </button>
+              <button
+                onClick={(e) => {
+                  onStatusChange(tutor.id, "Verified");
+                }}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out"
+              >
+                Accept
+              </button>
+
+              <button
+                onClick={(e) => {
+                  onStatusChange(tutor.id, "Rejected");
+                }}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out"
+              >
+                Reject
+              </button>
             </>
-}
-         
-          { tutor.status ==='Verified' &&
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onBlockToggle(tutor.user.id, tutor.user.is_active);
-            }}
-            className={`${
-              tutor.user?.is_active
-                ? "bg-yellow-500 hover:bg-yellow-700"
-                : "bg-gray-500 hover:bg-gray-700"
-            } text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out`}
-          >
-            {tutor.user?.is_active ? "Block" : "Unblock"}
-          </button>
-          }
+          )}
+
+          {tutor.status === "Verified" && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onBlockToggle(tutor.user.id, tutor.user.is_active);
+              }}
+              className={`${
+                tutor.user?.is_active
+                  ? "bg-yellow-500 hover:bg-yellow-700"
+                  : "bg-gray-500 hover:bg-gray-700"
+              } text-white font-bold py-2 px-4 rounded text-sm transition duration-300 ease-in-out`}
+            >
+              {tutor.user?.is_active ? "Block" : "Unblock"}
+            </button>
+          )}
         </div>
       </div>
     </div>

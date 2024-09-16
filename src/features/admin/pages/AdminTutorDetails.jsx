@@ -4,6 +4,7 @@ import useFetchTutorDetails from "../hooks/useFetchTutorDetails";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
+import { formatDate } from "@/utils/format";
 
 const AdminTutorDetails = () => {
   const [loading, setLoading] = useState(false);
@@ -104,9 +105,12 @@ const AdminTutorDetails = () => {
                 <div className="ml-auto text-right">
                   <span className="text-sm text-gray-500">
                     <i className="far fa-calendar mr-1"></i> Joined on{" "}
-                    {new Date(
-                      TutorDetails.user.date_joined
-                    ).toLocaleDateString()}
+                    {TutorDetails.user.date_joined
+                      ? formatDate(
+                          new Date(TutorDetails.user.date_joined),
+                          "dd, mmmm, yyyy"
+                        )
+                      : "N/A"}
                   </span>
                 </div>
               </div>
@@ -145,9 +149,12 @@ const AdminTutorDetails = () => {
                     </h4>
                     <p className="text-lg text-gray-600">{exp.company_name}</p>
                     <p className="text-sm text-gray-500">
-                      {new Date(exp.start_date).toLocaleDateString()} -{" "}
+                      {exp.start_date
+                        ? formatDate(new Date(exp.start_date), "dd, mmmm, yyyy")
+                        : "N/A"}
+                      -{" "}
                       {exp.end_date
-                        ? new Date(exp.end_date).toLocaleDateString()
+                        ? formatDate(new Date(exp.end_date), "dd, mmmm, yyyy")
                         : "Present"}
                     </p>
                   </div>

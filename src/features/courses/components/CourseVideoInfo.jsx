@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { FaHeart, FaBook, FaRegHeart } from "react-icons/fa";
-import { formatDuration } from "../../../utils/format";
+import { formatDate, formatDuration } from "../../../utils/format";
 import { useParams } from "react-router-dom";
 import api from "../../../services/api";
 
 const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
-
   if (!courseDetails || !currentVideo) {
     return null;
   }
@@ -22,7 +21,7 @@ const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
     console.log(current_status);
 
     try {
-      const res = await api.patch(`modules/${id}/toggle-like/`)
+      const res = await api.patch(`modules/${id}/toggle-like/`);
       console.log(res.data);
       refetch();
     } catch (error) {
@@ -46,7 +45,8 @@ const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
             )}
           </button>
           <span className="text-sm text-gray-600">
-            {currentVideo.likes_count} {currentVideo.likes_count === 1 ? "Like" : "Likes"}
+            {currentVideo.likes_count}{" "}
+            {currentVideo.likes_count === 1 ? "Like" : "Likes"}
           </span>
         </div>
       </div>
@@ -66,7 +66,10 @@ const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
       <div className="mt-2 text-sm text-gray-600">
         <span>{time} total · </span>
         <span>
-          Last updated {new Date(courseDetails.updated_at).toLocaleDateString()}
+          Last updated
+          {courseDetails.updated_at
+            ? formatDate(new Date(courseDetails.updated_at), "dd, mmmm, yyyy")
+            : "N/A"}
         </span>
       </div>
     </div>

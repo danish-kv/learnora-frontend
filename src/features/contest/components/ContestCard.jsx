@@ -1,3 +1,4 @@
+import { formatDate } from '@/utils/format';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -28,10 +29,10 @@ const ContestCard = ({ contest }) => {
       <div className="flex justify-between items-center text-gray-500 text-sm mb-4">
         <div>
           <span className="block">
-            <strong>Start:</strong> {new Date(contest.start_time).toLocaleString()}
+            <strong>Start:</strong> {contest?.start_time ? formatDate(new Date(contest.start_time), 'dd, mmmm, yyyy') : 'N/A'}
           </span>
           <span className="block">
-            <strong>End:</strong> {new Date(contest.end_time).toLocaleString()}
+            <strong>End:</strong> {contest?.start_time ? formatDate(new Date(contest.end_time), 'dd, mmmm, yyyy') : 'N/A'}
           </span>
         </div>
         <div>

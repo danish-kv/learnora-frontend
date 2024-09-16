@@ -18,6 +18,7 @@ import CommentForm from "./CommentForm";
 import DiscussionComment from "./DiscussionComment";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import { formatDate } from "@/utils/format";
 
 const DiscussionPost = ({
   discussion,
@@ -55,10 +56,7 @@ const DiscussionPost = ({
     is_downvoted,
   } = discussion;
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+
 
   const handleUpdateCommet = async (id, editedcomment) => {
     console.log("edit comment ==== ", id, comment);
@@ -98,7 +96,8 @@ const DiscussionPost = ({
             <div>
               <h3 className="font-semibold text-lg">{user?.username}</h3>
               <time className="text-sm text-gray-500" dateTime={updated_at}>
-                {formatDate(updated_at)}
+                
+                {updated_at ? formatDate(new Date(updated_at), 'dd, mmmm, yyyy') : 'N/A'}
               </time>
             </div>
           </div>

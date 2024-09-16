@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { formatDate } from '@/utils/format';
 
 const TutorCommunityCard = ({ community }) => {
 
@@ -25,7 +26,7 @@ const TutorCommunityCard = ({ community }) => {
           </span>
           <span className="flex items-center text-sm">
             <Calendar size={16} className="mr-2" />
-            {new Date(community.created_at).toLocaleDateString()}
+            {community.created_at ? formatDate(new Date(community.created_at), 'dd, mmmm, yyyy') : 'N/A'}
           </span>
         </div>
         <Link to={`/tutor/community/${community.slug}`}>
