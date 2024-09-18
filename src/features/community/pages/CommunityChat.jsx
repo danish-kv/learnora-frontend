@@ -33,17 +33,11 @@ const CommunityChat = () => {
   const { community, error, loading } = useFetchCommunityDetails(slug);
   const WS_BASE_URL = import.meta.env.VITE_API_WS_URL;
 
+
+
   useEffect(() => {
-    if (community) {
-      console.log("lllllllllllllllll", community);
-
-      setParticipants(community.participants || []);
-    }
-    if (page === 1) {
-      setNewMessage([]);
-    }
+    
     fetchMessage();
-
     const ws = new WebSocket(`${WS_BASE_URL}/ws/community/${slug}/`);
 
     ws.onopen = () => {
@@ -61,7 +55,8 @@ const CommunityChat = () => {
 
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log("===============", data);
+
+      console.log("Received message==", data);
 
       console.log("hey bro ");
       if (data.type === "video_call") {
@@ -72,14 +67,14 @@ const CommunityChat = () => {
         setMessages((prev) => [
           ...prev,
           {
-            content: data.message,
-            sender: data.user || {
-              username: "Unknown",
-              profile: "/default.png",
+            content: data.content,
+            sender: {
+              username: data.user,
             },
             is_my_message: data?.userID === userID,
           },
         ]);
+        console.log("message =======", messages);
       }
     };
 
@@ -89,6 +84,17 @@ const CommunityChat = () => {
       }
     };
   }, [slug]);
+
+
+
+  useEffect(() => {
+    if (community) {
+      console.log("Community data:", community);
+      setParticipants(community.participants || []);
+    }
+  }, [community]);
+  
+  
 
   function showVideoCallConfirmation(message) {
     Swal.fire({
@@ -108,6 +114,8 @@ const CommunityChat = () => {
     });
   }
 
+
+
   const fetchMessage = async (page = 1) => {
     try {
       const res = await api.get(`community/${slug}/chat/?page=${page}`);
@@ -118,11 +126,9 @@ const CommunityChat = () => {
 
       if (res.data.results.length > 0) {
         console.log(res.data);
-        setMessages((prev) => [...res.data.results, ...prev]);
+        setMessages((prev) => [...prev, ...res.data.results]);
         setPage(page);
-        if (!res.data.next) {
-          setHasMoreMessages(false);
-        }
+        setHasMoreMessages(!!res.data.next);
       } else {
         setHasMoreMessages(false);
       }
@@ -131,19 +137,11 @@ const CommunityChat = () => {
     }
   };
 
+
+
   const handleSendMessage = () => {
     if (!newMessage.trim() || !socket) return;
     console.log("message sended");
-    const messageData = {
-      content: newMessage,
-      sender: {
-        username: "student",
-        profile: "",
-      },
-      is_my_message: true,
-    };
-
-    setMessages((prev) => [...prev, messageData]);
     socket.send(
       JSON.stringify({
         message: newMessage,
@@ -153,7 +151,10 @@ const CommunityChat = () => {
     setNewMessage("");
   };
 
+
+
   useEffect(() => {
+    console.log("Messages updated, scrolling to bottom...");
     messageEndRef.current?.scrollIntoView({ behavior: "instant" });
     if (messageContainerRef.current && prevHeightRef.current) {
       const newScrollTop =
@@ -162,6 +163,8 @@ const CommunityChat = () => {
     }
   }, [messages]);
 
+
+
   const handleScroll = () => {
     if (messageContainerRef.current) {
       if (messageContainerRef.current.scrollTop === 0 && hasMoreMessages) {
@@ -169,6 +172,8 @@ const CommunityChat = () => {
       }
     }
   };
+
+
 
   const handleExit = async () => {
     console.log("exit exit");
@@ -183,6 +188,10 @@ const CommunityChat = () => {
       console.log(error);
     }
   };
+
+
+
+
 
   if (!community || Object.keys(community).length === 0) {
     return <div>Loading...</div>;
