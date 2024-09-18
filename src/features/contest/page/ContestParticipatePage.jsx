@@ -19,11 +19,6 @@ const ContestParticipatePage = () => {
 
   const { contestDetails, error, loading } = useFetchContestDetails(id);
 
-  useEffect(() => {
-    if ( contestDetails.is_participated) {
-      navigate(`/contest/${id}`);
-    }
-  }, [id, contestDetails]);
 
   const handleOptionSelect = (optionID) => {
     console.log("selected option ==", optionID);

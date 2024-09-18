@@ -7,7 +7,7 @@ import UseFetchCategory from "@/features/admin/hooks/UseFetchCategory";
 import LoadingDotStream from "@/components/common/Loading";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import { formatDateTime } from "@/utils/formatDuration";
+import { formatDateTime } from "@/utils/format"; 
 
 const TutorCreateContest = () => {
   const [contestData, setContestData] = useState({

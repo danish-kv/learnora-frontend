@@ -154,9 +154,7 @@ const StudentRoutes = () => {
         />
         <Route
           path="/community/:slug/room/"
-          element={
-            <ProtectedRoute element={<VideoCallRoom />} role={"student"} />
-          }
+          element={<VideoCallRoom />} 
         />
 
         <Route path="*" element={<NotFound />} />
