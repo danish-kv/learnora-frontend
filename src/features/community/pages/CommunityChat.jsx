@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchCommunityDetails from "@/features/tutor/hooks/useFetchCommunityDetails";
@@ -10,11 +10,14 @@ import MessageList from "../components/MessageList";
 import ChatInput from "../components/ChatInput";
 import ParticipantsTab from "../components/ParticipantsTab";
 import CommunityInfoTab from "../components/CommunityInfoTab";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const CommunityChat = () => {
   const { slug } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [participants, setParticipants] = useState([]);
   const [socket, setSocket] = useState(null);
 
@@ -22,16 +25,24 @@ const CommunityChat = () => {
   const userID = useSelector((state) => state.auth.id);
   console.log(userID);
 
+  const messageContainerRef = useRef(null);
+  const messageEndRef = useRef(null);
+  const prevHeightRef = useRef(0);
+
   const WS_BASE_URL = import.meta.env.VITE_API_WS_URL;
 
   useEffect(() => {
     if (community) {
+      console.log("lllllllllllllllll", community);
+
       setParticipants(community.participants || []);
     }
+    if (page === 1) {
+      setNewMessage([]);
+    }
+    fetchMessage();
 
     const ws = new WebSocket(`${WS_BASE_URL}/ws/community/${slug}/`);
-
-    fetchMessage();
 
     ws.onopen = () => {
       console.log("web socket is conneted");
@@ -46,41 +57,51 @@ const CommunityChat = () => {
       console.log("web socket disconnection ");
     };
 
-    ws.onmessage = handleMessage;
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      console.log("===============", data);
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: data.message,
+          sender: data.user || { username: "Unknown", profile: "/default.png" },
+          is_my_message: data?.userID === userID,
+        },
+      ]);
+    };
 
     return () => {
       if (ws) {
         ws.close();
       }
     };
-  }, [community, slug]);
+  }, [slug]);
 
-  const handleMessage = (e) => {
-    const data = JSON.parse(e.data);
-    console.log("===============", data);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        content: data.message,
-        sender: data.user || { username: "Unknown", profile: "/default.png" },
-        is_my_message: data?.userID === userID,
-      },
-    ]);
-  };
-
-  const fetchMessage = async () => {
+  const fetchMessage = async (page = 1) => {
     try {
-      const res = await api.get(`community/${slug}/chat/`);
-      console.log(res.data);
-      setMessages((prev) => [...res.data, ...prev]);
+      const res = await api.get(`community/${slug}/chat/?page=${page}`);
+
+      if (messageContainerRef.current) {
+        prevHeightRef.current = messageContainerRef.current.scrollHeight;
+      }
+
+      if (res.data.results.length > 0) {
+        console.log(res.data);
+        setMessages((prev) => [...res.data.results, ...prev]);
+        setPage(page);
+        if (!res.data.next) {
+          setHasMoreMessages(false);
+        }
+      } else {
+        setHasMoreMessages(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() && !socket) return;
+    if (!newMessage.trim() || !socket) return;
     console.log("message sended");
     const messageData = {
       content: newMessage,
@@ -92,24 +113,45 @@ const CommunityChat = () => {
     };
 
     setMessages((prev) => [...prev, messageData]);
-
     socket.send(
       JSON.stringify({
-        messages: newMessage,
+        message: newMessage,
         user: userID,
       })
     );
     setNewMessage("");
   };
 
-
-  const messageEndRef = useRef(null);
-
   useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current?.scrollIntoView({ behavior: "instant" });
+    if (messageContainerRef.current && prevHeightRef.current) {
+      const newScrollTop =
+        messageContainerRef.current.scrollHeight - prevHeightRef.current;
+      messageContainerRef.current.scrollTop = newScrollTop;
     }
   }, [messages]);
+
+  const handleScroll = () => {
+    if (messageContainerRef.current) {
+      if (messageContainerRef.current.scrollTop === 0 && hasMoreMessages) {
+        fetchMessage(page + 1);
+      }
+    }
+  };
+
+  const handleExit = async () => {
+    console.log("exit exit");
+
+    try {
+      const res = await api.post(`community/${community.slug}/exit/`);
+      console.log(res);
+    } catch (error) {
+      const errorMessage =
+        error.response.data?.error || "failed to exit from community";
+      displayToastAlert(400, errorMessage);
+      console.log(error);
+    }
+  };
 
   if (!community || Object.keys(community).length === 0) {
     return <div>Loading...</div>;
@@ -128,10 +170,18 @@ const CommunityChat = () => {
       <Header />
       <div className="max-w-7xl mx-auto p-4">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <ChatHeader community={community} />
+          <ChatHeader community={community} onExit={handleExit} />
           <div className="flex h-[calc(100vh-200px)]">
             <div className="w-3/4 flex flex-col">
-              <MessageList messages={messages} userID={userID} />
+              <div
+                ref={messageContainerRef}
+                onScroll={handleScroll}
+                className="flex-grow overflow-y-auto"
+              >
+                <MessageList messages={messages} userID={userID} />
+                <div ref={messageEndRef} />
+              </div>
+
               <ChatInput
                 newMessage={newMessage}
                 setNewMessage={setNewMessage}
