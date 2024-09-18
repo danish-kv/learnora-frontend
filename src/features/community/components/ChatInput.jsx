@@ -8,13 +8,13 @@ const ChatInput = ({ newMessage, setNewMessage, handleSendMessage }) => {
   const handleSendMessageDebounced = debounce(handleSendMessage, 300);
 
   return (
-    <div className="p-4 border-t">
+    <div className="p-2 sm:p-4 border-t">
       <div className="flex space-x-2">
         <Input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your message..."
-          className="flex-grow"
+          className="flex-grow text-sm sm:text-base"
         />
         <Button
           onClick={handleSendMessageDebounced}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Menu, X } from "lucide-react";
 import ChatHeader from "@/features/community/components/ChatHeader";
@@ -12,6 +12,7 @@ import api from "@/services/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import useFetchCommunityDetails from "../../hooks/useFetchCommunityDetails";
+import Swal from "sweetalert2";
 
 const TutorCommunityChat = () => {
   const { slug } = useParams();
@@ -19,18 +20,22 @@ const TutorCommunityChat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [participants, setParticipants] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-  const { community, error, loading } = useFetchCommunityDetails(slug);
-  const userID = useSelector((state) => state.auth.id);
+
+  const messageContainerRef = useRef(null);
   const messageEndRef = useRef(null);
+  const prevHeightRef = useRef(0);
+
+  const navigate = useNavigate();
+  const userID = useSelector((state) => state.auth.id);
 
   const WS_BASE_URL = import.meta.env.VITE_API_WS_URL;
+  const { community, error, loading } = useFetchCommunityDetails(slug);
 
   useEffect(() => {
-    if (community) {
-      setParticipants(community.participants || []);
-    }
 
     const ws = new WebSocket(`${WS_BASE_URL}/ws/community/${slug}/`);
     fetchMessages();
@@ -42,78 +47,181 @@ const TutorCommunityChat = () => {
 
     ws.onerror = (error) => console.log("WebSocket connection error", error);
     ws.onclose = () => console.log("WebSocket disconnected");
-    ws.onmessage = handleMessage;
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+
+      console.log("Received message==", data);
+
+      console.log("hey bro ");
+      if (data.type === "video_call") {
+        console.log("hey bro its video call please checkin");
+
+        showVideoCallConfirmation(data.message);
+      } else if (data.type === "chat_message") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            content: data.content,
+            sender: {
+              username: data.user,
+            },
+            is_my_message: data?.userID === userID,
+          },
+        ]);
+        console.log("message =======", messages);
+      }
+    };
 
     return () => {
-      if (ws) ws.close();
+      if (ws) {
+        ws.close();
+      }
     };
-  }, [community, slug]);
+  }, [slug]);
 
+  
+  
   useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (community) {
+      console.log("Community data:", community);
+      setParticipants(community.participants || []);
     }
-  }, [messages]);
+  }, [community]);
 
-  const handleMessage = (e) => {
-    const data = JSON.parse(e.data);
-    setMessages((prev) => [
-      ...prev,
-      {
-        content: data.message,
-        sender: data.user || { username: "Unknown", profile: "/default.png" },
-        is_my_message: data?.userID === userID,
-      },
-    ]);
-  };
 
-  const fetchMessages = async () => {
+
+  function showVideoCallConfirmation(message) {
+    Swal.fire({
+      title: "Video Call Initiated",
+      text: message,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Join Call",
+      cancelButtonText: "Ignore",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(`/community/${slug}/room`);
+        console.log("joining call...");
+      } else {
+        console.log("ignoring video call...");
+      }
+    });
+  }
+
+  const fetchMessages = async (page = 1) => {
     try {
-      const res = await api.get(`community/${slug}/chat/`);
-      setMessages((prev) => [...res.data, ...prev]);
+      const res = await api.get(`community/${slug}/chat/?page=${page}`);
+
+      if (messageContainerRef.current) {
+        prevHeightRef.current = messageContainerRef.current.scrollHeight;
+      }
+
+      if (res.data.results.length > 0) {
+        console.log(res.data);
+        setMessages((prev) => [...prev, ...res.data.results]);
+        setPage(page);
+        setHasMoreMessages(!!res.data.next);
+      } else {
+        setHasMoreMessages(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    console.log("Messages updated, scrolling to bottom...");
+    messageEndRef.current?.scrollIntoView({ behavior: "instant" });
+    if (messageContainerRef.current && prevHeightRef.current) {
+      const newScrollTop =
+        messageContainerRef.current.scrollHeight - prevHeightRef.current;
+      messageContainerRef.current.scrollTop = newScrollTop;
+    }
+  }, [messages]);
+
+  const handleScroll = () => {
+    if (messageContainerRef.current) {
+      if (messageContainerRef.current.scrollTop === 0 && hasMoreMessages) {
+        fetchMessages(page + 1);
+      }
+    }
+  };
+
   const handleSendMessage = () => {
     if (!newMessage.trim() || !socket) return;
-    const messageData = {
-      content: newMessage,
-      sender: { username: "Tutor", profile: "" },
-      is_my_message: true,
-    };
-
-    setMessages((prev) => [...prev, messageData]);
-    socket.send(JSON.stringify({ messages: newMessage, user: userID }));
+    console.log("message sended");
+    socket.send(
+      JSON.stringify({
+        message: newMessage,
+        user: userID,
+      })
+    );
     setNewMessage("");
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading community details...</div>;
-  if (error) return <div className="flex justify-center items-center h-screen">Error loading community details: {error.message}</div>;
-  if (!community || Object.keys(community).length === 0) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  const handleExit = () => {};
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading community details...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Error loading community details: {error.message}
+      </div>
+    );
+  if (!community || Object.keys(community).length === 0)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 transition-transform duration-300 ease-in-out transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+      <div
+        className={`fixed inset-y-0 left-0 z-30 w-64 transition-transform duration-300 ease-in-out transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0`}
+      >
         <TutorSidebar />
       </div>
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="bg-white shadow-md z-10">
           <div className="flex items-center px-4 py-3">
-            <Button variant="ghost" className="md:hidden mr-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
+            <Button
+              variant="ghost"
+              className="md:hidden mr-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
               <Menu size={24} />
             </Button>
-            <ChatHeader community={community} />
-            <Button variant="ghost" className="ml-auto md:hidden" onClick={() => setInfoOpen(!infoOpen)}>
+            <ChatHeader
+              community={community}
+              onExit={handleExit}
+              socket={socket}
+              userID={userID}
+            />
+            <Button
+              variant="ghost"
+              className="ml-auto md:hidden"
+              onClick={() => setInfoOpen(!infoOpen)}
+            >
               <Menu size={24} />
             </Button>
           </div>
         </div>
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 flex flex-col">
-            <div className="flex-1 overflow-y-auto px-4 py-2">
-              <MessageList messages={messages} userID={userID} />
+            <div
+              ref={messageContainerRef}
+              onScroll={handleScroll}
+              className="flex-grow overflow-y-auto"
+            >
+              <MessageList messages={messages} />
               <div ref={messageEndRef} />
             </div>
             <ChatInput
@@ -122,8 +230,16 @@ const TutorCommunityChat = () => {
               handleSendMessage={handleSendMessage}
             />
           </div>
-          <div className={`fixed inset-y-0 right-0 w-64 bg-white border-l border-gray-200 overflow-y-auto transition-transform duration-300 ease-in-out transform ${infoOpen ? 'translate-x-0' : 'translate-x-full'} md:relative md:translate-x-0`}>
-            <Button variant="ghost" className="absolute top-2 right-2 md:hidden" onClick={() => setInfoOpen(false)}>
+          <div
+            className={`fixed inset-y-0 right-0 w-64 bg-white border-l border-gray-200 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
+              infoOpen ? "translate-x-0" : "translate-x-full"
+            } md:relative md:translate-x-0`}
+          >
+            <Button
+              variant="ghost"
+              className="absolute top-2 right-2 md:hidden"
+              onClick={() => setInfoOpen(false)}
+            >
               <X size={24} />
             </Button>
             <Tabs defaultValue="participants" className="h-full flex flex-col">
@@ -131,7 +247,10 @@ const TutorCommunityChat = () => {
                 <TabsTrigger value="participants">Participants</TabsTrigger>
                 <TabsTrigger value="info">Info</TabsTrigger>
               </TabsList>
-              <TabsContent value="participants" className="flex-1 overflow-y-auto p-4">
+              <TabsContent
+                value="participants"
+                className="flex-1 overflow-y-auto p-4"
+              >
                 <ParticipantsTab participants={participants} />
               </TabsContent>
               <TabsContent value="info" className="flex-1 overflow-y-auto p-4">
