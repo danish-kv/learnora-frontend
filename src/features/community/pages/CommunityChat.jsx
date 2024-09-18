@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useFetchCommunityDetails from "@/features/tutor/hooks/useFetchCommunityDetails";
@@ -11,6 +11,7 @@ import ChatInput from "../components/ChatInput";
 import ParticipantsTab from "../components/ParticipantsTab";
 import CommunityInfoTab from "../components/CommunityInfoTab";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import Swal from "sweetalert2";
 
 const CommunityChat = () => {
   const { slug } = useParams();
@@ -21,14 +22,15 @@ const CommunityChat = () => {
   const [participants, setParticipants] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  const { community, error, loading } = useFetchCommunityDetails(slug);
-  const userID = useSelector((state) => state.auth.id);
-  console.log(userID);
-
   const messageContainerRef = useRef(null);
   const messageEndRef = useRef(null);
   const prevHeightRef = useRef(0);
 
+  const navigate = useNavigate();
+  const userID = useSelector((state) => state.auth.id);
+  console.log(userID);
+
+  const { community, error, loading } = useFetchCommunityDetails(slug);
   const WS_BASE_URL = import.meta.env.VITE_API_WS_URL;
 
   useEffect(() => {
@@ -60,14 +62,25 @@ const CommunityChat = () => {
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
       console.log("===============", data);
-      setMessages((prev) => [
-        ...prev,
-        {
-          content: data.message,
-          sender: data.user || { username: "Unknown", profile: "/default.png" },
-          is_my_message: data?.userID === userID,
-        },
-      ]);
+
+      console.log("hey bro ");
+      if (data.type === "video_call") {
+        console.log("hey bro its video call please checkin");
+
+        showVideoCallConfirmation(data.message);
+      } else if (data.type === "chat_message") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            content: data.message,
+            sender: data.user || {
+              username: "Unknown",
+              profile: "/default.png",
+            },
+            is_my_message: data?.userID === userID,
+          },
+        ]);
+      }
     };
 
     return () => {
@@ -76,6 +89,24 @@ const CommunityChat = () => {
       }
     };
   }, [slug]);
+
+  function showVideoCallConfirmation(message) {
+    Swal.fire({
+      title: "Video Call Initiated",
+      text: message,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Join Call",
+      cancelButtonText: "Ignore",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(`/community/${slug}/room`);
+        console.log("joining call...");
+      } else {
+        console.log("ignoring video call...");
+      }
+    });
+  }
 
   const fetchMessage = async (page = 1) => {
     try {
@@ -170,7 +201,12 @@ const CommunityChat = () => {
       <Header />
       <div className="max-w-7xl mx-auto p-4">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <ChatHeader community={community} onExit={handleExit} />
+          <ChatHeader
+            community={community}
+            onExit={handleExit}
+            socket={socket}
+            userID={userID}
+          />
           <div className="flex h-[calc(100vh-200px)]">
             <div className="w-3/4 flex flex-col">
               <div
@@ -178,7 +214,7 @@ const CommunityChat = () => {
                 onScroll={handleScroll}
                 className="flex-grow overflow-y-auto"
               >
-                <MessageList messages={messages} userID={userID} />
+                <MessageList messages={messages} />
                 <div ref={messageEndRef} />
               </div>
 

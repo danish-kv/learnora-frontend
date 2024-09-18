@@ -12,6 +12,7 @@ import ContestDetailsPage from "@/features/contest/page/ContestDetailsPage";
 import ContestParticipatePage from "@/features/contest/page/ContestParticipatePage";
 import CommunityPage from "@/features/community/pages/CommunityPage";
 import CommunityChat from "@/features/community/pages/CommunityChat";
+import VideoCallRoom from "@/features/community/pages/VideoCallRoom";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -149,6 +150,12 @@ const StudentRoutes = () => {
           path="/community/:slug"
           element={
             <ProtectedRoute element={<CommunityChat />} role={"student"} />
+          }
+        />
+        <Route
+          path="/community/:slug/room/"
+          element={
+            <ProtectedRoute element={<VideoCallRoom />} role={"student"} />
           }
         />
 
