@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TutorSidebar from "../../components/TutorSidebar";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import { useNavigate, useParams } from "react-router-dom";
 
-const TutorCreateQuestion = () => {
+const TutorEditQuestion = () => {
   const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState([
     { option_text: "", is_correct: false },
@@ -12,11 +12,27 @@ const TutorCreateQuestion = () => {
   const [errors, setErrors] = useState({});
 
   const { id } = useParams();
+  console.log("id ===", id);
+
+  const getQuestion = async (id) => {
+    try {
+      const res = await api.get(`question/${id}/`);
+      console.log(res.data);
+      setQuestionText(res.data.question_text);
+      setOptions(res.data.options);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestion(id);
+  }, []);
+
   const navigate = useNavigate();
 
   const handleAddOption = () => {
-    if(options.length < 4){
-
+    if (options.length < 4) {
       setOptions([...options, { option_text: "", is_correct: false }]);
     }
   };
@@ -24,27 +40,10 @@ const TutorCreateQuestion = () => {
   const validateForm = () => {
     let formErrors = {};
 
-    //     // Check if question text is empty
     if (questionText.trim() === "") {
       formErrors.questionText = "Question text is required";
     }
 
-    //     // Validate options
-    //     const optionErrors = options.map((option, index) => {
-    //       if (option.option_text.trim() === "") {
-    //         return `Option ${String.fromCharCode(65 + index)} is required`;
-    //       }
-    //       return null;
-    //     });
-
-    //     // If no options provided, add error
-    //     if (options.length === 0) {
-    //       formErrors.options = ["At least one option must be provided"];
-    //     } else {
-    //       formErrors.options = optionErrors.filter((err) => err !== null);
-    //     }
-
-    //     // Ensure at least one option is marked as correct
     if (!options.some((option) => option.is_correct)) {
       formErrors.correctOption =
         "At least one option must be marked as correct";
@@ -53,7 +52,7 @@ const TutorCreateQuestion = () => {
     return formErrors;
   };
 
-  const handleOnSubmit = async (e, actionType) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
     console.log("buttoons clicked");
     console.log(questionText);
@@ -61,48 +60,33 @@ const TutorCreateQuestion = () => {
 
     const formErrors = validateForm();
     setErrors(formErrors);
-    // console.log("validation completed");
-    // console.log(Object.keys(formErrors).length);
-    // console.log(formErrors);
-    // console.log(Object.keys(formErrors).length);
 
     if (Object.keys(formErrors).length > 0) {
       console.log("problems in if conditions");
       return;
     }
 
-    // options.forEach((option, index) => {
-    //   formData.append(`options[${index}].option_text`, option.option_text);
-    //   formData.append(`options[${index}].is_correct`, option.is_correct);
-    // });
-
     const payLoad = {
       question_text: questionText,
-      contest: id,
       options: options,
     };
     console.log(payLoad);
 
     console.log("final thired");
     try {
-      const res = await api.post("question/", payLoad, {
+      const res = await api.patch(`question/${id}/`, payLoad, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (res.status === 201) {
-        if (actionType === "addAnother") {
-          displayToastAlert(200, "Question created successfully!");
-          setQuestionText("");
-          setOptions([{ option_text: "", is_correct: false }]);
-        } else if (actionType === "finish") {
-          await swal(
-            "success",
-            "Contest Question creation completed",
-            "success"
-          );
-          navigate("/tutor/contest/");
-        }
+      if (res.status === 200) {
+
+        await swal(
+          "Updated",
+          "Contest Question Updated successfully",
+          "success"
+        );
+        navigate("/tutor/contest/");
       }
     } catch (error) {
       console.error(error);
@@ -204,18 +188,11 @@ const TutorCreateQuestion = () => {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button
-              onClick={(e) => handleOnSubmit(e, "addAnother")}
-              type="button"
-              className="w-full bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-800 transition"
-            >
-              Save and Add Another
-            </button>
-            <button
-              onClick={(e) => handleOnSubmit(e, "finish")}
+              onClick={(e) => handleOnSubmit(e)}
               type="button"
               className="w-full bg-indigo-700 text-white px-3 py-2 rounded-md hover:bg-indigo-800 transition"
             >
-              Save and Finish
+              Update
             </button>
           </div>
         </form>
@@ -224,4 +201,4 @@ const TutorCreateQuestion = () => {
   );
 };
 
-export default TutorCreateQuestion;
+export default TutorEditQuestion;

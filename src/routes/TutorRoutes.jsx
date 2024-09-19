@@ -5,6 +5,8 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import LoadingDotStream from "@/components/common/Loading";
 import TutorCommunityChat from "@/features/tutor/pages/community/TutorCommunityChat";
+import TutorEditQuestion from "@/features/tutor/pages/contest/TutorEditQuestion";
+import TutorEditContest from "@/features/tutor/pages/contest/TutorEditContest";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -164,6 +166,21 @@ const TutorRoutes = () => {
             <ProtectedRoute element={<TutorContestDetails />} role={"tutor"} />
           }
         />
+        <Route
+          path="/contest/:id/edit"
+          element={
+            <ProtectedRoute element={<TutorEditContest />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/contest/:id/question/:id/edit"
+          element={
+            <ProtectedRoute element={<TutorEditQuestion />} role={"tutor"} />
+          }
+        />
+
+
+        
         <Route
           path="/community"
           element={

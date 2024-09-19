@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TutorSidebar from "../../components/TutorSidebar";
 import { ErrorMessage, Field, Formik, Form } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { validationContestSchema } from "@/utils/yupValidationSchema";
 import UseFetchCategory from "@/features/admin/hooks/UseFetchCategory";
 import LoadingDotStream from "@/components/common/Loading";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import useFetchContestDetails from "../../hooks/useFetchContestDetails";
 
-const TutorCreateContest = () => {
+const TutorEditContest = () => {
   const [contestData, setContestData] = useState({
     name: "",
     description: "",
@@ -22,6 +23,30 @@ const TutorCreateContest = () => {
 
   const navigate = useNavigate();
   const { categories } = UseFetchCategory();
+
+  const { id } = useParams();
+  console.log(id);
+  const { contestDetails } = useFetchContestDetails(id);
+
+  useEffect(() => {
+    if (contestDetails) {
+      const formatDateTimeForInput = (dateString) => {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+          return "";
+        }
+        return date.toISOString().slice(0, 16);
+      };
+
+      setContestData({
+        ...contestDetails,
+        start_time: formatDateTimeForInput(contestDetails.start_time),
+        end_time: formatDateTimeForInput(contestDetails.end_time),
+      });
+    }
+  }, [contestDetails]);
+
+  console.log(contestDetails);
 
   const handleOnSubmit = async (values, actions) => {
     console.log(contestData);
@@ -37,21 +62,21 @@ const TutorCreateContest = () => {
     formData.append("category_id", values.category);
 
     try {
-      const res = await api.post("contest/", formData, {
+      const res = await api.patch(`contest/${id}/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       console.log(res);
-      if (res.status === 201) {
+      if (res.status === 200) {
         await swal({
-          title: "Success!",
-          text: "Your contest has been created successfully.",
+          title: "Updated!",
+          text: "Your contest has been Updated successfully.",
           icon: "success",
           button: "Okay",
         });
         actions.resetForm();
-        navigate(`/tutor/contest/questions/create/${res.data.id}`);
+        navigate(`/tutor/contest/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -74,22 +99,23 @@ const TutorCreateContest = () => {
 
       {/* Main content */}
       <div className="flex-1 ml-64 p-6 bg-gray-100">
-        <h1 className="text-2xl font-semibold mb-6">Create New Contest</h1>
+        <h1 className="text-2xl font-semibold mb-6">Edit Contest</h1>
         <Formik
           initialValues={{
-            contest_title: "",
-            description: "",
-            start_time: "",
-            end_time: "",
-            time_limit: "",
-            category: "",
-            difficulty_level: "",
-            max_points: "",
+            contest_title: contestData.name || "",
+            description: contestData.description || "",
+            start_time: contestData.start_time || "",
+            end_time: contestData.end_time || "",
+            time_limit: contestData.time_limit || "",
+            category: contestData.category?.id || "",
+            difficulty_level: contestData.difficulty_level || "",
+            max_points: contestData.max_points || "",
           }}
           validationSchema={validationContestSchema}
           onSubmit={handleOnSubmit}
+          enableReinitialize={true}
         >
-          {({ setFieldValue, isSubmitting, values }) => (
+          {({ isSubmitting }) => (
             <Form className="bg-white p-6 rounded-lg shadow-md">
               <div className="mb-4 flex gap-4">
                 <div className="flex-1">
@@ -271,7 +297,7 @@ const TutorCreateContest = () => {
                 className="w-full bg-indigo-700 text-white p-3 rounded-lg hover:bg-indigo-800 transition duration-300"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? <LoadingDotStream /> : "Create Contest"}
+                {isSubmitting ? <LoadingDotStream /> : "Update Contest"}
               </button>
             </Form>
           )}
@@ -281,4 +307,4 @@ const TutorCreateContest = () => {
   );
 };
 
-export default TutorCreateContest;
+export default TutorEditContest;
