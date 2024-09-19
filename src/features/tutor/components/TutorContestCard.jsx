@@ -1,11 +1,15 @@
+import { formatDate } from "@/utils/format";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TutorContestCard = ({ contest }) => {
+const TutorContestCard = ({ contest, onBlockToggle }) => {
   if (!contest) {
     return <h1>Contest is loading....</h1>;
   }
 
+  const handleBlock = (id, current_status) => {
+    onBlockToggle(id, current_status);
+  };
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 relative">
       <div className="flex justify-between items-center mb-4">
@@ -33,19 +37,17 @@ const TutorContestCard = ({ contest }) => {
             <div>
               <p className="text-sm text-gray-500">Start Time</p>
               <p className="text-gray-800 font-medium">
-                {new Date(contest.start_time).toLocaleString("en-US", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
+                {contest.start_time
+                  ? formatDate(new Date(contest.start_time), "dd, mmmm, yyyy")
+                  : "N/A"}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500">End Time</p>
               <p className="text-gray-800 font-medium">
-                {new Date(contest.end_time).toLocaleString("en-US", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
+                {contest.end_time
+                  ? formatDate(new Date(contest.end_time), "dd, mmmm, yyyy")
+                  : "N/A"}
               </p>
             </div>
           </div>
@@ -54,12 +56,19 @@ const TutorContestCard = ({ contest }) => {
       <div className="flex justify-center mt-6">
         <Link
           to={`/tutor/contest/${contest.id}`}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-3 py-2 rounded-md mr-2"
+          className="bg-indigo-700 hover:bg-indigo-800 text-white p-3 py-2 rounded-md mr-2"
         >
           View
         </Link>
-        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md ml-2">
-          Edit
+        <button
+          onClick={() => handleBlock(contest.id, contest.is_active)}
+          className={` ${
+            contest.is_active
+              ? "bg-yellow-500 hover:bg-yellow-600"
+              : "bg-green-500 hover:bg-green-600"
+          }   text-white px-4 py-2 rounded-md ml-2`}
+        >
+          {contest.is_active ? "Block" : 'Unblock' }
         </button>
       </div>
     </div>

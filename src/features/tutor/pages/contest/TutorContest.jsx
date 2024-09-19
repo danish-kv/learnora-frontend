@@ -1,12 +1,25 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-import TutorSidebar from '../../components/TutorSidebar';
-import TutorContestCard from '../../components/TutorContestCard';
-import useFetchContest from '../../hooks/useFetchContest';
-import PaginationComponent from '@/features/courses/components/Pagination';
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import TutorSidebar from "../../components/TutorSidebar";
+import TutorContestCard from "../../components/TutorContestCard";
+import useFetchContest from "../../hooks/useFetchContest";
+import PaginationComponent from "@/features/courses/components/Pagination";
+import api from "@/services/api";
 
 const TutorContest = () => {
-  const {contests, errors, loading} = useFetchContest()
+  const { contests, errors, loading, getConteset } = useFetchContest();
+
+  const handleBlock = async (id, current_status) => {
+    console.log(id, current_status);
+
+    try {
+      const res = await api.patch(`contest/${id}/block/`);
+      getConteset()
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   return (
@@ -21,16 +34,18 @@ const TutorContest = () => {
             </button>
           </Link>
         </div>
-        { <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {contests.map((contest, index) => (
-            <TutorContestCard
-              key={index}
-              contest={contest}
-              // onBlockToggle={handleBlock}
-            />
-          ))}
-        </div> }
-         {/* {contests.length > 0 && (
+        {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {contests.map((contest, index) => (
+              <TutorContestCard
+                key={index}
+                contest={contest}
+                onBlockToggle={handleBlock}
+              />
+            ))}
+          </div>
+        }
+        {/* {contests.length > 0 && (
           <PaginationComponent
             totalPages={totalPages}
             onPageChange={handlePageChange}
@@ -42,5 +57,4 @@ const TutorContest = () => {
   );
 };
 
-
-export default TutorContest
+export default TutorContest;

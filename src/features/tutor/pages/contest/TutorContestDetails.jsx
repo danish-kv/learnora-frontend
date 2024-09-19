@@ -1,10 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useFetchContestDetails from "../../hooks/useFetchContestDetails";
-import { CheckCircleIcon, XCircleIcon } from "lucide-react";
+import { CheckCircleIcon, EditIcon, XCircleIcon } from "lucide-react";
+import { formatDate } from "@/utils/format";
 
 const TutorContestDetails = () => {
-  const { id } = useParams(); // Get the contest ID from the route parameters
+  const { id } = useParams();
+  const navigate = useNavigate()
   const { contestDetails, error, loading } = useFetchContestDetails(id);
 
   if (loading)
@@ -18,6 +20,16 @@ const TutorContestDetails = () => {
       </div>
     );
 
+
+    const handleEditContest = () => {
+      navigate(`/tutor/contest/${id}/edit`); 
+    };
+  
+    const handleEditQuestion = (questionId) => {
+      navigate(`/tutor/contest/${id}/question/${questionId}/edit`); 
+    };
+
+    
   return (
     <div className="p-8 bg-gray-100">
       {/* Contest Overview */}
@@ -42,7 +54,16 @@ const TutorContestDetails = () => {
 
       {/* Contest Info */}
       <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-bold mb-4">Contest Details</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Contest Details</h2>
+          <button
+            onClick={handleEditContest}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded"
+          >
+            Edit Contest
+          </button>
+        </div>
+
         <div className="grid grid-cols-2 gap-6">
           <div>
             <p className="text-gray-500 text-sm uppercase mb-1">
@@ -75,13 +96,23 @@ const TutorContestDetails = () => {
           <div>
             <p className="text-gray-500 text-sm uppercase mb-1">Start Time</p>
             <p className="text-gray-800 font-medium">
-              {new Date(contestDetails.start_time).toLocaleString()}
+              {contestDetails.start_time
+                ? formatDate(
+                    new Date(contestDetails.start_time),
+                    "dd, mmmm, yyyy"
+                  )
+                : "N/A"}
             </p>
           </div>
           <div>
             <p className="text-gray-500 text-sm uppercase mb-1">End Time</p>
             <p className="text-gray-800 font-medium">
-              {new Date(contestDetails.end_time).toLocaleString()}
+              {contestDetails?.end_time
+                ? formatDate(
+                    new Date(contestDetails?.end_time),
+                    "dd, mmmm, yyyy"
+                  )
+                : "N/A"}
             </p>
           </div>
         </div>
@@ -97,9 +128,17 @@ const TutorContestDetails = () => {
                 key={question.id}
                 className="border border-gray-200 rounded-lg p-4"
               >
-                <h3 className="text-lg font-medium mb-2">{`Q${index + 1}: ${
-                  question.question_text
-                }`}</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-medium">
+                    {`Q${index + 1}: ${question.question_text}`}
+                  </h3>
+                  <button
+                    onClick={() => handleEditQuestion(question.id)}
+                    className="text-blue-500 hover:text-blue-600"
+                  >
+                    <EditIcon className="h-5 w-5" />
+                  </button>
+                </div>
                 <div className="ml-4">
                   {question.options.map((option) => (
                     <div key={option.id} className="flex items-center mb-2">
