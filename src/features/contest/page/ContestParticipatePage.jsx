@@ -255,7 +255,7 @@ const ContestParticipatePage = () => {
                   currentQuestion === totalQuestions - 1 &&
                   "bg-indigo-300 text-stone-50"
                 }`}
-                disabled={currentQuestion >= totalQuestions - 1}
+                disabled={currentQuestion > totalQuestions - 1}
               >
                 {currentQuestion === totalQuestions - 1 ? "Done" : "Next"}
               </button>

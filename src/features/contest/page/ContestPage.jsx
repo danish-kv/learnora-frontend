@@ -4,15 +4,14 @@ import ContestCard from "../components/ContestCard";
 import useFetchContest from "@/features/tutor/hooks/useFetchContest";
 import SearchBar from "@/features/courses/components/SearchBar";
 import Leaderboard from "../components/Leaderboard";
+import useFetchGlobalLeaderboard from "../hooks/useFetchGlobalLeaderboard";
 
 const ContestPage = () => {
   const { contests, errors, loading } = useFetchContest();
 
-  const participants = [
-    { id: 1, name: "Alice", score: 95 },
-    { id: 2, name: "Bob", score: 90 },
-    { id: 3, name: "Charlie", score: 85 },
-  ];
+  const {participants} = useFetchGlobalLeaderboard()
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -31,11 +30,11 @@ const ContestPage = () => {
               ))}
           </main>
           <aside className="w-64 flex-shrink-0">
-            {/* {contests.length > 0 ? (
+            {contests.length > 0 ? (
               <Leaderboard participants={participants} />
             ) : (
               <p>No contest available</p>
-            )} */}
+            )}
           </aside>
         </div>
       </div>

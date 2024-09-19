@@ -21,7 +21,7 @@ const ContestDetailsPage = () => {
       const res = await api.post(`contest/${id}/participate/`);
       console.log("res of res ====", res);
       if (res.status === 200) {
-        await swal("Started", "Your time starts now", "succuss");
+        await swal("Started", "Your time starts now", "success");
         navigate(`/contest/${id}/participate`);
       }
     } catch (error) {
@@ -41,7 +41,7 @@ const ContestDetailsPage = () => {
       <div className="max-w-7xl mx-auto pt-8 px-4">
         {contestDetails ? (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="bg-indigo-400 text-white p-6">
+            <div className="bg-indigo-500 text-white p-6">
               <h1 className="text-3xl font-bold mb-2">{contestDetails.name}</h1>
               <p className="text-indigo-100">{contestDetails.description}</p>
             </div>

@@ -8,7 +8,7 @@ const Leaderboard = ({ participants }) => {
         {participants && participants.length > 0 ? (
           participants.map((participant, index) => (
             <div
-              key={participant.id}
+              key={index}
               className="flex items-center justify-between p-2 bg-gray-50 rounded"
             >
               <div className="flex items-center space-x-3">
@@ -17,15 +17,15 @@ const Leaderboard = ({ participants }) => {
                 </span>
                 <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                   <span className="text-sm font-medium text-gray-600">
-                    {participant.name.charAt(0)}
+                    {participant.user__username.charAt(0)}
                   </span>
                 </div>
                 <span className="text-sm font-medium text-gray-700">
-                  {participant.name}
+                  {participant.user__username}
                 </span>
               </div>
               <span className="text-sm font-semibold text-blue-600">
-                {participant.score} pts
+                {participant.total_score} pts
               </span>
             </div>
           ))
