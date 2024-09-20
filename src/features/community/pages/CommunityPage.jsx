@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/layout/Header";
-import { Users, Search, Filter, MessageCircle } from "lucide-react";
+import { Search, Users } from "lucide-react";
 import CommunityCard from "../components/CommunityCard";
 import useFetchCommunity from "@/features/tutor/hooks/useFetchCommunity";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import Banner from "@/components/common/Banner";
 
 const CommunityPage = () => {
   const { communities, error, loading } = useFetchCommunity();
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const filteredCommunities = communities?.filter((community) =>
     community.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -42,8 +42,16 @@ const CommunityPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-        <div className="max-w-7xl mx-auto p-4">
+      <Banner
+        title="Discover Your Community"
+        description="Connect, learn, and grow with tutors and fellow students in our vibrant learning ecosystem."
+        buttonText="Join Community"
+        icon={Users}
+        gradient="bg-gradient-to-r from-purple-600 to-pink-500"
+        onClick={() => console.log("Join Community clicked")}
+      />
 
+      <div className="max-w-7xl mx-auto p-4">
         {/* Search and Filter Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h2 className="text-3xl font-bold mb-4 md:mb-0">

@@ -7,8 +7,8 @@ import useFetchCourse from "../../admin/hooks/useFetchCourse";
 import { useNavigate } from "react-router-dom";
 import PaginationComponent from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
-import { debounce } from "lodash";
-// import debounce from "lodash/debounce";
+import { BookOpen } from "lucide-react";
+import Banner from "@/components/common/Banner";
 
 const Courses = () => {
   const { categories, error } = UseFetchCategory();
@@ -60,6 +60,15 @@ const Courses = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
+      <Banner
+        title="Discover Your Next Learning Adventure"
+        description="Explore our wide range of courses and start your journey to mastery."
+        buttonText="Explore Courses"
+        icon={BookOpen}
+        gradient="bg-gradient-to-r from-indigo-600 to-purple-600"
+        onClick={() => console.log("Explore Courses clicked")}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex space-x-8">
           <aside className="w-64 flex-shrink-0">

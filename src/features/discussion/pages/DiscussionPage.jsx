@@ -6,6 +6,8 @@ import UseFetchDiscussion from "../hooks/UseFetchDiscussion";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import Swal from "sweetalert2";
+import { MessageCircle } from "lucide-react";
+import Banner from "@/components/common/Banner";
 
 const DiscussionPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -92,10 +94,19 @@ const DiscussionPage = () => {
     toggleCreateForm();
   };
 
-
   return (
     <div>
       <Header />
+
+      <Banner
+        title="Join the Conversation"
+        description="Share ideas, ask questions, and learn from your peers."
+        buttonText="Start a Discussion"
+        icon={MessageCircle}
+        gradient="bg-gradient-to-r from-blue-600 to-teal-600"
+        onClick={() => console.log("Start Discussion clicked")}
+      />
+
       <div className="max-w-3xl mx-auto p-4">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl p-6 font-bold mb-6 text-center">
