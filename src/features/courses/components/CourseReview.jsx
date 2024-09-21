@@ -21,6 +21,8 @@ const CourseReview = ({ reviews }) => {
   const averageRating =
     reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
 
+  const reviewsToDisplay = reviews ? reviews : reviews.slice(0, 3);
+
   return (
     <div className="my-8 bg-white border border-gray-200 rounded-lg shadow-sm p-6">
       <div className="flex items-center justify-between mb-6">
@@ -35,7 +37,7 @@ const CourseReview = ({ reviews }) => {
       </div>
 
       <div className="space-y-6">
-        {reviews.map((review) => (
+        {reviewsToDisplay.map((review) => (
           <div
             key={review.id}
             className="bg-gray-50 p-6 rounded-lg transition-all duration-300 hover:shadow-md"
@@ -85,14 +87,14 @@ const CourseReview = ({ reviews }) => {
           </div>
         ))}
 
-        {reviews.length > 1 && (
+        {reviews.length > 3 && (
           <button
-            className="mt-4 text-blue-500 underline"
-            onClick={() => setIsReviewModalOpen(true)}
-            aria-label="See all reviews"
-          >
-            See All
-          </button>
+          className="mt-4 text-blue-500 underline"
+          onClick={() => setIsReviewModalOpen(true)}
+          aria-label="See all reviews"
+        >
+          See All
+        </button>
         )}
       </div>
       <SeeMoreReviewModal

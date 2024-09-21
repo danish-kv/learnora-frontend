@@ -123,7 +123,7 @@ const CreateDiscussionModal = ({
               onChange={(e) =>
                 setDiscussionData((prevState) => ({
                   ...prevState,
-                  title: e.target.value,
+                  description: e.target.value,
                 }))
               }
               placeholder="What's on your mind?"

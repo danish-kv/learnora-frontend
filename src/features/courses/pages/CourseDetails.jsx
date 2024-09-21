@@ -49,7 +49,7 @@ const CourseDetails = () => {
               <div className="flex justify-between">
                 <div>
                   <p className="text-sm font-semibold">Skill level</p>
-                  <p className="text-sm">{courseDetails?.level}</p>
+                  <p className="text-sm">{courseDetails?.skill_level}</p>
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Time to complete</p>

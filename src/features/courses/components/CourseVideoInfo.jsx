@@ -57,7 +57,7 @@ const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
           {courseDetails.average_rating}
         </span>
         <span className="ml-2 text-sm text-gray-600">
-          ({courseDetails.rating_count} ratings)
+          ({courseDetails.reviews.length} ratings)
         </span>
         <span className="ml-4 text-sm text-gray-600">
           {courseDetails.total_enrollment} students enrolled
