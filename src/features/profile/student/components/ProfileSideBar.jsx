@@ -14,7 +14,7 @@ const ProfileSideBar = () => {
               Profile
             </Button>
           </Link>
-{/* 
+
           <Link to={"/profile/edit"}>
             <Button variant="ghost" className="w-full justify-start">
               <Edit className="mr-2 h-4 w-4" />
@@ -41,7 +41,7 @@ const ProfileSideBar = () => {
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
-          </Link> */}
+          </Link>
         </nav>
       </aside>
     </div>
