@@ -7,6 +7,8 @@ import LoadingDotStream from "@/components/common/Loading";
 import TutorCommunityChat from "@/features/tutor/pages/community/TutorCommunityChat";
 import TutorEditQuestion from "@/features/tutor/pages/contest/TutorEditQuestion";
 import TutorEditContest from "@/features/tutor/pages/contest/TutorEditContest";
+import TutorProfile from "@/features/profile/tutor/pages/TutorProfile";
+import TutorEditProfile from "@/features/profile/tutor/pages/TutorEditProfile";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -19,7 +21,6 @@ const TutorDashboard = lazy(() =>
   import("../features/tutor/pages/TutorDashboard")
 );
 const TutorCourse = lazy(() => import("../features/tutor/pages/TutorCourse"));
-const TutorProfile = lazy(() => import("../features/tutor/pages/TutorProfile"));
 const TutorCourseDetails = lazy(() =>
   import("../features/tutor/pages/TutorCourseDetails")
 );
@@ -197,6 +198,18 @@ const TutorRoutes = () => {
           path="/community/:slug"
           element={
             <ProtectedRoute element={<TutorCommunityChat />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute element={<TutorProfile />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute element={<TutorEditProfile />} role={"tutor"} />
           }
         />
 
