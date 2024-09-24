@@ -180,8 +180,6 @@ const TutorRoutes = () => {
           }
         />
 
-
-        
         <Route
           path="/community"
           element={
@@ -194,6 +192,8 @@ const TutorRoutes = () => {
             <ProtectedRoute element={<TutorCreateCommunity />} role={"tutor"} />
           }
         />
+
+        
         <Route
           path="/community/:slug"
           element={
@@ -202,9 +202,7 @@ const TutorRoutes = () => {
         />
         <Route
           path="/profile"
-          element={
-            <ProtectedRoute element={<TutorProfile />} role={"tutor"} />
-          }
+          element={<ProtectedRoute element={<TutorProfile />} role={"tutor"} />}
         />
         <Route
           path="/profile/:id"
