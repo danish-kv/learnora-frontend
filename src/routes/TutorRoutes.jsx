@@ -9,6 +9,7 @@ import TutorEditQuestion from "@/features/tutor/pages/contest/TutorEditQuestion"
 import TutorEditContest from "@/features/tutor/pages/contest/TutorEditContest";
 import TutorProfile from "@/features/profile/tutor/pages/TutorProfile";
 import TutorEditProfile from "@/features/profile/tutor/pages/TutorEditProfile";
+import TutorDashboard from "@/features/dashboard/pages/TutorDashboard";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -16,9 +17,6 @@ const TutorRegister = lazy(() =>
 const TutorLogin = lazy(() => import("../features/tutor/pages/TutorLogin"));
 const TutorApplication = lazy(() =>
   import("../features/tutor/pages/TutorApplication")
-);
-const TutorDashboard = lazy(() =>
-  import("../features/tutor/pages/TutorDashboard")
 );
 const TutorCourse = lazy(() => import("../features/tutor/pages/TutorCourse"));
 const TutorCourseDetails = lazy(() =>
@@ -210,6 +208,7 @@ const TutorRoutes = () => {
             <ProtectedRoute element={<TutorEditProfile />} role={"tutor"} />
           }
         />
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>
