@@ -7,7 +7,7 @@ import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import RequestedCourses from "../features/admin/pages/RequestedCourses";
 import AdminRequestedCategory from "@/features/admin/pages/AdminRequestedCategory";
 const AdminDashboard = lazy(() =>
-  import("../features/admin/pages/AdminDashboard")
+  import("../features/dashboard/pages/AdminDashboard")
 );
 const AdminStudent = lazy(() => import("../features/admin/pages/AdminStudent"));
 const AdminTutor = lazy(() => import("../features/admin/pages/AdminTutor"));

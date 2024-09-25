@@ -1,8 +1,7 @@
-import api from "@/services/api";
 import React, { useEffect, useState } from "react";
-import { fetchTutorDashboard } from "../services/dashboardServices";
+import { fetchAdminDashboard } from "../services/dashboardServices";
 
-const useFetchTutorDashboard = () => {
+const useFetchAdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -10,7 +9,7 @@ const useFetchTutorDashboard = () => {
   const getDashboard = async () => {
     setLoading(false);
     try {
-      const data = await fetchTutorDashboard();
+      const data = await fetchAdminDashboard();
       setDashboardData(data);
     } catch (error) {
       console.log(error);
@@ -26,4 +25,4 @@ const useFetchTutorDashboard = () => {
   return { dashboardData, error, loading };
 };
 
-export default useFetchTutorDashboard;
+export default useFetchAdminDashboard;
