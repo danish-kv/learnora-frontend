@@ -86,6 +86,7 @@ const Courses = () => {
             <SearchBar
               searchQuery={searchQuery}
               onSearchChange={handleSearchChange}
+              from={'courses'}
             />
             <CourseList courses={courses} />
             <div className="mt-8">
