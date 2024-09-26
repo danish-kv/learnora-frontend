@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import ProfileSideBar from "../components/ProfileSideBar";
 import ProfileView from "../components/ProfileView";
@@ -7,11 +7,18 @@ import EditProfile from "../components/EditProfile";
 import ChangePassword from "../components/ChangePassword";
 import SavedNotes from "../components/SavedNotes";
 import UseFetchStudentProfile from "../hooks/UseFetchStudentProfile";
+import { useSelector } from "react-redux";
 
 const StudentProfile = () => {
-  const { profile, getProfileData } = UseFetchStudentProfile();
+  const { profile } = UseFetchStudentProfile();
   console.log("profile data ==========", profile);
 
+  const navigate = useNavigate()
+  const {user} = useSelector((state) => state.auth)
+  if(!user){
+    return navigate('/')
+  }
+  
   return (
     <>
       <Header />

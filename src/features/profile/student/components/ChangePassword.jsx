@@ -3,11 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Logout } from "@/redux/thunk/authThunks";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -22,10 +28,14 @@ const ChangePassword = () => {
         confirm_password : confirmPassword
       });
       console.log(res);
+      swal('Changed', 'Password changed successfully', 'success')
+      dispatch(Logout())
+      navigate('/login')
+
+      
     } catch (error) {
       console.log(error);
       if (error.response && error.response.data) {
-        // Extract backend errors and display appropriate messages
         const errors = error.response.data;
   
         if (errors.old_password) {
