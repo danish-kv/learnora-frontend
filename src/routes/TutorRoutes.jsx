@@ -10,6 +10,7 @@ import TutorEditContest from "@/features/tutor/pages/contest/TutorEditContest";
 import TutorProfile from "@/features/profile/tutor/pages/TutorProfile";
 import TutorEditProfile from "@/features/profile/tutor/pages/TutorEditProfile";
 import TutorDashboard from "@/features/dashboard/pages/TutorDashboard";
+import TutorSalesReport from "@/features/salesReport/pages/TutorSalesReport";
 
 const TutorRegister = lazy(() =>
   import("../features/tutor/pages/TutorRegister")
@@ -206,6 +207,12 @@ const TutorRoutes = () => {
           path="/profile/:id"
           element={
             <ProtectedRoute element={<TutorEditProfile />} role={"tutor"} />
+          }
+        />
+        <Route
+          path="/sales-report"
+          element={
+            <ProtectedRoute element={<TutorSalesReport />} role={"tutor"} />
           }
         />
 

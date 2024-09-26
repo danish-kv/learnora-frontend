@@ -6,6 +6,7 @@ import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import AuthRouteProtection from "./protectedRoutes/AuthRouteProtection";
 import RequestedCourses from "../features/admin/pages/RequestedCourses";
 import AdminRequestedCategory from "@/features/admin/pages/AdminRequestedCategory";
+import AdminSalesReport from "@/features/salesReport/pages/AdminSalesReport";
 const AdminDashboard = lazy(() =>
   import("../features/dashboard/pages/AdminDashboard")
 );
@@ -82,6 +83,12 @@ const AdminRoutes = () => {
           path="requested-category"
           element={
             <ProtectedRoute element={<AdminRequestedCategory />} role={"admin"} />
+          }
+        />
+        <Route
+          path="sales-report"
+          element={
+            <ProtectedRoute element={<AdminSalesReport />} role={"admin"} />
           }
         />
 

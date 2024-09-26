@@ -10,6 +10,7 @@ import {
   Users,
   User,
   LogOut,
+  BarChart3,
 } from "lucide-react";
 
 const TutorSidebar = () => {
@@ -23,6 +24,7 @@ const TutorSidebar = () => {
     { to: "/tutor/categories", label: "Categories", icon: Folder },
     { to: "/tutor/community", label: "Community", icon: Users },
     { to: "/tutor/profile", label: "Profile", icon: User },
+    { to: "/tutor/sales-report", label: "Sale Report", icon: BarChart3 },
   ];
 
   const isActive = (path) => location.pathname === path;
