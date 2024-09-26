@@ -47,7 +47,7 @@ const ContestCard = ({ contest }) => {
       <div className="flex justify-between items-center">
         <Link
           to={`/contest/${contest.id}`}
-          className="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 transition duration-200"
+          className="text-white bg-emerald-500 px-4 py-2 rounded-md hover:bg-emerald-600 transition duration-200"
         >
           View Details
         </Link>

@@ -8,17 +8,28 @@ import { displayToastAlert } from "@/utils/displayToastAlert";
 import Swal from "sweetalert2";
 import { MessageCircle } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const DiscussionPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
-
   const [editDiscussion, setEditDiscussion] = useState(null);
 
   const { discussions, errors, loading, getDiscussion } = UseFetchDiscussion();
   console.log("data =========", discussions);
 
-  const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
+  const {user} = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+
+  const toggleCreateForm = () => {
+    if (!user){
+      navigate('/login')
+      displayToastAlert(300,'Please Login to create discussion...')
+    }
+    setShowCreateForm(!showCreateForm);
+  }
+
   const toggleComments = (discussionId) => {
     setExpandedComments((prev) => ({
       ...prev,
@@ -104,20 +115,23 @@ const DiscussionPage = () => {
         buttonText="Start a Discussion"
         icon={MessageCircle}
         gradient="bg-gradient-to-r from-blue-600 to-teal-600"
-        onClick={() => console.log("Start Discussion clicked")}
+        onClick={() => {
+          console.log("Start Discussion clicked")
+          toggleCreateForm()
+        }}
       />
 
       <div className="max-w-3xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-center items-center mb-6">
           <h1 className="text-3xl p-6 font-bold mb-6 text-center">
             Discussion Forum
           </h1>
-          <button
+          {/* <button
             onClick={toggleCreateForm}
-            className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+            className="bg-teal-600  text-white px-4 py-2 rounded hover:bg-indigo-600"
           >
             New Discussion
-          </button>
+          </button> */}
         </div>
 
         {discussions.map((discussion) => (

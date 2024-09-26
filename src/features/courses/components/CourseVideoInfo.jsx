@@ -54,7 +54,6 @@ const CourseVideoInfo = ({ courseDetails, currentVideo, refetch }) => {
         <span className="text-yellow-500">
           {"★".repeat(Math.floor(courseDetails.average_rating || 0))}
           {"☆".repeat(5 - Math.floor(courseDetails.average_rating || 0))}
-          {courseDetails.average_rating}
         </span>
         <span className="ml-2 text-sm text-gray-600">
           ({courseDetails.reviews.length} ratings)

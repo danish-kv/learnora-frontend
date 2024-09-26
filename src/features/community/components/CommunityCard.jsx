@@ -27,7 +27,7 @@ const CommunityCard = ({ community, onJoin }) => {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+          <div className="w-full h-full bg-gradient-to-r from-purple-400 to-pink-500"></div>
         )}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
           <h3 className="text-2xl font-bold text-white">{community.name}</h3>
@@ -65,13 +65,13 @@ const CommunityCard = ({ community, onJoin }) => {
           </span>
           {community.is_joined ? (
             <Link to={`/community/${community.slug}`}>
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
+              <Button className="bg-purple-600 hover:bg-purple-700">
                 Open
               </Button>
             </Link>
           ) : (
             <Button
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-purple-600 hover:bg-purple-700"
               onClick={() => handleOnJoin(community.slug, community.name)}
             >
               Join Community

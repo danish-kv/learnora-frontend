@@ -1,3 +1,4 @@
+import { formatDate } from "@/utils/format";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -57,7 +58,7 @@ const CourseDetailsMain = ({ course }) => {
         </span>
       </div>
       <div className="flex items-center text-sm text-gray-600 mb-4">
-        <span>Last updated {course.updated_at.slice(0, 7)}</span>
+        <span>Last updated {course.updated_at ? formatDate(new Date(course.updated_at), 'dd mmmm yyyy') : "N/A"}</span>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import Header from "@/components/layout/Header";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ContestCard from "../components/ContestCard";
 import useFetchContest from "@/features/tutor/hooks/useFetchContest";
 import SearchBar from "@/features/courses/components/SearchBar";
@@ -13,6 +13,7 @@ const ContestPage = () => {
   const { contests, errors, loading } = useFetchContest();
 
   const {participants} = useFetchGlobalLeaderboard()
+  const [searchQuery, setSearchQuery] = useState("");
 
   
 
@@ -23,7 +24,7 @@ const ContestPage = () => {
       <Banner
         title="Expand Your Knowledge, Compete, and Win!"
         description="Join our exciting contests and challenge yourself to learn more."
-        buttonText="Join a Contest"
+        buttonText="Explore a Contest"
         icon={Trophy}
         gradient="bg-gradient-to-r from-green-600 to-emerald-600"
         onClick={() => console.log("Join Contest clicked")}

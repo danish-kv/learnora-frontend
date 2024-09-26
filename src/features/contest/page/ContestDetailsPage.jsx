@@ -36,14 +36,14 @@ const ContestDetailsPage = () => {
   if (error) return <div className="text-red-500 text-center">{error}</div>;
 
   return (
-    <div className="bg-gradient-to-b from-indigo-100 to-white min-h-screen">
+    <div className="bg-gradient-to-b from-emerald-100 to-white min-h-screen">
       <Header />
       <div className="max-w-7xl mx-auto pt-8 px-4">
         {contestDetails ? (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="bg-indigo-500 text-white p-6">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6">
               <h1 className="text-3xl font-bold mb-2">{contestDetails.name}</h1>
-              <p className="text-indigo-100">{contestDetails.description}</p>
+              <p className="text-emerald-100">{contestDetails.description}</p>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -70,7 +70,7 @@ const ContestDetailsPage = () => {
               </div>
 
               <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-3 text-indigo-800">
+                <h2 className="text-2xl font-semibold mb-3 text-emerald-800">
                   Contest Rules
                 </h2>
                 <ul className="space-y-2">
@@ -83,7 +83,7 @@ const ContestDetailsPage = () => {
                     "Participants can only attempt once.",
                   ].map((rule, index) => (
                     <li key={index} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-1" />
+                      <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0 mt-1" />
                       <span>{rule}</span>
                     </li>
                   ))}
@@ -91,10 +91,10 @@ const ContestDetailsPage = () => {
               </div>
 
               <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-3 text-indigo-800">
+                <h2 className="text-2xl font-semibold mb-3 text-emerald-800">
                   Top Participants
                 </h2>
-                <div className="bg-indigo-50 rounded-lg p-4">
+                <div className="bg-emerald-50 rounded-lg p-4">
                   {contestDetails &&
                     contestDetails?.leaderboard.map((participant, index) => (
                       <div
@@ -104,7 +104,7 @@ const ContestDetailsPage = () => {
                         <span className="font-semibold">
                           {participant.rank}. {participant?.user?.username}
                         </span>
-                        <span className="bg-indigo-200 text-indigo-800 px-2 py-1 rounded">
+                        <span className="bg-emerald-200 text-emerald-800 px-2 py-1 rounded">
                           {participant.score} points
                         </span>
                       </div>
@@ -117,9 +117,7 @@ const ContestDetailsPage = () => {
                 <button
                   onClick={handleParticipate}
                   disabled={contestDetails.is_participated}
-                  className={`w-full ${
-                    contestDetails.is_participated && "opacity-70"
-                  } bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1`}
+                  className={`w-full  bg-emerald-600 text-white px-6 py-3 rounded-lg shadow hover:bg-emerald-700 transition duration-300 ease-in-out transform hover:-translate-y-1`}
                 >
                   {contestDetails.is_participated
                     ? "Completed"
