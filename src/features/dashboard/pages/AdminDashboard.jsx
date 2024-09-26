@@ -1,5 +1,4 @@
 import React from "react";
-import TutorSidebar from "@/features/tutor/components/TutorSidebar";
 import DashboardCard from "../components/DashboardCard";
 import EnrollmentChart from "../components/EnrollmentChart";
 import CourseProgressChart from "../components/CourseProgressChart ";
@@ -9,7 +8,7 @@ import ContestLeaderboardTable from "../components/ContestLeaderboardTable";
 import RatingsTable from "../components/RatingsTable";
 import AdminSidebar from "@/features/admin/components/AdminSidebar";
 import useFetchAdminDashboard from "../hooks/useFetchAdminDashboard";
-import { ArrowUpRight, BookOpen, DollarSign, Eye, Users } from "lucide-react";
+import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
 
 const AdminDashboard = () => {
   const { dashboardData } = useFetchAdminDashboard();
@@ -30,8 +29,8 @@ const AdminDashboard = () => {
     },
     {
       label: "Total Amount",
-      value: `$${dashboardData?.stats?.total_amount}`,
-      icon: DollarSign,
+      value: dashboardData?.stats?.total_amount,
+      icon: IndianRupeeIcon,
       color: "text-yellow-600",
     },
     {
@@ -66,7 +65,6 @@ const AdminDashboard = () => {
             <h2 className="text-xl font-semibold mb-4">Enrollment Over Time</h2>
             <EnrollmentChart enrollmentData={dashboardData.enrollment_data} />
           </div>
-
           <div className="p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
             <CourseProgressChart courseProgressData={courseProgressData} />
@@ -80,7 +78,6 @@ const AdminDashboard = () => {
           />
           <LatestPaymentsTable paymentsData={dashboardData?.recent_purchase} />
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <RecentEnrollmentTable
             enrollmentsData={dashboardData?.recent_enrollments}

@@ -8,7 +8,7 @@ import LatestPaymentsTable from "../components/LatestPaymentsTable";
 import ContestLeaderboardTable from "../components/ContestLeaderboardTable";
 import RatingsTable from "../components/RatingsTable";
 import useFetchTutorDashboard from "../hooks/useFetchTutorDashboard";
-import { BookOpen, DollarSign, Eye, Users } from "lucide-react";
+import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
 
 const TutorDashboard = () => {
   const { dashboardData } = useFetchTutorDashboard();
@@ -29,8 +29,8 @@ const TutorDashboard = () => {
     },
     {
       label: "Total Amount",
-      value: `$${dashboardData?.stats?.total_amount}`,
-      icon: DollarSign,
+      value: dashboardData?.stats?.total_amount,
+      icon: IndianRupeeIcon,
       color: "text-yellow-600",
     },
     {

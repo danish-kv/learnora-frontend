@@ -1,6 +1,7 @@
 import React from "react";
 import TableWrapper from "./TableWrapper";
 import { Calendar, User, BookOpen, Clock } from "lucide-react";
+import { formatDate } from "@/utils/format";
 
 export const RecentEnrollmentTable = ({ enrollmentsData }) => {
   if (!enrollmentsData || enrollmentsData.length === 0) return null;
@@ -30,7 +31,9 @@ export const RecentEnrollmentTable = ({ enrollmentsData }) => {
               <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                 <Calendar className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
                 <span className="font-medium mr-2">Enrolled on:</span>
-                {new Date(enrollment?.created_at).toLocaleDateString()}
+                {enrollment?.created_at
+                  ? formatDate(new Date(enrollment?.created_at), "dd mmmm yyyy")
+                  : "N/A"}
               </div>
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-500">
