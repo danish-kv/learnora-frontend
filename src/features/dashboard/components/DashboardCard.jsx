@@ -23,14 +23,6 @@ const DashboardCard = ({ stats }) => {
                     <div className="text-2xl font-semibold text-gray-900">
                       {item.value}
                     </div>
-                    <div className="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                      <ArrowUpRight
-                        className="self-center flex-shrink-0 h-5 w-5 text-green-500"
-                        aria-hidden="true"
-                      />
-                      <span className="sr-only">Increased by</span>
-                      12%
-                    </div>
                   </dd>
                 </dl>
               </div>

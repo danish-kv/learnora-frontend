@@ -13,7 +13,7 @@ const chartColors = {
 
 const EnrollmentChart = ({ enrollmentData }) => {
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep', 'Oc', 'Nov', 'Dec'],
     datasets: [
       {
         label: 'Enrollments',

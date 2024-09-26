@@ -42,7 +42,6 @@ const AdminDashboard = () => {
     },
   ];
 
-  const enrollmentData = [10, 20, 15, 25, 30, 40];
   const courseProgressData = {
     completed: dashboardData?.progress?.completed_course || 0,
     ongoing: dashboardData?.progress?.ongoing_course || 0,
@@ -65,7 +64,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Enrollment Over Time</h2>
-            <EnrollmentChart enrollmentData={enrollmentData} />
+            <EnrollmentChart enrollmentData={dashboardData.enrollment_data} />
           </div>
 
           <div className="p-6 bg-white shadow-md rounded-lg">
