@@ -4,22 +4,10 @@ import TutorSidebar from "../../components/TutorSidebar";
 import TutorContestCard from "../../components/TutorContestCard";
 import useFetchContest from "../../hooks/useFetchContest";
 import PaginationComponent from "@/features/courses/components/Pagination";
-import api from "@/services/api";
 
 const TutorContest = () => {
-  const { contests, errors, loading, getConteset } = useFetchContest();
+  const { contests } = useFetchContest();
 
-  const handleBlock = async (id, current_status) => {
-    console.log(id, current_status);
-
-    try {
-      const res = await api.patch(`contest/${id}/block/`);
-      getConteset()
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
 
   return (
@@ -40,7 +28,6 @@ const TutorContest = () => {
               <TutorContestCard
                 key={index}
                 contest={contest}
-                onBlockToggle={handleBlock}
               />
             ))}
           </div>

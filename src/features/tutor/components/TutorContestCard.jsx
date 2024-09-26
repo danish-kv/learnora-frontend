@@ -1,21 +1,28 @@
-import { formatDate } from "@/utils/format";
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatDate } from "@/utils/format";
 
-const TutorContestCard = ({ contest, onBlockToggle }) => {
+const TutorContestCard = ({ contest }) => {
   if (!contest) {
-    return <h1>Contest is loading....</h1>;
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6">
+        Loading...
+      </div>
+    );
   }
 
-  const handleBlock = (id, current_status) => {
-    onBlockToggle(id, current_status);
+  const handleBlock = () => {
+    onBlockToggle(contest.id, contest.is_active);
   };
+
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 relative">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold text-gray-800">{contest.name}</h3>
+    <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col h-full">
+      <div className="flex justify-between items-start mb-2">
+        <h3 className="text-xl font-semibold text-gray-800 truncate">
+          {contest.name}
+        </h3>
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium absolute top-4 right-4 ${
+          className={`px-3 py-1 rounded-full text-xs font-medium ${
             contest.status === "ongoing"
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
@@ -24,52 +31,42 @@ const TutorContestCard = ({ contest, onBlockToggle }) => {
           {contest.status}
         </span>
       </div>
-      <p className="text-gray-600 mb-4">{contest.description}</p>
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <p className="text-sm text-gray-600 mb-4 flex-grow overflow-hidden line-clamp-2 text-ellipsis">
+        {contest.description}
+      </p>{" "}
+      <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <p className="text-sm text-gray-500">Total Questions</p>
-          <p className="text-gray-800 font-medium">{contest.total_questions}</p>
-          <p className="text-sm text-gray-500 mt-2">Max Points</p>
-          <p className="text-gray-800 font-medium">{contest.max_points}</p>
+          <p className="text-gray-500">Total Questions</p>
+          <p className="font-medium">{contest.total_questions}</p>
         </div>
         <div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Start Time</p>
-              <p className="text-gray-800 font-medium">
-                {contest.start_time
-                  ? formatDate(new Date(contest.start_time), "dd, mmmm, yyyy")
-                  : "N/A"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">End Time</p>
-              <p className="text-gray-800 font-medium">
-                {contest.end_time
-                  ? formatDate(new Date(contest.end_time), "dd, mmmm, yyyy")
-                  : "N/A"}
-              </p>
-            </div>
-          </div>
+          <p className="text-gray-500">Start Time</p>
+          <p className="font-medium">
+            {contest.start_time
+              ? formatDate(new Date(contest.start_time), "dd MMM yyyy")
+              : "N/A"}
+          </p>
+        </div>
+        <div>
+          <p className="text-gray-500">Max Points</p>
+          <p className="font-medium">{contest.max_points}</p>
+        </div>
+        <div>
+          <p className="text-gray-500">End Time</p>
+          <p className="font-medium">
+            {contest.end_time
+              ? formatDate(new Date(contest.end_time), "dd MMM yyyy")
+              : "N/A"}
+          </p>
         </div>
       </div>
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-end mt-4 space-x-2">
         <Link
           to={`/tutor/contest/${contest.id}`}
-          className="bg-indigo-700 hover:bg-indigo-800 text-white p-3 py-2 rounded-md mr-2"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150"
         >
           View
         </Link>
-        <button
-          onClick={() => handleBlock(contest.id, contest.is_active)}
-          className={` ${
-            contest.is_active
-              ? "bg-yellow-500 hover:bg-yellow-600"
-              : "bg-green-500 hover:bg-green-600"
-          }   text-white px-4 py-2 rounded-md ml-2`}
-        >
-          {contest.is_active ? "Block" : 'Unblock' }
-        </button>
       </div>
     </div>
   );
