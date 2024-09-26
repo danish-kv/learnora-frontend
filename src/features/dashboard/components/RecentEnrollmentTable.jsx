@@ -1,45 +1,47 @@
-import { formatDate } from "@/utils/format";
 import React from "react";
+import TableWrapper from "./TableWrapper";
+import { Calendar, User, BookOpen, Clock } from "lucide-react";
 
-const RecentEnrollmentTable = ({ enrollmentsData }) => {
-  if (!enrollmentsData) {
-    return null;
-  }
+export const RecentEnrollmentTable = ({ enrollmentsData }) => {
+  if (!enrollmentsData || enrollmentsData.length === 0) return null;
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Course Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Student Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Enrollment Date
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {enrollmentsData.map((enrollment, index) => (
-            <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {enrollment?.course?.title}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    <TableWrapper title="Recent Enrollments">
+      <ul className="divide-y divide-gray-200">
+        {enrollmentsData.map((enrollment, index) => (
+          <li key={index} className="px-4 py-4 sm:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <BookOpen className="h-5 w-5 text-indigo-600 mr-2" />
+                <p className="text-sm font-medium text-indigo-600 truncate">{enrollment?.course?.title}</p>
+              </div>
+              <div className="ml-2 flex-shrink-0">
+                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  {enrollment?.status || 'Enrolled'}
+                </span>
+              </div>
+            </div>
+            <div className="mt-2 sm:flex sm:justify-between">
+              <div className="flex items-center text-sm text-gray-500">
+                <User className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                <span className="font-medium mr-2">Student:</span>
                 {enrollment?.student?.username}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {enrollment?.created_at
-                  ? formatDate(new Date(enrollment?.created_at), "dd mmmm yyyy")
-                  : "N/A"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+              </div>
+              <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                <Calendar className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                <span className="font-medium mr-2">Enrolled on:</span>
+                {new Date(enrollment?.created_at).toLocaleDateString()}
+              </div>
+            </div>
+            <div className="mt-2 flex items-center text-sm text-gray-500">
+              <Clock className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+              <span className="font-medium mr-2">Progress:</span>
+              {enrollment?.progress || '0%'}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </TableWrapper>
   );
 };
 

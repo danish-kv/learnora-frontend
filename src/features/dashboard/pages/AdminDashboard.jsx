@@ -9,6 +9,7 @@ import ContestLeaderboardTable from "../components/ContestLeaderboardTable";
 import RatingsTable from "../components/RatingsTable";
 import AdminSidebar from "@/features/admin/components/AdminSidebar";
 import useFetchAdminDashboard from "../hooks/useFetchAdminDashboard";
+import { ArrowUpRight, BookOpen, DollarSign, Eye, Users } from "lucide-react";
 
 const AdminDashboard = () => {
   const { dashboardData } = useFetchAdminDashboard();
@@ -18,26 +19,26 @@ const AdminDashboard = () => {
     {
       label: "Total Courses",
       value: dashboardData?.stats?.total_courses,
-      icon: "📚",
-      bgColor: "bg-blue-600",
+      icon: BookOpen,
+      color: "text-blue-600",
     },
     {
       label: "Total Users",
       value: dashboardData?.stats?.enrolled_courses,
-      icon: "👨‍🎓",
-      bgColor: "bg-green-600",
+      icon: Users,
+      color: "text-green-600",
     },
     {
       label: "Total Amount",
-      value: `${dashboardData?.stats?.total_amount}`,
-      icon: "💰",
-      bgColor: "bg-yellow-600",
+      value: `$${dashboardData?.stats?.total_amount}`,
+      icon: DollarSign,
+      color: "text-yellow-600",
     },
     {
       label: "Total Viewers",
-      value: `${dashboardData?.stats?.total_views}`,
-      icon: "👀",
-      bgColor: "bg-red-600",
+      value: dashboardData?.stats?.total_views,
+      icon: Eye,
+      color: "text-purple-600",
     },
   ];
 
@@ -58,17 +59,7 @@ const AdminDashboard = () => {
         <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <DashboardCard
-              key={index}
-              label={stat.label}
-              value={stat.value}
-              icon={stat.icon}
-              bgColor={stat.bgColor}
-            />
-          ))}
-        </div>
+        <DashboardCard stats={stats} />
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
