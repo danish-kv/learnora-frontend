@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import AdminSidebar from "@/features/admin/components/AdminSidebar";
 import { Calendar, DollarSign, BarChart2, Download } from "lucide-react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const AdminSalesReport = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [salesData, setSalesData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const summaryRef = useRef(null);
 
   const handleGenerateReport = async () => {
     if (!startDate || !endDate) {
@@ -40,6 +43,20 @@ const AdminSalesReport = () => {
     return salesData
       .reduce((total, sale) => total + parseFloat(sale.total_amount), 0)
       .toFixed(2);
+  };
+
+  const handleDownloadPDF = () => {
+    if (summaryRef.current) {
+      html2canvas(summaryRef.current).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save("sales_summary.pdf");
+      });
+    }
   };
 
   return (
@@ -125,86 +142,93 @@ const AdminSalesReport = () => {
               <h3 className="text-2xl font-semibold text-gray-800">
                 Sales Summary
               </h3>
-              <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out flex items-center">
-                <Download className="mr-2" size={20} />
-                Export CSV
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-              <div className="bg-blue-100 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <Calendar className="text-blue-500 mr-2" size={24} />
-                  <span className="text-lg font-semibold text-blue-700">
-                    Date Range
-                  </span>
-                </div>
-                <p className="mt-2 text-sm text-blue-600">
-                  {startDate?.toLocaleDateString()} -{" "}
-                  {endDate?.toLocaleDateString()}
-                </p>
-              </div>
-              <div className="bg-green-100 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <BarChart2 className="text-green-500 mr-2" size={24} />
-                  <span className="text-lg font-semibold text-green-700">
-                    Total Sales
-                  </span>
-                </div>
-                <p className="mt-2 text-2xl font-bold text-green-600">
-                  {getTotalSales()}
-                </p>
-              </div>
-              <div className="bg-purple-100 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <DollarSign className="text-purple-500 mr-2" size={24} />
-                  <span className="text-lg font-semibold text-purple-700">
-                    Total Revenue
-                  </span>
-                </div>
-                <p className="mt-2 text-2xl font-bold text-purple-600">
-                  ${getTotalAmount()}
-                </p>
+              <div className="space-x-2">
+                <button
+                  onClick={handleDownloadPDF}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out flex items-center"
+                >
+                  <Download className="mr-2" size={20} />
+                  Download PDF
+                </button>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      SI
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Course Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div ref={summaryRef}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div className="bg-blue-100 p-4 rounded-lg">
+                  <div className="flex items-center">
+                    <Calendar className="text-blue-500 mr-2" size={24} />
+                    <span className="text-lg font-semibold text-blue-700">
+                      Date Range
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-blue-600">
+                    {startDate?.toLocaleDateString()} -{" "}
+                    {endDate?.toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-lg">
+                  <div className="flex items-center">
+                    <BarChart2 className="text-green-500 mr-2" size={24} />
+                    <span className="text-lg font-semibold text-green-700">
                       Total Sales
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {salesData.map((sale, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {index + 1}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {sale?.course_title}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {sale?.total_sales}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${sale?.total_amount}
-                      </td>
+                    </span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-green-600">
+                    {getTotalSales()}
+                  </p>
+                </div>
+                <div className="bg-purple-100 p-4 rounded-lg">
+                  <div className="flex items-center">
+                    <DollarSign className="text-purple-500 mr-2" size={24} />
+                    <span className="text-lg font-semibold text-purple-700">
+                      Total Revenue
+                    </span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-purple-600">
+                    {getTotalAmount()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        SI
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Course Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total Sales
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Amount
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {salesData.map((sale, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {index + 1}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {sale?.course_title}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {sale?.total_sales}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {sale?.total_amount}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         ) : (

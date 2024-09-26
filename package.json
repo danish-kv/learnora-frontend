@@ -33,6 +33,7 @@
     "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.3.31",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "jwt-decode": "^4.0.0",
     "ldrs": "^1.0.2",
