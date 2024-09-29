@@ -1,24 +1,81 @@
-import React from 'react'
+import React from "react";
 
 const Hero = () => {
+  const StatItem = ({ number, text }) => (
+    <div className="text-center">
+      <div className="text-4xl font-bold text-white mb-2">{number}</div>
+      <div className="text-sm text-indigo-100">{text}</div>
+    </div>
+  );
+
+  const Statistics = () => (
+    <div className="bg-indigo-600 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <StatItem number="700+" text="Success Stories" />
+          <StatItem number="200+" text="Expert Instructor" />
+          <StatItem number="80k+" text="Worldwide Students" />
+          <StatItem number="500+" text="Trendy Subjects" />
+        </div>
+      </div>
+    </div>
+  );
+
+  const ImageDisplay = () => {
+    const images = [
+      "/api/placeholder/300/400",
+      "/api/placeholder/300/400",
+      "/api/placeholder/300/400",
+      "/api/placeholder/300/400",
+      "/api/placeholder/300/400"
+    ];
+
+    return (
+      <div className="w-full overflow-hidden bg-gray-100 py-8">
+        <div className="flex space-x-4 animate-scroll">
+          {images.map((src, index) => (
+            <img
+              key={index}
+              src={src}
+              alt={`Professional ${index + 1}`}
+              className="w-48 h-64 object-cover rounded-lg shadow-md"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <section className="bg-purple-100 py-20">
-      <div className="container mx-auto text-center">
-        <h1 className="text-4xl font-bold mb-4">Become A Professional In Your Sector</h1>
-        <p className="text-lg mb-8">UI UX Design | Web Development | Digital Marketing | Practical Learning</p>
-        <button className="bg-purple-600 text-white py-2 px-4 rounded">Explore More</button>
-        <div className="mt-8">
-          <p className="text-gray-600">Over 100 Universities And Companies Collaborate With Us</p>
-          <div className="flex justify-center mt-4 space-x-6">
-            {/* Replace these with actual images */}
-            <img src="path/to/university1.png" alt="University 1" className="h-12"/>
-            <img src="path/to/university2.png" alt="University 2" className="h-12"/>
-            <img src="path/to/university3.png" alt="University 3" className="h-12"/>
+    <div className="bg-indigo-50 min-h-screen flex flex-col">
+      <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-4xl w-full space-y-8 text-center">
+          <div className="bg-indigo-100 text-indigo-600 py-2 px-4 rounded-full inline-block mb-8">
+            Over 3 million ready-to-work creatives!
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+            Start Your Journey Toward Academic Excellence
+          </h1>
+
+          <p className="mt-4 text-xl text-gray-500 max-w-2xl mx-auto">
+            We have simplified the learning process to suit your needs, offering
+            user-friendly courses designed for easy comprehension and practical
+            application.
+          </p>
+
+          <div className="mt-8">
+            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+              Join Course
+            </button>
           </div>
         </div>
       </div>
-    </section>
-  )
-}
 
-export default Hero
+      <ImageDisplay />
+      <Statistics />
+    </div>
+  );
+};
+
+export default Hero;
