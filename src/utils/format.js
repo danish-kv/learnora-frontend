@@ -34,3 +34,43 @@ export const formatDate = (dateString) => {
 
   })
 }
+
+
+// formatUtils.js
+
+import { format } from "date-fns";
+
+
+export const formatMessageTime = (timestamp) => {
+  return format(new Date(timestamp), "HH:mm");
+};
+
+
+import { isToday, isYesterday, differenceInCalendarDays } from 'date-fns';
+
+export const formatMessageDateHeader = (dateString) => {
+  console.log("Received dateString===", dateString); 
+  const date = new Date(dateString);
+  console.log("Parsed date==", date); 
+
+  if (isNaN(date)) {
+    console.error("Invalid Date:", dateString);
+    return "";
+  }
+
+  if (isToday(date)) {
+    return 'Today';
+  } else if (isYesterday(date)) {
+    return 'Yesterday';
+  } else {
+    return format(date, 'dd/MM/yyyy');
+  }
+};
+
+
+
+export const isDifferentDay = (currentMessageDate, previousMessageDate) => {
+  return (
+    differenceInCalendarDays(new Date(currentMessageDate), new Date(previousMessageDate)) !== 0
+  );
+};
