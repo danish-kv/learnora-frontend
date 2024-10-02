@@ -24,10 +24,13 @@ const CourseModules = ({ course }) => {
         </button>
       </div>
       <p className="text-sm text-gray-500 mb-6">
-      {course.modules.length > 0 ? `${Object.keys(course.modules).length} lessons` : "No modules available"}
+        {course.modules.length > 0
+          ? `${Object.keys(course.modules).length} lessons`
+          : "No modules available"}
       </p>
       {course.modules.map((module, index) => (
         <ModuleItems
+          key={index}
           number={index + 1}
           title={module.title}
           description={module.description}

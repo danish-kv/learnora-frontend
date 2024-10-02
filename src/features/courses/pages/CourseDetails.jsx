@@ -1,52 +1,56 @@
 import React from "react";
-import CourseModules from "../components/CourseModules";
+import { useParams } from "react-router-dom";
 import Header from "../../../components/layout/Header";
+import CourseDetailsMain from "../components/CourseDetailsMain";
 import CourseDetailsCard from "../components/CourseDetailsCard";
 import CourseDetailsAbout from "../components/CourseDetailsAbout";
-import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
-import { useParams } from "react-router-dom";
-import CourseDetailsMain from "../components/CourseDetailsMain";
-import { formatDuration } from "../../../utils/format";
+import CourseModules from "../components/CourseModules";
 import CourseReview from "../components/CourseReview";
 import CourseDetailTutorData from "../components/CourseDetailTutorData";
+import useFetchCourseDetails from "../../tutor/hooks/useFetchCourseDetails";
+import { formatDuration } from "../../../utils/format";
 
 const CourseDetails = () => {
   const { slug } = useParams();
-  const { courseDetails, error, refetch, loading } =
-    useFetchCourseDetails(slug);
+  const { courseDetails, error, loading } = useFetchCourseDetails(slug);
 
   if (loading) {
     return (
-      <div>
-        <p>Loading course details...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-xl font-semibold">Loading course details...</p>
       </div>
     );
   }
 
-  console.log("eerroorr", error);
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-xl font-semibold text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
 
   const total_duration = courseDetails?.modules.reduce((total, module) => {
     return total + module.duration;
   }, 0);
 
   const time = formatDuration(total_duration);
-  console.log(time);
-
-  console.log("total duration of ", total_duration);
-
-  const check = courseDetails?.modules.length;
-  console.log(check);
 
   return (
-    <div className="bg-[#f2e9ff]">
+    <div className="bg-gray-100 min-h-screen">
       <Header />
-      <div className="p-8 max-w-6xl mx-auto">
-        <div className="flex gap-8">
-          <div className="flex-grow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="w-full lg:w-2/3">
             <CourseDetailsMain course={courseDetails} />
 
-            <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-              <div className="flex justify-between">
+            {/* Right sidebar for small screens */}
+            <div className="lg:hidden mb-6">
+              <CourseDetailsCard course={courseDetails} />
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-sm font-semibold">Skill level</p>
                   <p className="text-sm">{courseDetails?.skill_level}</p>
@@ -67,7 +71,13 @@ const CourseDetails = () => {
             <CourseReview reviews={courseDetails?.reviews} />
             <CourseDetailTutorData data={courseDetails} />
           </div>
-          <CourseDetailsCard course={courseDetails} />
+
+          {/* Right sidebar for large screens */}
+          <div className="hidden lg:block w-1/3">
+            <div className="sticky top-4">
+              <CourseDetailsCard course={courseDetails} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import api from "../../../services/api";
-import { Link, useNavigate } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns"; // Optional: For formatting the time remaining
+import { Link } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 const CourseDetailsCard = ({ course }) => {
   if (!course) {
     return null;
   }
-  const navigate = useNavigate();
 
-  
   const formatDate = (date) => {
     if (!date) return "N/A";
     return formatDistanceToNow(new Date(date), { addSuffix: true });
@@ -30,8 +28,6 @@ const CourseDetailsCard = ({ course }) => {
     }
   };
 
-
-  // Determine if the user has purchased or rented the course
   const hasPurchased = course?.progress?.progress;
   const isRental = course?.progress?.access_type === "Rental";
   const rentalExpiry = isRental
@@ -39,21 +35,21 @@ const CourseDetailsCard = ({ course }) => {
     : null;
 
   return (
-    <div className="w-80 flex-shrink-0">
-      <div className="bg-white rounded-lg shadow-md p-4 sticky top-4">
+    <div className="w-full lg:w-80 mb-6 lg:mb-0">
+      <div className="bg-white rounded-lg shadow-md p-4 lg:sticky lg:top-4">
         <img
           src={course.thumbnail}
           alt="Course preview"
-          className="w-full h-32 object-cover rounded-t-lg mb-4"
+          className="w-full h-48 lg:h-32 object-cover rounded-t-lg mb-4"
         />
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <div>
-              <span className="text-xl font-bold text-gray-800">
+              <span className="text-2xl lg:text-xl font-bold text-gray-800">
                 {course.price}
               </span>
               <span className="text-sm text-gray-500 line-through ml-2">
-                {(course.price * 1.08).toFixed(2) }
+                {(course.price * 1.08).toFixed(2)}
               </span>
             </div>
           </div>
@@ -66,17 +62,17 @@ const CourseDetailsCard = ({ course }) => {
         </div>
 
         {!hasPurchased ? (
-          <div className="flex space-x-2 mb-4">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
             <button
               onClick={() => handlePurchase("Lifetime")}
-              className="w-full bg-purple-600 text-white py-2 rounded-md"
+              className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition duration-300"
             >
               Buy Course
             </button>
             {course.rental_price > 0 && (
               <button
                 onClick={() => handlePurchase("Rental")}
-                className="w-full bg-blue-600 text-white py-2 rounded-md"
+                className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition duration-300"
               >
                 Rent Course
               </button>
@@ -85,9 +81,7 @@ const CourseDetailsCard = ({ course }) => {
         ) : (
           <div className="mb-4">
             <Link to={`/course/${course.slug}/${course.modules[0]?.id}`}>
-              <button
-                className="w-full bg-green-600 text-white py-2 rounded-md"
-              >
+              <button className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition duration-300">
                 View Course
               </button>
             </Link>
@@ -118,7 +112,7 @@ const CourseDetailsCard = ({ course }) => {
           <img
             src={course.tutor.user.profile}
             alt="Tutor"
-            className="w-8 h-8 rounded-full mr-2"
+            className="w-10 h-10 rounded-full mr-2"
           />
           <span className="text-sm text-gray-600">{course.tutor.headline}</span>
         </div>

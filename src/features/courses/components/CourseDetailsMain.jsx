@@ -41,16 +41,7 @@ const CourseDetailsMain = ({ course }) => {
         <span className="text-gray-600">{course.title}</span>
       </p>
       <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
-      {/* <p className="text-gray-600 mb-4">
-      Free Java Course with Certificate Online [2024]
-    </p> */}
-      {/* <div className="flex items-center mb-4">
-      <span className="text-2xl font-bold mr-2">4.6</span>
-      <div className="text-yellow-400 text-xl">★★★★☆</div>
-      <span className="text-sm text-gray-600 ml-2">
-        (2,939 ratings)
-      </span>
-    </div> */}
+
       <div className="flex items-center text-sm text-gray-600 mb-4">
         <span className="mr-2">👤</span>
         <span>
@@ -58,7 +49,12 @@ const CourseDetailsMain = ({ course }) => {
         </span>
       </div>
       <div className="flex items-center text-sm text-gray-600 mb-4">
-        <span>Last updated {course.updated_at ? formatDate(new Date(course.updated_at), 'dd mmmm yyyy') : "N/A"}</span>
+        <span>
+          Last updated{" "}
+          {course.updated_at
+            ? formatDate(new Date(course.updated_at), "dd mmmm yyyy")
+            : "N/A"}
+        </span>
       </div>
     </div>
   );
