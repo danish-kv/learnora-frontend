@@ -11,18 +11,14 @@ const TutorContestCard = ({ contest }) => {
     );
   }
 
-  const handleBlock = () => {
-    onBlockToggle(contest.id, contest.is_active);
-  };
-
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col h-full">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-md p-4 sm:p-6 flex flex-col h-full">
       <div className="flex justify-between items-start mb-2">
-        <h3 className="text-xl font-semibold text-gray-800 truncate">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
           {contest.name}
         </h3>
         <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
+          className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
             contest.status === "ongoing"
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
@@ -33,7 +29,7 @@ const TutorContestCard = ({ contest }) => {
       </div>
       <p className="text-sm text-gray-600 mb-4 flex-grow overflow-hidden line-clamp-2 text-ellipsis">
         {contest.description}
-      </p>{" "}
+      </p>
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-gray-500">Total Questions</p>

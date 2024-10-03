@@ -67,13 +67,13 @@ const TutorSidebar = () => {
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-indigo-700 text-white flex flex-col transition-all duration-300 ease-in-out z-20 shadow-lg transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
       >
         <div className="flex items-center justify-center h-16 border-b border-indigo-600">
           <h1 className="text-2xl font-bold">Tutor Dashboard</h1>
         </div>
         <nav className="flex-1 py-6 px-4 overflow-y-auto">
-          <ul className="space-y-2">
+          <ul className="space-y-2 px-4">
             {navItems.map((item) => (
               <li key={item.to}>
                 <Link

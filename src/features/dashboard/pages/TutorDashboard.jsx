@@ -1,5 +1,6 @@
 import React from "react";
 import TutorSidebar from "@/features/tutor/components/TutorSidebar";
+import TutorHeader from "@/features/tutor/components/TutorHeader";
 import DashboardCard from "../components/DashboardCard";
 import EnrollmentChart from "../components/EnrollmentChart";
 import CourseProgressChart from "../components/CourseProgressChart ";
@@ -12,7 +13,6 @@ import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
 
 const TutorDashboard = () => {
   const { dashboardData } = useFetchTutorDashboard();
-  console.log(dashboardData);
 
   const stats = [
     {
@@ -48,44 +48,49 @@ const TutorDashboard = () => {
   };
 
   return (
-    <div className="h-screen flex">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-gray-100">
       <TutorSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TutorHeader />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
-      {/* Main Content */}
-      <div className="flex-1 p-8 bg-gray-100 ml-64">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+            <DashboardCard stats={stats} />
 
-        {/* Statistics Cards */}
-        <DashboardCard stats={stats} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="p-6 bg-white shadow-md rounded-lg">
+                <h2 className="text-xl font-semibold mb-4">
+                  Enrollment Over Time
+                </h2>
+                <EnrollmentChart
+                  enrollmentData={dashboardData?.enrollment_data}
+                />
+              </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Enrollment Over Time</h2>
-            <EnrollmentChart enrollmentData={dashboardData?.enrollment_data} />
+              <div className="p-6 bg-white shadow-md rounded-lg">
+                <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
+                <CourseProgressChart courseProgressData={courseProgressData} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <ContestLeaderboardTable
+                contestData={dashboardData?.recent_contests}
+              />
+              <LatestPaymentsTable
+                paymentsData={dashboardData?.recent_purchase}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <RecentEnrollmentTable
+                enrollmentsData={dashboardData?.recent_enrollments}
+              />
+              <RatingsTable ratingsData={dashboardData?.recent_reviews} />
+            </div>
           </div>
-
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
-            <CourseProgressChart courseProgressData={courseProgressData} />
-          </div>
-        </div>
-
-        {/* Tables Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <ContestLeaderboardTable
-            contestData={dashboardData?.recent_contests}
-          />
-          <LatestPaymentsTable paymentsData={dashboardData?.recent_purchase} />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <RecentEnrollmentTable
-            enrollmentsData={dashboardData?.recent_enrollments}
-          />
-          <RatingsTable ratingsData={dashboardData?.recent_reviews} />
-        </div>
+        </main>
       </div>
     </div>
   );

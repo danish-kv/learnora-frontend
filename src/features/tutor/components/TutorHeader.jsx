@@ -21,7 +21,7 @@ const TutorHeader = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <header className="bg-indigo-700 text-white shadow-md fixed top-0 right-0 left-0 z-10">
+    <header className="bg-indigo-800 shadow-sm">
       <div className="max-w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -54,11 +54,13 @@ const TutorHeader = () => {
                 >
                   <Avatar>
                     <AvatarImage src="/path-to-your-image.jpg" alt="User" />
-                    <AvatarFallback className="capitalize text-indigo-500 font-bold">
-                      {user ? user.slice(0, 1) : "T"}
+                    <AvatarFallback className="bg-indigo-100 text-indigo-600">
+                      {user ? user.slice(0, 1).toUpperCase() : "T"}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium text-sm capitalize">{user}</span>
+                  <span className="font-medium text-sm hidden sm:inline-block capitalize">
+                    {user}
+                  </span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
