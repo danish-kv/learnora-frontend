@@ -4,7 +4,7 @@ const Leaderboard = ({ participants }) => {
   return (
     <div className="bg-white shadow-sm rounded-lg p-4">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">Leaderboard</h2>
-      <div className="space-y-2">
+      <div className="space-y-2 max-h-96 overflow-y-auto">
         {participants && participants.length > 0 ? (
           participants.map((participant, index) => (
             <div
@@ -20,7 +20,7 @@ const Leaderboard = ({ participants }) => {
                     {participant.user__username.charAt(0)}
                   </span>
                 </div>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 truncate max-w-[100px]">
                   {participant.user__username}
                 </span>
               </div>

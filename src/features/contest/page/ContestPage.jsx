@@ -1,21 +1,22 @@
 import Header from "@/components/layout/Header";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ContestCard from "../components/ContestCard";
 import useFetchContest from "@/features/tutor/hooks/useFetchContest";
 import SearchBar from "@/features/courses/components/SearchBar";
 import Leaderboard from "../components/Leaderboard";
 import useFetchGlobalLeaderboard from "../hooks/useFetchGlobalLeaderboard";
-import { LucideTrophy, Trophy, TrophyIcon } from "lucide-react";
-import { TrophySpin } from "react-loading-indicators";
+import { Trophy } from "lucide-react";
 import Banner from "@/components/common/Banner";
 
 const ContestPage = () => {
-  const { contests, errors, loading } = useFetchContest();
-
-  const {participants} = useFetchGlobalLeaderboard()
+  const { contests, loading } = useFetchContest();
+  const { participants } = useFetchGlobalLeaderboard();
   const [searchQuery, setSearchQuery] = useState("");
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
-  
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -31,24 +32,48 @@ const ContestPage = () => {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex space-x-8">
-          <main className="flex-1">
+        <div className="lg:flex lg:space-x-8">
+          <main className="lg:flex-1">
             <SearchBar
-              // searchQuery={searchQuery}
-              // onSearchChange={handleSearchChange}
-              from={"contest"}
+              searchQuery={searchQuery}
+              onSearchChange={handleSearchChange}
+              from="contest"
             />
-            {contests &&
-              contests.map((contest) => (
-                <ContestCard key={contest.id} contest={contest} />
-              ))}
-          </main>
-          <aside className="w-64 flex-shrink-0">
-            {contests.length > 0 ? (
-              <Leaderboard participants={participants} />
+
+            <div className="mb-6 lg:hidden">
+              <button
+                onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+                className="w-full bg-white text-emerald-600 font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-emerald-50 transition duration-200"
+              >
+                {leaderboardOpen ? "Hide Leaderboard" : "Show Leaderboard"}
+              </button>
+            </div>
+
+            <div className="lg:hidden mb-6">
+              {leaderboardOpen && <Leaderboard participants={participants} />}
+            </div>
+
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-emerald-600"></div>
+              </div>
+            ) : contests && contests.length > 0 ? (
+              <div className="space-y-6">
+                {contests.map((contest) => (
+                  <ContestCard key={contest.id} contest={contest} />
+                ))}
+              </div>
             ) : (
-              <p>No contest available</p>
+              <p className="text-center text-gray-500 mt-8">
+                No contests available
+              </p>
             )}
+          </main>
+
+          <aside className="hidden lg:block lg:w-80 lg:flex-shrink-0">
+            <div className="sticky top-8">
+              <Leaderboard participants={participants} />
+            </div>
           </aside>
         </div>
       </div>
