@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CourseSidebar from "../components/CourseSidebar";
 import Header from "../../../components/layout/Header";
 import CourseList from "../components/CourseList";
@@ -11,7 +11,7 @@ import { BookOpen } from "lucide-react";
 import Banner from "@/components/common/Banner";
 
 const Courses = () => {
-  const { categories, error } = UseFetchCategory();
+  const { categories } = UseFetchCategory();
   const {
     courses,
     getCourses,
@@ -23,12 +23,8 @@ const Courses = () => {
   } = useFetchCourse();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
-  console.log("selected categr", selectedCategory);
-  console.log("all cat", categories);
-
-  console.log(courses);
 
   useEffect(() => {
     if (searchQuery) {
@@ -43,6 +39,7 @@ const Courses = () => {
     setPage(1);
     setSearchQuery("");
     navigate(`/courses/?category=${category}&page=1`);
+    setSidebarOpen(false);
   };
 
   const handlePageChange = (newPage) => {
@@ -70,34 +67,50 @@ const Courses = () => {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex space-x-8">
-          <aside className="w-64 flex-shrink-0">
-            {categories.length > 0 ? (
-              <CourseSidebar
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={handleCategorySelect}
-              />
-            ) : (
-              <p>No categories available</p>
-            )}
+        <div className="lg:flex lg:space-x-8">
+          <aside className="lg:w-64 flex-shrink-0 mb-8 lg:mb-0">
+            <button
+              className="lg:hidden w-full bg-white text-indigo-600 font-semibold py-2 px-4 rounded-md mb-4"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? "Hide Categories" : "Show Categories"}
+            </button>
+            <div className={`lg:block ${sidebarOpen ? "block" : "hidden"}`}>
+              {categories.length > 0 ? (
+                <CourseSidebar
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={handleCategorySelect}
+                />
+              ) : (
+                <p>No categories available</p>
+              )}
+            </div>
           </aside>
           <main className="flex-1">
             <SearchBar
               searchQuery={searchQuery}
               onSearchChange={handleSearchChange}
-              from={'courses'}
+              from="courses"
             />
-            <CourseList courses={courses} />
-            <div className="mt-8">
-              {courses.length > 0 && (
-                <PaginationComponent
-                  page={page}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              )}
-            </div>
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
+              </div>
+            ) : (
+              <>
+                <CourseList courses={courses} />
+                <div className="mt-8">
+                  {courses.length > 0 && (
+                    <PaginationComponent
+                      page={page}
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
+                </div>
+              </>
+            )}
           </main>
         </div>
       </div>

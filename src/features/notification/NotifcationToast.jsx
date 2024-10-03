@@ -1,100 +1,59 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ArrowRight, MessageSquare } from "lucide-react";
 
 const NotificationToast = ({ notifications, removeNotification, navigate }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (notifications.length > 0) {
+        removeNotification(notifications[0].id);
+      }
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [notifications, removeNotification]);
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 24,
-        right: 24,
-        zIndex: 1400,
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-      }}
-    >
-      {notifications &&
-        notifications.map((notification) => (
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+      <AnimatePresence>
+        {notifications.map((notification) => (
           <motion.div
             key={notification.id}
-            initial={{ opacity: 0, translateY: 20 }} // Starts from below
-            animate={{ opacity: 1, translateY: 0 }} // Move into position
-            exit={{ opacity: 0, translateY: 20 }} // Moves out of position
-            transition={{ duration: 0.3 }}
-            style={{
-              backgroundColor: "#FFFFFF", // Snackbar background
-              color: "#333", // Text color
-              padding: "16px", // Increased padding for better spacing
-              borderRadius: "8px", // More rounded corners
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)", // Softer shadow
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              border: "1px solid #E0E0E0", // Border for definition
-            }}
+            initial={{ opacity: 0, y: 50, scale: 0.3 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+            className="bg-white rounded-lg shadow-lg overflow-hidden"
           >
-            <p style={{ margin: 0, fontWeight: "600" }}>
-              {notification.message}
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "10px",
-              }}
-            >
-              <button
-                onClick={() => {
-                  removeNotification(notification.id);
-                  navigate(notification.link);
-                }}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#007BFF", // Primary action color
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s",
-                  fontSize: "14px", // Font size adjustment
-                  fontWeight: "500", // Slightly bolder text
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Button shadow
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#0056b3")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#007BFF")
-                }
-              >
-                VIEW
-              </button>
-              <button
-                onClick={() => removeNotification(notification.id)}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#E0E0E0",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Button shadow
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#b0b0b0")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#E0E0E0")
-                }
-              >
-                CLOSE
-              </button>
+            <div className="p-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="text-blue-500" size={20} />
+                <h3 className="text-sm font-semibold text-gray-800">
+                  {notification.message}
+                </h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => removeNotification(notification.id)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                  aria-label="Close"
+                >
+                  <X size={16} />
+                </button>
+                <button
+                  onClick={() => {
+                    removeNotification(notification.id);
+                    navigate(notification.link);
+                  }}
+                  className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors duration-200"
+                >
+                  View
+                  <ArrowRight size={12} />
+                </button>
+              </div>
             </div>
           </motion.div>
         ))}
+      </AnimatePresence>
     </div>
   );
 };

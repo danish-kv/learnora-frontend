@@ -1,5 +1,4 @@
 import React from 'react';
-import { MessageCircle, BookOpen, Trophy } from 'lucide-react';
 
 const Banner = ({ title, description, buttonText, icon, gradient, onClick }) => {
   const Icon = icon;

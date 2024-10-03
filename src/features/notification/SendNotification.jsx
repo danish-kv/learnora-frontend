@@ -1,4 +1,3 @@
-// SendNotification.js
 import React, { useEffect, useState } from "react";
 import NotificationToast from "./NotifcationToast";
 import { useNavigate } from "react-router-dom";
