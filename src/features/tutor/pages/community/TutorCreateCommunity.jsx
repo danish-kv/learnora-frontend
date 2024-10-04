@@ -1,72 +1,78 @@
-import UseFetchCategory from '@/features/admin/hooks/UseFetchCategory';
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import TutorSidebar from '../../components/TutorSidebar';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import LoadingDotStream from '@/components/common/Loading';
-import { validationCommunitySchema } from '@/utils/yupValidationSchema';
-import { displayToastAlert } from '@/utils/displayToastAlert';
-import api from '@/services/api';
+import UseFetchCategory from "@/features/admin/hooks/UseFetchCategory";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import TutorSidebar from "../../components/TutorSidebar";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import LoadingDotStream from "@/components/common/Loading";
+import { validationCommunitySchema } from "@/utils/yupValidationSchema";
+import { displayToastAlert } from "@/utils/displayToastAlert";
+import api from "@/services/api";
+import TutorHeader from "../../components/TutorHeader";
 
 const TutorCreateCommunity = () => {
-    const [communityData, setCommunityData] = useState({
-        name: "",
-        description: "",
-        banner: "",
-        max_participants: "",
+  const [communityData, setCommunityData] = useState({
+    name: "",
+    description: "",
+    banner: "",
+    max_participants: "",
+  });
+
+  const navigate = useNavigate();
+  const { categories } = UseFetchCategory();
+
+  const handleOnSubmit = async (values, actions) => {
+    console.log(communityData);
+
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("description", values.description);
+    formData.append("banner", values.banner);
+    formData.append("max_participants", values.max_participants);
+
+    try {
+      const res = await api.post("create-community/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-    
-      const navigate = useNavigate();
-      const { categories } = UseFetchCategory();
-    
-      const handleOnSubmit = async (values, actions) => {
-        console.log(communityData);
-    
-        const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("description", values.description);
-        formData.append("banner", values.banner);
-        formData.append("max_participants", values.max_participants);
-    
-        try {
-          const res = await api.post("create-community/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          console.log(res);
-          if (res.status === 201) {
-            await swal({
-              title: "Success!",
-              text: "Your Community has been created successfully.",
-              icon: "success",
-              button: "Okay",
-            });
-            actions.resetForm();
-            navigate(`/tutor/community/`);
-          }
-        } catch (error) {
-          console.log(error);
-          if (error.response && error.response.data) {
-            Object.keys(error.response.data).forEach((key) => {
-              displayToastAlert(400, `${key} : ${error.response.data[key]}`);
-            });
-          } else {
-            displayToastAlert(400, "Something went wrong");
-          }
-        } finally {
-          actions.setSubmitting(false);
-        }
-      };
-    
-      return (
-        <div className="h-screen flex">
-          {/* Sidebar */}
-          <TutorSidebar />
-    
-          {/* Main content */}
-          <div className="flex-1 ml-64 p-6 bg-gray-100">
-            <h1 className="text-2xl font-semibold mb-6">Create New Community</h1>
+      console.log(res);
+      if (res.status === 201) {
+        await swal({
+          title: "Success!",
+          text: "Your Community has been created successfully.",
+          icon: "success",
+          button: "Okay",
+        });
+        actions.resetForm();
+        navigate(`/tutor/community/`);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.data) {
+        Object.keys(error.response.data).forEach((key) => {
+          displayToastAlert(400, `${key} : ${error.response.data[key]}`);
+        });
+      } else {
+        displayToastAlert(400, "Something went wrong");
+      }
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="flex h-screen ">
+      {/* Sidebar */}
+      <TutorSidebar />
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TutorHeader />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto ">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 className="text-2xl font-semibold mb-6">
+              Create New Community
+            </h1>
             <Formik
               initialValues={{
                 name: "",
@@ -78,10 +84,13 @@ const TutorCreateCommunity = () => {
               onSubmit={handleOnSubmit}
             >
               {({ setFieldValue, isSubmitting, values }) => (
-                <Form className="bg-white p-6 rounded-lg shadow-md">
+                <Form className="bg-white p-6 rounded-lg border">
                   <div className="mb-4 flex gap-4">
                     <div className="flex-1">
-                      <label htmlFor="name" className="block text-gray-700 mb-2">
+                      <label
+                        htmlFor="name"
+                        className="block text-gray-700 mb-2"
+                      >
                         Name
                       </label>
                       <Field
@@ -122,7 +131,7 @@ const TutorCreateCommunity = () => {
                       />
                     </div>
                   </div>
-    
+
                   <div className="mb-4 flex gap-4">
                     <div className="flex-1">
                       <label
@@ -166,10 +175,13 @@ const TutorCreateCommunity = () => {
                       />
                     </div>
                   </div>
-    
+
                   <div className="mb-4 flex gap-4">
                     <div className="flex-1">
-                      <label htmlFor="max_participants" className="block text-gray-700 mb-2">
+                      <label
+                        htmlFor="max_participants"
+                        className="block text-gray-700 mb-2"
+                      >
                         Max Participants
                       </label>
                       <Field
@@ -185,10 +197,10 @@ const TutorCreateCommunity = () => {
                       />
                     </div>
                   </div>
-    
+
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                    className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? <LoadingDotStream /> : "Create Community"}
@@ -197,8 +209,10 @@ const TutorCreateCommunity = () => {
               )}
             </Formik>
           </div>
-        </div>
-      );
-    };
-    
-export default TutorCreateCommunity
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default TutorCreateCommunity;

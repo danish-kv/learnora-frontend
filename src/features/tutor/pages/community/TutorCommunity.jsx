@@ -15,19 +15,19 @@ const TutorCommunity = () => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <TutorSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+            <div className="bg-white border rounded-lg p-6 mb-8">
               <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
                 <h2 className="text-3xl font-semibold mb-4 sm:mb-0 text-gray-800">
                   My Communities
                 </h2>
                 <Link to="/tutor/community/create">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center">
+                  <button className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300 flex items-center">
                     <Plus size={20} className="mr-2" />
                     Add New Community
                   </button>

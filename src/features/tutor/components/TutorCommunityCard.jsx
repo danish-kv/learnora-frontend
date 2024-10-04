@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/format';
 const TutorCommunityCard = ({ community }) => {
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden w-full transition-all duration-300 hover:shadow-xl">
+    <div className="bg-white border rounded-lg overflow-hidden w-full transition-all duration-300 hover:shadow-xl">
       <div className="relative">
         <img
           className="w-full h-48 object-cover"
