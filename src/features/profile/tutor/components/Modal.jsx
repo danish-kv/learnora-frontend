@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         {children}
         <button
           onClick={onClose}
-          className="mt-4 ml-2 bg-gray-500 text-white px-4 py-2 rounded"
+          className="mt-4 ml-2 bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded"
         >
           Close
         </button>

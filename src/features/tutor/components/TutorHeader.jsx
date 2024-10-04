@@ -21,7 +21,7 @@ const TutorHeader = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <header className="bg-indigo-800 shadow-sm">
+    <header className="bg-indigo-700 shadow-sm">
       <div className="max-w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">

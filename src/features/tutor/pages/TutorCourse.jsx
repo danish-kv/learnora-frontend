@@ -34,31 +34,28 @@ const TutorCourse = () => {
         swal("UnBlocked", "Course Unblocked successfully", "success");
       }
     } catch (error) {
-      console.log(error);
-      displayToastAlert(
-        400,
-        "Failed to Fetch Course. We are facing some issue"
-      );
+      console.error(error);
+      displayToastAlert(400, "Failed to Fetch Course. We are facing some issue");
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <TutorSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto ">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-semibold">My Courses</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+              <h2 className="text-3xl font-semibold mb-4 sm:mb-0">My Courses</h2>
               <Link to="/tutor/new-course">
-                <button className="bg-black text-white px-6 py-2 rounded-lg">
-                  Add New Courses
+                <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition duration-300">
+                  Add New Course
                 </button>
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course, index) => (
                 <CourseCard
                   key={index}
@@ -69,7 +66,7 @@ const TutorCourse = () => {
             </div>
 
             {courses.length > 0 && (
-              <div className="mt-8">
+              <div className="mt-8 flex justify-center">
                 <PaginationComponent
                   totalPages={totalPages}
                   onPageChange={handlePageChange}

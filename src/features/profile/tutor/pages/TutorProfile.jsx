@@ -151,13 +151,13 @@ const TutorProfile = () => {
   console.log(editEducation);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <TutorSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="bg-white shadow-md rounded-lg p-8 relative">
+            <div className="bg-white p-8 relative">
               <div className="flex items-center mb-8 relative">
                 <div className="relative">
                   <img

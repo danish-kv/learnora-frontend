@@ -27,11 +27,11 @@ const TutorCategories = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen ">
       <TutorSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto ">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-semibold">Categories</h2>
@@ -48,7 +48,7 @@ const TutorCategories = () => {
                 categories.map((category) => (
                   <div
                     key={category.id}
-                    className="bg-white shadow-md rounded-md p-4 flex justify-between items-center"
+                    className="bg-white border rounded-md p-4 flex justify-between items-center"
                   >
                     <span className="text-gray-700 text-lg">
                       {category.name}
@@ -74,7 +74,7 @@ const TutorCategories = () => {
                     <button
                       type="submit"
                       onClick={handleRequestedCategory}
-                      className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+                      className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
                     >
                       Request
                     </button>
