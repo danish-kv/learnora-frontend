@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import TutorSidebar from "../../components/TutorSidebar";
+import TutorHeader from "../../components/TutorHeader";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import { useNavigate, useParams } from "react-router-dom";
+import swal from "sweetalert";
 
 const TutorCreateQuestion = () => {
   const [questionText, setQuestionText] = useState("");
@@ -10,85 +12,45 @@ const TutorCreateQuestion = () => {
     { option_text: "", is_correct: false },
   ]);
   const [errors, setErrors] = useState({});
-
   const { id } = useParams();
   const navigate = useNavigate();
 
   const handleAddOption = () => {
-    if(options.length < 4){
-
+    if (options.length < 4) {
       setOptions([...options, { option_text: "", is_correct: false }]);
     }
   };
 
   const validateForm = () => {
     let formErrors = {};
-
-    //     // Check if question text is empty
     if (questionText.trim() === "") {
       formErrors.questionText = "Question text is required";
     }
-
-    //     // Validate options
-    //     const optionErrors = options.map((option, index) => {
-    //       if (option.option_text.trim() === "") {
-    //         return `Option ${String.fromCharCode(65 + index)} is required`;
-    //       }
-    //       return null;
-    //     });
-
-    //     // If no options provided, add error
-    //     if (options.length === 0) {
-    //       formErrors.options = ["At least one option must be provided"];
-    //     } else {
-    //       formErrors.options = optionErrors.filter((err) => err !== null);
-    //     }
-
-    //     // Ensure at least one option is marked as correct
     if (!options.some((option) => option.is_correct)) {
       formErrors.correctOption =
         "At least one option must be marked as correct";
     }
-
     return formErrors;
   };
 
   const handleOnSubmit = async (e, actionType) => {
     e.preventDefault();
-    console.log("buttoons clicked");
-    console.log(questionText);
-    console.log(options);
-
     const formErrors = validateForm();
     setErrors(formErrors);
-    // console.log("validation completed");
-    // console.log(Object.keys(formErrors).length);
-    // console.log(formErrors);
-    // console.log(Object.keys(formErrors).length);
 
     if (Object.keys(formErrors).length > 0) {
-      console.log("problems in if conditions");
       return;
     }
 
-    // options.forEach((option, index) => {
-    //   formData.append(`options[${index}].option_text`, option.option_text);
-    //   formData.append(`options[${index}].is_correct`, option.is_correct);
-    // });
-
-    const payLoad = {
+    const payload = {
       question_text: questionText,
       contest: id,
       options: options,
     };
-    console.log(payLoad);
 
-    console.log("final thired");
     try {
-      const res = await api.post("question/", payLoad, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const res = await api.post("question/", payload, {
+        headers: { "Content-Type": "application/json" },
       });
       if (res.status === 201) {
         if (actionType === "addAnother") {
@@ -97,7 +59,7 @@ const TutorCreateQuestion = () => {
           setOptions([{ option_text: "", is_correct: false }]);
         } else if (actionType === "finish") {
           await swal(
-            "success",
+            "Success",
             "Contest Question creation completed",
             "success"
           );
@@ -105,10 +67,10 @@ const TutorCreateQuestion = () => {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error creating question:", error);
       if (error.response && error.response.data) {
-        Object.keys(error.response.data).forEach((key) => {
-          displayToastAlert(400, `${key} : ${error.response.data[key]}`);
+        Object.entries(error.response.data).forEach(([key, value]) => {
+          displayToastAlert(400, `${key}: ${value}`);
         });
       } else {
         displayToastAlert(400, "Error creating question");
@@ -117,108 +79,110 @@ const TutorCreateQuestion = () => {
   };
 
   return (
-    <div className="h-screen flex">
-      {/* Sidebar */}
+    <div className="flex h-screen">
       <TutorSidebar />
-
-      {/* Main Content */}
-      <div className="flex-1 ml-64 p-6 bg-gray-100">
-        <h1 className="text-2xl font-semibold mb-6">Add New Question</h1>
-
-        <form
-          onSubmit={handleOnSubmit}
-          className="bg-white p-6 rounded-lg shadow-md"
-        >
-          {/* Question Field */}
-          <div className="mb-4">
-            <label htmlFor="question_text" className="block text-gray-700 mb-2">
-              Question Text
-            </label>
-            <textarea
-              name="question_text"
-              value={questionText}
-              onChange={(e) => setQuestionText(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-              placeholder="Enter your question here"
-            />
-            {errors.questionText && (
-              <p className="text-red-500 text-sm">{errors.questionText}</p>
-            )}
-          </div>
-
-          {/* Options Section */}
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">Options</h2>
-
-            {options.map((option, index) => (
-              <div key={index} className="flex gap-4 items-center mb-2">
-                <input
-                  name={`options[${index}].option_text`}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  placeholder={`Option ${String.fromCharCode(65 + index)}`}
-                  value={option.option_text}
-                  onChange={(e) => {
-                    const newOptions = [...options];
-                    newOptions[index].option_text = e.target.value;
-                    setOptions(newOptions);
-                  }}
-                />
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    name={`options[${index}].is_correct`}
-                    checked={option.is_correct}
-                    onChange={() => {
-                      const newOptions = [...options];
-                      newOptions[index].is_correct =
-                        !newOptions[index].is_correct;
-                      setOptions(newOptions);
-                    }}
-                  />
-                  Correct
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TutorHeader />
+        <main className="flex-grow p-4 overflow-auto">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-2xl font-semibold mb-6">Add New Question</h1>
+            <form className="bg-white p-6 rounded-lg border space-y-6">
+              <div>
+                <label
+                  htmlFor="question_text"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Question Text
                 </label>
+                <textarea
+                  id="question_text"
+                  name="question_text"
+                  rows="3"
+                  value={questionText}
+                  onChange={(e) => setQuestionText(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Enter your question here"
+                />
+                {errors.questionText && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.questionText}
+                  </p>
+                )}
               </div>
-            ))}
 
-            {Array.isArray(errors.options) &&
-              errors.options.length > 0 &&
-              errors.options.map((err, index) => (
-                <p key={index} className="text-red-500 text-sm">
-                  {err}
-                </p>
-              ))}
+              <div>
+                <h2 className="text-lg font-semibold mb-2">Options</h2>
+                <div className="space-y-3">
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col sm:flex-row sm:items-center gap-2"
+                    >
+                      <input
+                        type="text"
+                        value={option.option_text}
+                        onChange={(e) => {
+                          const newOptions = [...options];
+                          newOptions[index].option_text = e.target.value;
+                          setOptions(newOptions);
+                        }}
+                        className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder={`Option ${String.fromCharCode(
+                          65 + index
+                        )}`}
+                      />
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={option.is_correct}
+                          onChange={() => {
+                            const newOptions = [...options];
+                            newOptions[index].is_correct =
+                              !newOptions[index].is_correct;
+                            setOptions(newOptions);
+                          }}
+                          className="rounded text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <span className="text-sm text-gray-700">Correct</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {errors.correctOption && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.correctOption}
+                  </p>
+                )}
+                {options.length < 4 && (
+                  <button
+                    type="button"
+                    onClick={handleAddOption}
+                    className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  >
+                    Add Option
+                  </button>
+                )}
+              </div>
 
-            {errors.correctOption && (
-              <p className="text-red-500 text-sm">{errors.correctOption}</p>
-            )}
-
-            <button
-              type="button"
-              onClick={handleAddOption}
-              className="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 transition"
-            >
-              Add Option
-            </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={(e) => handleOnSubmit(e, "addAnother")}
+                  type="button"
+                  className="w-full sm:w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                  Save and Add Another
+                </button>
+                <button
+                  onClick={(e) => handleOnSubmit(e, "finish")}
+                  type="button"
+                  className="w-full sm:w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Save and Finish
+                </button>
+              </div>
+            </form>
           </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={(e) => handleOnSubmit(e, "addAnother")}
-              type="button"
-              className="w-full bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-800 transition"
-            >
-              Save and Add Another
-            </button>
-            <button
-              onClick={(e) => handleOnSubmit(e, "finish")}
-              type="button"
-              className="w-full bg-indigo-700 text-white px-3 py-2 rounded-md hover:bg-indigo-800 transition"
-            >
-              Save and Finish
-            </button>
-          </div>
-        </form>
+        </main>
       </div>
     </div>
   );
