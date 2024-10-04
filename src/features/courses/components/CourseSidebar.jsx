@@ -2,7 +2,7 @@ import React from "react";
 
 const Sidebar = ({ categories, onSelectCategory, selectedCategory }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white rounded-lg border shadow-sm p-6">
       <h2 className="text-lg font-semibold mb-4">Categories</h2>
       <nav>
         <ul className="space-y-2">

@@ -11,7 +11,7 @@ const CourseCard = ({ course }) => {
 
   return (
     <Link to={`/course/${course.slug}`} className="block h-full">
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden h-full flex flex-col transition-transform duration-300 hover:scale-105">
+      <div className="bg-white  border rounded-lg shadow-lg overflow-hidden h-full flex flex-col transition-transform duration-300 hover:scale-105">
         <img
           src={course.thumbnail}
           alt={course.title}
