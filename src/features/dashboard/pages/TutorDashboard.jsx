@@ -48,18 +48,18 @@ const TutorDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <TutorSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
             <DashboardCard stats={stats} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="p-6 bg-white shadow-md rounded-lg">
+              <div className="p-6 bg-white border shadow-sm rounded-lg">
                 <h2 className="text-xl font-semibold mb-4">
                   Enrollment Over Time
                 </h2>
@@ -68,7 +68,7 @@ const TutorDashboard = () => {
                 />
               </div>
 
-              <div className="p-6 bg-white shadow-md rounded-lg">
+              <div className="p-6 bg-white border shadow-sm rounded-lg">
                 <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
                 <CourseProgressChart courseProgressData={courseProgressData} />
               </div>
