@@ -1,77 +1,78 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { Logout } from "../../../redux/thunk/authThunks";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Layout,
+  Users,
+  BookOpen,
+  FolderOpen,
+  BarChart2,
+} from "lucide-react";
+import { toggleSidebar } from "@/redux/slices/sidebarSlice";
 
 const AdminSidebar = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
+
+  const menuItems = [
+    { path: "/admin/", label: "Dashboard", icon: Layout },
+    { path: "/admin/student", label: "Students", icon: Users },
+    { path: "/admin/tutor", label: "Tutors", icon: Users },
+    { path: "/admin/courses", label: "Courses", icon: BookOpen },
+    { path: "/admin/category", label: "Categories", icon: FolderOpen },
+    { path: "/admin/sales-report", label: "Sales Report", icon: BarChart2 },
+  ];
+
   return (
-    <div className="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out z-20 shadow-lg">
-      <div className="flex items-center justify-between h-20 border-b border-gray-700">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      </div>
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          <li>
-            <Link
-              to="/admin/"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 active:bg-gray-600"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/student"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Students
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/tutor"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Tutor
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/courses"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Courses
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/category"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Category
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/sales-report"
-              className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
-            >
-              Sales Report
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div className="p-4">
+    <div
+      className={`fixed inset-y-0 left-0 ${
+        isSidebarOpen ? "w-64" : "w-20"
+      } bg-indigo-900 text-gray-100 flex flex-col transition-all duration-300 ease-in-out z-20 shadow-lg`}
+    >
+      <div className="flex items-center justify-between h-16 px-4 bg-indigo-800">
+        {isSidebarOpen ? (
+          <h1 className="text-white text-xl font-bold truncate">Learnora</h1>
+        ) : (
+          <h1 className="text-white text-xl font-bold">LN</h1>
+        )}
         <button
-          onClick={() => {
-            dispatch(Logout());
-          }}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+          onClick={() => dispatch(toggleSidebar())}
+          className="p-1 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          Logout
+          {isSidebarOpen ? (
+            <ChevronLeft size={20} />
+          ) : (
+            <ChevronRight size={20} />
+          )}
         </button>
       </div>
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-2 px-2">
+          {menuItems.map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${
+                  location.pathname === item.path
+                    ? "bg-indigo-600 text-white"
+                    : "text-indigo-100 hover:bg-indigo-700"
+                }`}
+              >
+                <item.icon
+                  size={20}
+                  className={isSidebarOpen ? "mr-3" : "mx-auto"}
+                />
+                {isSidebarOpen && (
+                  <span className="font-medium">{item.label}</span>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 };
