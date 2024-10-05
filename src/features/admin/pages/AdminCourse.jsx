@@ -1,99 +1,146 @@
-import React, { useEffect } from "react";
-import AdminSidebar from "../components/AdminSidebar";
-import CourseCard from "../../tutor/components/CourseCard";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useFetchCourse from "../hooks/useFetchCourse";
+import { useSelector } from "react-redux";
+import AdminSidebar from "../components/AdminSidebar";
+import AdminHeader from "../components/AdminHeader";
 import AdminCourseCard from "../components/AdminCourseCard";
+import useFetchCourse from "../hooks/useFetchCourse";
 import api from "../../../services/api";
 import PaginationComponent from "@/features/courses/components/Pagination";
+import { displayToastAlert } from "@/utils/displayToastAlert";
+import { ChevronRightIcon, HomeIcon } from "lucide-react";
 
 const AdminCourse = () => {
   const { courses, getCourses, setPage, page, totalPages } = useFetchCourse();
+  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
   const navigate = useNavigate();
-  console.log(courses);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getCourses(page);
   }, [page]);
 
-  const handlePageChange = (newpage) => {
-    if (newpage >= 1 && newpage <= totalPages) {
-      setPage(newpage);
-      navigate(`/admin/courses/?page=${newpage}`);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+      navigate(`/admin/courses/?page=${newPage}`);
     }
   };
 
-
-  const handleStatus = async (slug, new_status) => {
-    console.log(slug, new_status);
+  const handleStatus = async (slug, newStatus) => {
+    setIsLoading(true);
     try {
-      const res = await api.patch(`courses/${slug}/`, {
-        status: new_status,
-      });
-      console.log(res);
-
-      getCourses(page);
+      await api.patch(`courses/${slug}/`, { status: newStatus });
+      await getCourses(page);
+      displayToastAlert(200, "Course status updated successfully");
     } catch (error) {
-      console.log(error);
+      console.error("Error updating course status:", error);
+      displayToastAlert(400, "Failed to update course status");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleBlock = async (slug, current_status) => {
-    console.log(slug, current_status);
-
+  const handleBlock = async (slug, currentStatus) => {
+    setIsLoading(true);
     try {
-      const res = await api.patch(`courses/${slug}/`, {
-        is_active: !current_status,
-      });
-      console.log(res);
-
-      getCourses();
+      await api.patch(`courses/${slug}/`, { is_active: !currentStatus });
+      await getCourses(page);
+      displayToastAlert(
+        400,
+        `Course ${currentStatus ? "blocked" : "unblocked"} successfully`
+      );
     } catch (error) {
-      console.log(error);
+      console.error("Error toggling course block status:", error);
+      displayToastAlert(400, "Failed to update course block status");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       <AdminSidebar />
-      <div className="flex-1 ml-64">
-        <div className="p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-semibold">All Courses</h2>
-            <Link
-              to="/admin/course/requested"
-              className="relative inline-block"
-            >
-              <button className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition duration-200">
-                Requested
-              </button>
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
+        <AdminHeader />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+                Courses
+              </h1>
+              <Link
+                to="/admin/course/requested"
+                className="relative inline-block"
+              >
+                <button className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition duration-200">
+                  Requested
+                </button>
+                {courses[0]?.requested_course_count > 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white rounded-full text-xs px-2 py-1 font-semibold shadow-lg">
+                    {courses[0].requested_course_count}
+                  </span>
+                )}
+              </Link>
+            </div>
+            {/* Breadcrumbs */}
+            <nav className="flex mb-8" aria-label="Breadcrumb">
+              <ol className="inline-flex items-center space-x-1 md:space-x-3">
+                <li className="inline-flex items-center">
+                  <Link
+                    to="/admin"
+                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
+                  >
+                    <HomeIcon className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </li>
 
-              <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white rounded-full text-xs px-2 py-1 font-semibold shadow-lg">
-                {courses[0]?.requested_course_count}
-              </span>
-            </Link>
+                <li aria-current="page">
+                  <div className="flex items-center">
+                    <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                    <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                      Courses
+                    </span>
+                  </div>
+                </li>
+              </ol>
+            </nav>
+
+            {isLoading ? (
+              <div className="flex justify-center items-center h-40">
+                <div className="animate-spin rounded-full h-28 w-28 border-t-2 border-b-2 border-gray-900"></div>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {courses &&
+                    courses.map((course, index) => (
+                      <AdminCourseCard
+                        key={index}
+                        course={course}
+                        onBlockToggle={handleBlock}
+                        onStatusToggle={handleStatus}
+                      />
+                    ))}
+                </div>
+                {courses.length > 0 && (
+                  <div className="mt-6">
+                    <PaginationComponent
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                      page={page}
+                    />
+                  </div>
+                )}
+              </>
+            )}
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses &&
-              courses.map((course, index) => (
-                <AdminCourseCard
-                  key={index}
-                  course={course}
-                  onBlockToggle={handleBlock}
-                  onStatusToggle={handleStatus}
-                />
-              ))}
-          </div>
-          {courses.length > 0 && (
-            <PaginationComponent
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              page={page}
-            ></PaginationComponent>
-          )}
-        </div>
+        </main>
       </div>
     </div>
   );

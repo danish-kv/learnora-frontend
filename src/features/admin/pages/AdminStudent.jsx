@@ -1,13 +1,18 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
-import useFetchStudnet from "../hooks/useFetchStudnet";
+import useFetchStudent from "../hooks/useFetchStudnet";
 import api from "../../../services/api";
 import { formatDate } from "@/utils/format";
+import swal from "sweetalert";
+import { Link } from "react-router-dom";
+import { ChevronRightIcon, HomeIcon } from "lucide-react";
 
 const AdminStudent = () => {
-  const { students, refetch } = useFetchStudnet();
+  const { students, refetch } = useFetchStudent();
   const [searchQuery, setSearchQuery] = useState("");
+  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
   const handleBlock = async (id, current_status) => {
     try {
@@ -27,60 +32,84 @@ const AdminStudent = () => {
     }
   };
 
-  // const filteredStudents = students.filter(student =>
-  //   student.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //   student.email.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+  const filteredStudents = students.filter(
+    (student) =>
+      student.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col">
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 ml-64">
-          <div className="container mx-auto px-6 py-8">
-            <div className="mb-4 flex justify-between items-center">
-              <h2 className="text-3xl font-bold text-gray-700">Students</h2>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+                Students
+              </h1>
               <input
                 type="text"
                 placeholder="Search"
-                className="border p-2 rounded"
+                className="border p-2 rounded w-full sm:w-auto"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+            {/* Breadcrumbs */}
+            <nav className="flex mb-8" aria-label="Breadcrumb">
+              <ol className="inline-flex items-center space-x-1 md:space-x-3">
+                <li className="inline-flex items-center">
+                  <Link
+                    to="/admin"
+                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
+                  >
+                    <HomeIcon className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </li>
+             
+                <li aria-current="page">
+                  <div className="flex items-center">
+                    <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                    <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                      Student
+                    </span>
+                  </div>
+                </li>
+              </ol>
+            </nav>
+
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      No
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Username
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      First Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Last Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Created At
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Last Login
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    {[
+                      "No",
+                      "Username",
+                      "First Name",
+                      "Last Name",
+                      "Email",
+                      "Created At",
+                      "Last Login",
+                      "Actions",
+                    ].map((header) => (
+                      <th
+                        key={header}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {students.map((student, index) => (
+                  {filteredStudents.map((student, index) => (
                     <tr key={student.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {index + 1}

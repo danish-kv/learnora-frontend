@@ -1,4 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
+import AdminSidebar from "@/features/admin/components/AdminSidebar";
+import AdminHeader from "@/features/admin/components/AdminHeader";
 import DashboardCard from "../components/DashboardCard";
 import EnrollmentChart from "../components/EnrollmentChart";
 import CourseProgressChart from "../components/CourseProgressChart ";
@@ -6,13 +10,11 @@ import RecentEnrollmentTable from "../components/RecentEnrollmentTable";
 import LatestPaymentsTable from "../components/LatestPaymentsTable";
 import ContestLeaderboardTable from "../components/ContestLeaderboardTable";
 import RatingsTable from "../components/RatingsTable";
-import AdminSidebar from "@/features/admin/components/AdminSidebar";
 import useFetchAdminDashboard from "../hooks/useFetchAdminDashboard";
-import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
 
 const AdminDashboard = () => {
   const { dashboardData } = useFetchAdminDashboard();
-  console.log(dashboardData);
+  const { isSidebarOpen } = useSelector((state) => state.sidebar);
 
   const stats = [
     {
@@ -48,42 +50,73 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="h-screen flex">
-      {/* Sidebar */}
+    <div className="flex h-screen">
       <AdminSidebar />
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
+        <AdminHeader />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
+          {" "}
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+                Dashboard
+              </h1>
+            </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-8 bg-gray-100 ml-64">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+            <DashboardCard stats={stats} />
 
-        {/* Statistics Cards */}
-        <DashboardCard stats={stats} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">
+                  Enrollment Over Time
+                </h2>
+                <EnrollmentChart
+                  enrollmentData={dashboardData?.enrollment_data}
+                />
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
+                <CourseProgressChart courseProgressData={courseProgressData} />
+              </div>
+            </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Enrollment Over Time</h2>
-            <EnrollmentChart enrollmentData={dashboardData.enrollment_data} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">
+                  Contest Leaderboard
+                </h2>
+                <ContestLeaderboardTable
+                  contestData={dashboardData?.recent_contests}
+                />
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">Latest Payments</h2>
+                <LatestPaymentsTable
+                  paymentsData={dashboardData?.recent_purchase}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">
+                  Recent Enrollments
+                </h2>
+                <RecentEnrollmentTable
+                  enrollmentsData={dashboardData?.recent_enrollments}
+                />
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">Recent Ratings</h2>
+                <RatingsTable ratingsData={dashboardData?.recent_reviews} />
+              </div>
+            </div>
           </div>
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
-            <CourseProgressChart courseProgressData={courseProgressData} />
-          </div>
-        </div>
-
-        {/* Tables Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <ContestLeaderboardTable
-            contestData={dashboardData?.recent_contests}
-          />
-          <LatestPaymentsTable paymentsData={dashboardData?.recent_purchase} />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <RecentEnrollmentTable
-            enrollmentsData={dashboardData?.recent_enrollments}
-          />
-          <RatingsTable ratingsData={dashboardData?.recent_reviews} />
-        </div>
+        </main>
       </div>
     </div>
   );

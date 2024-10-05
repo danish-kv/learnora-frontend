@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { Login } from "../../../redux/thunk/authThunks";
 import LoadingDotStream from "../../../components/common/Loading";
 import { jwtDecode } from "jwt-decode";
 import { validateLogin } from "../../../utils/validation";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const AdminLogin = () => {
   const [user, setUser] = useState({
@@ -29,7 +29,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(user);
-    setError('')
+    setError("");
 
     const { isValid, errors } = validateLogin(user);
 
@@ -37,17 +37,15 @@ const AdminLogin = () => {
       try {
         const res = await dispatch(Login(user)).unwrap();
         console.log(res);
-        
 
         const token = jwtDecode(res.access_token);
         console.log("token jwt ", token);
-
 
         if (token?.is_admin) {
           await swal("Success", "Logged in successfully", "success");
           navigate("/admin/");
         } else {
-          toast.error("You are not authorized");
+          displayToastAlert(400, "You are not authorized");
           navigate("/admin/login");
         }
       } catch (error) {
@@ -127,11 +125,11 @@ const AdminLogin = () => {
               )}
             </div>
             {loading ? (
-              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+              <button className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
                 <LoadingDotStream />
               </button>
             ) : (
-              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+              <button className="w-full bg-indigo-700 text-white py-2 rounded-md hover:bg-indigo-800 transition duration-200">
                 Login
               </button>
             )}
