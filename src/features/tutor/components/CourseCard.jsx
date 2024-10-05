@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 
 const CourseCard = ({ course, onBlockToggle }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden w-80">
+    <div className="bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden flex flex-col h-full">
       <img
         src={course.thumbnail}
         alt={course.title}
         className="w-full h-48 object-cover"
       />
-      <div className="p-5">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xl font-bold">{course.title}</h3>
+      <div className="p-5 flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="text-xl font-bold text-gray-800 line-clamp-2">
+            {course.title}
+          </h3>
           <span
             className={`px-3 py-1 text-xs font-semibold rounded-full ${
               course.status === "Published"
@@ -22,14 +24,14 @@ const CourseCard = ({ course, onBlockToggle }) => {
             {course.status}
           </span>
         </div>
-        <p className="text-gray-600 mb-4  text-ellipsis overflow-clip ">
+        <p className="text-gray-600 mb-4 flex-grow line-clamp-3">
           {course.description}
         </p>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-500 text-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-auto">
+          <span className="text-gray-500 text-sm mb-2 sm:mb-0 flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 inline mr-1"
+              className="h-4 w-4 mr-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -43,22 +45,22 @@ const CourseCard = ({ course, onBlockToggle }) => {
             </svg>
             {course.total_enrollment} enrollments
           </span>
-          <div className="text-ellipsis overflow-clip">
+          <div className="flex space-x-2">
             <Link to={`/tutor/course/${course.slug}`}>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm mr-2">
+              <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm transition duration-300 ease-in-out">
                 View
               </button>
             </Link>
-              <button
-                onClick={() => onBlockToggle(course.slug, course.is_active)}
-                className={`${
-                  course.is_active
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-green-500 hover:bg-green-600"
-                } text-white px-4 py-2 rounded-lg text-sm`}
-              >
-                {course.is_active ? "Block" : "Unblock"}
-              </button>
+            <button
+              onClick={() => onBlockToggle(course.slug, course.is_active)}
+              className={`${
+                course.is_active
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-green-500 hover:bg-green-600"
+              } text-white px-4 py-2 rounded-lg text-sm transition duration-300 ease-in-out`}
+            >
+              {course.is_active ? "Block" : "Unblock"}
+            </button>
           </div>
         </div>
       </div>

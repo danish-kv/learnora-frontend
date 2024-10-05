@@ -23,7 +23,7 @@ const ChatHeader = ({ community, onExit, socket, userID }) => {
     onExit();
   };
   return (
-    <div className="p-2 sm:p-4 bg-indigo-600 text-white flex flex-col sm:flex-row justify-between items-center w-full">
+    <div className="p-2 sm:p-4 bg-indigo-600  rounded-md text-white flex flex-col sm:flex-row justify-between items-center w-full">
       <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">
         {community.name} Chat
       </h1>

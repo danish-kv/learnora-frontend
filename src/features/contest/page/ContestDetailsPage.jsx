@@ -40,7 +40,7 @@ const ContestDetailsPage = () => {
       <Header />
       <div className="max-w-7xl mx-auto pt-8 px-4">
         {contestDetails ? (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-xl  shadow-lg overflow-hidden">
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6">
               <h1 className="text-3xl font-bold mb-2">{contestDetails.name}</h1>
               <p className="text-emerald-100">{contestDetails.description}</p>
