@@ -21,7 +21,7 @@ const useFetchTutor = () => {
       getTutors();
     }, []);
   
-    return { tutors, refech:  getTutors };
+    return { tutors,  getTutors };
   };
   
 
