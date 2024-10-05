@@ -1,180 +1,84 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import useFetchTutorDetails from "../hooks/useFetchTutorDetails";
-import { text } from "@fortawesome/fontawesome-svg-core";
 import AdminHeader from "../components/AdminHeader";
 import AdminSidebar from "../components/AdminSidebar";
-import { formatDate } from "@/utils/format";
+import AdminTutorAboutSection from "../components/AdminTutorAboutSection";
+import AdminTutorProfileSection from "../components/AdminTutorProfileSection";
+import AdminTutorEducationSection from "../components/AdminTutorEducationSection";
+import AdminTutorExperienceSection from "../components/AdminTutorExperienceSection";
+import AdminTutorSkillsSection from "../components/AdminTutorSkillsSection";
 
 const AdminTutorDetails = () => {
-  const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const { TutorDetails, error, loading } = useFetchTutorDetails(id);
+  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
-  const { TutorDetails, error } = useFetchTutorDetails(id);
-  console.log("==========", TutorDetails);
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500">
+        {error}
+      </div>
+    );
+  if (!TutorDetails)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Tutor not found
+      </div>
+    );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!TutorDetails) return <div>Tutor not found</div>;
+  const renderStatusBadge = (status) => {
+    const statusColors = {
+      Verified: "bg-green-100 text-green-800",
+      Rejected: "bg-red-100 text-red-800",
+      Pending: "bg-yellow-100 text-yellow-800",
+      Requested: "bg-blue-100 text-blue-800",
+      default: "bg-gray-100 text-gray-800",
+    };
 
-  const BASE_URL = import.meta.env.VITE_API_URL;
+    return (
+      <span
+        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+          statusColors[status] || ""
+        }`}
+      >
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>
+    );
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col ml-64">
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-16">
           <div className="container mx-auto px-6 py-8">
-            <div className="bg-white shadow rounded-lg p-6">
-              <div className="flex items-center mb-6">
-                <img
-                  src={TutorDetails.user.profile}
-                  alt={`${TutorDetails.user.username}'s profile`}
-                  className="w-32 h-32 rounded-full mr-6 object-cover"
+            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div className="p-6">
+                <AdminTutorProfileSection
+                  TutorDetails={TutorDetails}
+                  renderStatusBadge={renderStatusBadge}
                 />
-
-                <div>
-                  <h2 className="text-3xl font-bold text-gray-800">
-                    {`${TutorDetails.user.first_name} ${TutorDetails.user.last_name}`}
-                  </h2>
-
-                  <p className="text-gray-600 mt-1">{TutorDetails.headline}</p>
-
-                  <div className="mt-2">
-                    <span className="text-sm text-gray-500 mr-4">
-                      <i className="far fa-envelope mr-1"></i>
-                      {TutorDetails.user.email}
-                    </span>
-
-                    <span className="text-sm text-gray-500 mr-4">
-                      <i className="fas fa-phone mr-1"></i>
-                      {TutorDetails.user.phone}
-                    </span>
-                    <span
-                      className={`text-sm ${
-                        TutorDetails.is_verified
-                          ? "text-green-500"
-                          : "text-red-500"
-                      } mr-4`}
-                    >
-                      <i className="fas fa-check-circle mr-1"></i>
-                      {TutorDetails.is_verified
-                        ? "Email Verified"
-                        : "Email Not Verified"}
-                    </span>
-
-                    <span
-                      className={`text-sm px-3 ${
-                        TutorDetails.status === "verified"
-                          ? "text-green-500"
-                          : TutorDetails.status === "requested"
-                          ? "text-gray-500"
-                          : TutorDetails.status === "pending"
-                          ? "text-yellow-500"
-                          : TutorDetails.status === "rejected"
-                          ? "text-red-500"
-                          : ""
-                      } mr-4`}
-                    >
-                      <i className="fas fa-info-circle mr-1"></i> Application
-                      Status:{" "}
-                      {TutorDetails.status.charAt(0).toUpperCase() +
-                        TutorDetails.status.slice(1)}
-                    </span>
-
-                    <span
-                      className={`text-sm ${
-                        TutorDetails.user.is_active
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      <i className="fas fa-user-check mr-1"></i>
-                      {TutorDetails.user.is_active
-                        ? "Active Account"
-                        : "Blocked Account"}
-                    </span>
-                  </div>
-
-                  <button className="mt-3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Download CV
-                  </button>
-                </div>
-
-                <div className="ml-auto text-right">
-                  <span className="text-sm text-gray-500">
-                    <i className="far fa-calendar mr-1"></i> Joined on{" "}
-                    {TutorDetails.user.date_joined
-                      ? formatDate(
-                          new Date(TutorDetails.user.date_joined),
-                          "dd, mmmm, yyyy"
-                        )
-                      : "N/A"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-3">About Me</h3>
-                <p className="text-gray-700">{TutorDetails.user.bio}</p>
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-2xl font-semibold mb-5 text-gray-800">
-                  Education
-                </h3>
-                {TutorDetails.education.map((edu, index) => (
-                  <div key={index} className="mb-6">
-                    <h4 className="text-xl font-medium text-gray-700">
-                      {edu.highest_qualification}
-                    </h4>
-                    <p className="text-lg text-gray-600">
-                      {edu.name_of_institution}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Year of Qualification: {edu.year_of_qualification}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8">
-                <h3 className="text-2xl font-semibold mb-5 text-gray-800">
-                  Experience
-                </h3>
-                {TutorDetails.experiences.map((exp, index) => (
-                  <div key={index} className="mb-6">
-                    <h4 className="text-xl font-medium text-gray-700">
-                      {exp.position}
-                    </h4>
-                    <p className="text-lg text-gray-600">{exp.company_name}</p>
-                    <p className="text-sm text-gray-500">
-                      {exp.start_date
-                        ? formatDate(new Date(exp.start_date), "dd, mmmm, yyyy")
-                        : "N/A"}
-                      -{" "}
-                      {exp.end_date
-                        ? formatDate(new Date(exp.end_date), "dd, mmmm, yyyy")
-                        : "Present"}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-2xl font-semibold mb-5 text-gray-800">
-                  Skills
-                </h3>
-                <div className="flex flex-wrap">
-                  {TutorDetails.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="bg-gray-200 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 mr-3 mb-3"
-                    >
-                      {skill.skill_name}
-                    </span>
-                  ))}
-                </div>
+                <AdminTutorAboutSection bio={TutorDetails.user.bio} />
+                <AdminTutorEducationSection
+                  education={TutorDetails.education}
+                />
+                <AdminTutorExperienceSection
+                  experiences={TutorDetails.experiences}
+                />
+                <AdminTutorSkillsSection skills={TutorDetails.skills} />
               </div>
             </div>
           </div>
