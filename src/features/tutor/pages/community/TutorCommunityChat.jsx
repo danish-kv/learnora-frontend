@@ -23,9 +23,7 @@ const TutorCommunityChat = () => {
   const [socket, setSocket] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-
   const messageContainerRef = useRef(null);
   const messageEndRef = useRef(null);
   const prevHeightRef = useRef(0);
