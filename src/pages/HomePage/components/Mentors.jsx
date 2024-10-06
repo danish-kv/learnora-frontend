@@ -1,36 +1,40 @@
-import React from 'react'
+import React from 'react';
+
+const mentors = [
+  { name: 'Joseph Ferguso', role: 'Designer', experience: '7 years experience', image: 'https://picsum.photos/seed/picsum/200/300'},
+  { name: 'Michael Jordan', role: 'Marketing', experience: '10 years experience', image: 'https://picsum.photos/seed/picsum/200/300' },
+  { name: 'Sarah Lee', role: 'Project Manager', experience: '8 years experience', image: 'https://picsum.photos/seed/picsum/200/300' },
+  { name: 'Chris Evans', role: 'UI/UX Designer', experience: '6 years experience', image: 'https://picsum.photos/seed/picsum/200/300' },
+];
+
+const MentorCard = ({ name, role, experience, image }) => (
+  <div className="relative rounded-lg overflow-hidden group">
+    <img src={image} alt={name} className="w-full h-64 object-cover" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+    <div className="absolute bottom-0 left-0 p-4 text-white">
+      <span className="bg-indigo-600 text-xs font-semibold px-2 py-1 rounded-full mb-2 inline-block">{role}</span>
+      <h3 className="text-lg font-semibold">{name}</h3>
+      <p className="text-sm">{experience}</p>
+    </div>
+  </div>
+);
 
 const Mentors = () => {
   return (
-  <section className="py-10 bg-white">
-    <div className="container mx-auto text-center">
-      <h2 className="text-2xl font-bold mb-4">Experienced Course Mentor</h2>
-      <div className="flex justify-center space-x-8">
-        <div className="w-1/4 p-4">
-          <img src="path/to/mentor1.png" alt="Nelson Amiston" className="mb-4 mx-auto rounded-full"/>
-          <h3 className="text-xl font-bold mb-2">Nelson Amiston</h3>
-          <p className="text-gray-700">Subject Matter Expert</p>
-        </div>
-        <div className="w-1/4 p-4">
-          <img src="path/to/mentor2.png" alt="Taylor Swift" className="mb-4 mx-auto rounded-full"/>
-          <h3 className="text-xl font-bold mb-2">Taylor Swift</h3>
-          <p className="text-gray-700">Tutor</p>
-        </div>
-        <div className="w-1/4 p-4">
-          <img src="path/to/mentor3.png" alt="Mariam Davidson" className="mb-4 mx-auto rounded-full"/>
-          <h3 className="text-xl font-bold mb-2">Mariam Davidson</h3>
-          <p className="text-gray-700">Course Designer</p>
-        </div>
-        <div className="w-1/4 p-4">
-          <img src="path/to/mentor4.png" alt="John Smith" className="mb-4 mx-auto rounded-full"/>
-          <h3 className="text-xl font-bold mb-2">John Smith</h3>
-          <p className="text-gray-700">Lead Developer</p>
+    <div className=" bg-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-2">Our Professional & Experience Mentors</h2>
+        <p className="text-center text-gray-600 mb-12">
+          From foundational courses that lay the groundwork for your educational journey to advanced specializations.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {mentors.map((mentor, index) => (
+            <MentorCard key={index} {...mentor} />
+          ))}
         </div>
       </div>
     </div>
-  </section>
-);
-}
+  );
+};
 
-
-export default Mentors
+export default Mentors;

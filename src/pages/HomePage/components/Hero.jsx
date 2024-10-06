@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const StatItem = ({ number, text }) => (
@@ -23,11 +24,11 @@ const Hero = () => {
 
   const ImageDisplay = () => {
     const images = [
-      "/api/placeholder/300/400",
-      "/api/placeholder/300/400",
-      "/api/placeholder/300/400",
-      "/api/placeholder/300/400",
-      "/api/placeholder/300/400"
+      "https://picsum.photos/seed/picsum/300/400",
+      "https://picsum.photos/seed/picsum/200/300",
+      "https://picsum.photos/seed/picsum/200/300",
+      "https://picsum.photos/seed/picsum/200/300",
+      "https://picsum.photos/seed/picsum/200/300",
     ];
 
     return (
@@ -47,7 +48,13 @@ const Hero = () => {
   };
 
   return (
-    <div className="bg-indigo-50 min-h-screen flex flex-col">
+    <div
+      style={{
+        background:
+          "linear-gradient(144.88deg, rgba(255, 255, 255, 0.3) -3.98%, rgba(79, 70, 229, 0.2) 21.27%, rgba(79, 70, 229, 0.6) 71.28%)",
+      }}
+      className="min-h-screen flex flex-col"
+    >
       <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-4xl w-full space-y-8 text-center">
           <div className="bg-indigo-100 text-indigo-600 py-2 px-4 rounded-full inline-block mb-8">
@@ -65,13 +72,14 @@ const Hero = () => {
           </p>
 
           <div className="mt-8">
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300">
-              Join Course
-            </button>
+            <Link to={"/courses"}>
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+                Explore Course
+              </button>
+            </Link>
           </div>
         </div>
       </div>
-
       <ImageDisplay />
       <Statistics />
     </div>
