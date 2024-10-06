@@ -13,7 +13,7 @@ const ProtectedRoute = ({ element, role }) => {
 
     if (!currentRole) {
         if (location.pathname.startsWith('/tutor')) {
-            return <Navigate to='/tutor/login'  />;
+            return <Navigate to='/login'  />;
         } else if (location.pathname.startsWith('/admin')) {
             return <Navigate to='/admin/login'  />;
         }
