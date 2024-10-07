@@ -39,7 +39,7 @@ const Courses = () => {
     setPage(1);
     setSearchQuery("");
     navigate(`/courses/?category=${category}&page=1`);
-    setSidebarOpen(false);
+    getCourses(1, category); 
   };
 
   const handlePageChange = (newPage) => {

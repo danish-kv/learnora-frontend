@@ -12,7 +12,7 @@ import {
 const PaginationComponent = ({ page, totalPages, onPageChange }) => {
   const renderPaginationItems = () => {
     let items = [];
-    const maxVisiblePage = 5;
+    const maxVisiblePage = 9;
     const halfVisible = Math.floor(maxVisiblePage / 2);
     let startPage = Math.max(1, page - halfVisible);
     let endPage = Math.min(totalPages, startPage + maxVisiblePage - 1);
