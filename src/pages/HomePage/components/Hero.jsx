@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Hero = () => {
+const Hero = ({data}) => {
   const StatItem = ({ number, text }) => (
     <div className="text-center">
       <div className="text-4xl font-bold text-white mb-2">{number}</div>
@@ -9,43 +9,49 @@ const Hero = () => {
     </div>
   );
 
-  const Statistics = () => (
-    <div className="bg-indigo-600 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <StatItem number="700+" text="Success Stories" />
-          <StatItem number="200+" text="Expert Instructor" />
-          <StatItem number="80k+" text="Worldwide Students" />
-          <StatItem number="500+" text="Trendy Subjects" />
-        </div>
-      </div>
-    </div>
-  );
-
-  const ImageDisplay = () => {
-    const images = [
-      "https://picsum.photos/seed/picsum/300/400",
-      "https://picsum.photos/seed/picsum/200/300",
-      "https://picsum.photos/seed/picsum/200/300",
-      "https://picsum.photos/seed/picsum/200/300",
-      "https://picsum.photos/seed/picsum/200/300",
-    ];
+  const Statistics = () => {
+    if (!data) {
+      return <div>Loading...</div>;
+    }
 
     return (
-      <div className="w-full overflow-hidden bg-gray-100 py-8">
-        <div className="flex space-x-4 animate-scroll">
-          {images.map((src, index) => (
-            <img
-              key={index}
-              src={src}
-              alt={`Professional ${index + 1}`}
-              className="w-48 h-64 object-cover rounded-lg shadow-md"
-            />
-          ))}
+      <div className="bg-indigo-600 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <StatItem number={data.total_course_completion} text="Courses Completed" />
+            <StatItem number={data.total_tutor} text="Expert Tutors" />
+            <StatItem number={data.total_student} text="Students Enrolled" />
+            <StatItem number={data.total_course} text="Available Courses" />
+          </div>
         </div>
       </div>
     );
   };
+
+  // const ImageDisplay = () => {
+  //   const images = [
+  //     "https://picsum.photos/seed/picsum/300/400",
+  //     "https://picsum.photos/seed/picsum/200/300",
+  //     "https://picsum.photos/seed/picsum/200/300",
+  //     "https://picsum.photos/seed/picsum/200/300",
+  //     "https://picsum.photos/seed/picsum/200/300",
+  //   ];
+
+  //   return (
+  //     <div className="w-full overflow-hidden bg-gray-100 py-8">
+  //       <div className="flex space-x-4 animate-scroll">
+  //         {images.map((src, index) => (
+  //           <img
+  //             key={index}
+  //             src={src}
+  //             alt={`Professional ${index + 1}`}
+  //             className="w-48 h-64 object-cover rounded-lg shadow-md"
+  //           />
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <div
@@ -80,7 +86,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <ImageDisplay />
+      {/* <ImageDisplay /> */}
       <Statistics />
     </div>
   );
