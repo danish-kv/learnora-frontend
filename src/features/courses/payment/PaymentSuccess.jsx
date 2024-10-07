@@ -4,7 +4,7 @@ import api from "../../../services/api";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 
 const PaymentSuccess = () => {
-  const location = useLocation(); // Use useLocation to get current location
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,36 +13,34 @@ const PaymentSuccess = () => {
     const userID = params.get("user_id");
     const access_type = params.get("access_type");
     const session_id = params.get("session_id");
-    console.log("course id:", courseID, "user id:", userID, 'access_type ' ,access_type, 'session_id' , session_id);
-    console.log(session_id);
-    
 
     const confirmCoursePurchase = async () => {
       try {
         const res = await api.post("payment_success/", {
           course_id: courseID,
           user_id: userID,
-          access_type : access_type,
-          session_id : session_id
+          access_type,
+          session_id,
         });
         console.log(res);
-        await swal("Payment Success", "Your course purchase success.", "success");
-        navigate(`/course/${courseID}`);
+
+        swal("Payment Success", "Your course purchase success.", "success");
+        navigate(`/course/${courseID}`, { state: { showConfetti: true } });
       } catch (error) {
-        console.log(error);
-        displayToastAlert(400, 'Payment failed. Please try again.');
+        console.error(error);
+        displayToastAlert(400, "Payment failed. Please try again.");
       }
     };
 
     if (courseID && userID && access_type && session_id) {
       confirmCoursePurchase();
-    }else{
-      displayToastAlert(400, "Invalid payment request")
-      navigate('/courses')
+    } else {
+      displayToastAlert(400, "Invalid payment request");
+      navigate("/courses");
     }
-  },[]); 
+  }, [location, navigate]);
 
-  return <div>Payment Success</div>;
+  return <></>;
 };
 
 export default PaymentSuccess;
