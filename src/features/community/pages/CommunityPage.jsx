@@ -4,21 +4,28 @@ import { Search, Users } from "lucide-react";
 import CommunityCard from "../components/CommunityCard";
 import useFetchCommunity from "@/features/tutor/hooks/useFetchCommunity";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import api from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import Banner from "@/components/common/Banner";
+import { useSelector } from "react-redux";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const CommunityPage = () => {
   const { communities, error, loading } = useFetchCommunity();
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const filteredCommunities = communities?.filter((community) =>
     community.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleJoinCommuntiy = async (slug, name) => {
     try {
+      if (!user) {
+        console.log("not user found");
+        displayToastAlert(100, 'Please login to continue...')
+        return navigate("/login");
+      }
       const res = await api.post(`community/${slug}/join/`);
       if (res.status === 200) {
         await swal(

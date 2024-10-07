@@ -6,11 +6,13 @@ import LoadingDotStream from "@/components/common/Loading";
 import api from "@/services/api";
 import useFetchContestDetails from "@/features/tutor/hooks/useFetchContestDetails";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import { useSelector } from "react-redux";
 
 const ContestDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { contestDetails, error, loading } = useFetchContestDetails(id);
+  const { user } = useSelector((state) => state.auth);
 
   if (!contestDetails | (contestDetails.length == 0)) {
     return;
@@ -18,6 +20,12 @@ const ContestDetailsPage = () => {
 
   const handleParticipate = async () => {
     try {
+      if (!user) {
+        console.log("not user found");
+        displayToastAlert(100, 'Please login to continue...')
+        return navigate("/login");
+      }
+      
       const res = await api.post(`contest/${id}/participate/`);
       console.log("res of res ====", res);
       if (res.status === 200) {
