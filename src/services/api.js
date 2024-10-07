@@ -1,6 +1,5 @@
 import axios from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constant";
-import { toast } from "react-toastify";
 import { displayToastAlert } from "../utils/displayToastAlert";
 
 const api = axios.create({
