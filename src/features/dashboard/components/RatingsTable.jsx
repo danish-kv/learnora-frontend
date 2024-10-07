@@ -19,7 +19,7 @@ export const RatingsTable = ({ ratingsData }) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <BookOpen className="h-5 w-5 text-indigo-600 mr-2" />
-                <p className="text-sm font-medium text-indigo-600 truncate">{rating?.course?.title}</p>
+                <p className="text-sm font-medium text-indigo-600 truncate">{rating?.course_data?.title}</p>
               </div>
               <div className="flex items-center">
                 {renderStars(rating?.rating)}
