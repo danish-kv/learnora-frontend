@@ -1,6 +1,5 @@
 import { displayToastAlert } from "../utils/displayToastAlert";
 import api from "./api";
-import { toast } from "react-toastify";
 
 export const register = async (email, password, username, role) => {
   try {
@@ -10,23 +9,23 @@ export const register = async (email, password, username, role) => {
       username,
       role,
     });
-    toast.success("User registered successfully!");
+    displayToastAlert(200,"User registered successfully!");
     return response.data;
   } catch (error) {
     console.error("catch error signup ===>", error);
     console.error("catch  ===>", error.response);
-    await displayToastAlert(error.response.status || 400, error.response.data.email || 'Facing some issue please try later')
+    displayToastAlert(error.response.status || 400, error.response.data.email || 'Facing some issue please try later')
 
     if (error.response && error.response.data) {
       const errorMessages = error.response.data;
       for (let key in errorMessages) {
         if (errorMessages.hasOwnProperty(key)) {
-          toast.error(`${key}: ${errorMessages[key]}`);
+          displayToastAlert(400, `${key}: ${errorMessages[key]}`);
           console.error(`${key}: ${errorMessages[key]}`);
         }
       }
     } else {
-      toast.error("An unexpected error occurred.");
+      displayToastAlert(400, "An unexpected error occurred.");
     }
 
     throw error;
@@ -58,7 +57,7 @@ export const login = async ({ email, password, role }) => {
         const errorMess = error.response.data;
         for (let key in errorMess) {
           if (errorMess.hasOwnProperty(key)) {
-            toast.error(`${key}: ${errorMess[key]}`);
+            displayToastAlert(400, `${key}: ${errorMess[key]}`);
             console.error(`${key}: ${errorMess[key]}`);
           }
         }

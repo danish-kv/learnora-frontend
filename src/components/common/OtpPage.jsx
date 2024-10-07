@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ThreeDot } from "react-loading-indicators";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleOtpAccess,
   tutorApplication,
 } from "../../redux/slices/authSlice";
 import LoadingDotStream from "./Loading";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const OtpPage = () => {
   const [otp, setOtp] = useState(new Array(5).fill(""));
@@ -72,7 +71,7 @@ const OtpPage = () => {
       const res = await api.post("otp-verify/", { email, otp: otpString });
       if (res.status === 200) {
         dispatch(toggleOtpAccess(false));
-        toast.success("OTP verified successfully!");
+        displayToastAlert(200, "OTP verified successfully!");
 
         if (is_forget) {
           navigate("/password-reset", {
@@ -92,7 +91,7 @@ const OtpPage = () => {
       console.log(res);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to verify OTP. Please try again.");
+      displayToastAlert(400, "Failed to verify OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -102,12 +101,12 @@ const OtpPage = () => {
     setResendLoading(true);
     try {
       await api.post("otp-resend/", { email });
-      toast.success("OTP resend successfully");
+      displayToastAlert(200, "OTP resend successfully");
       setTimer(60);
       setResendDisabled(true);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to resend otp, please try again");
+      displayToastAlert(400, "Failed to resend otp, please try again");
     } finally {
       setResendLoading(false);
     }
@@ -145,7 +144,7 @@ const OtpPage = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-200"
+            className="w-full bg-indigo-700 text-white py-2 rounded-md hover:bg-indigo-800 transition duration-200"
           >
             {loading ? <LoadingDotStream /> : "Submit"}
           </button>

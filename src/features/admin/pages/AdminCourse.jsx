@@ -47,7 +47,7 @@ const AdminCourse = () => {
       await api.patch(`courses/${slug}/`, { is_active: !currentStatus });
       await getCourses(page);
       displayToastAlert(
-        400,
+        200,
         `Course ${currentStatus ? "blocked" : "unblocked"} successfully`
       );
     } catch (error) {

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { Riple, ThreeDot } from "react-loading-indicators";
+import LoadingDotStream from "../../../components/common/Loading";
 import authService from "../../../services/authService";
 import { validateRegistration } from "../../../utils/validation";
-import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { toggleOtpAccess } from "../../../redux/slices/authSlice";
-import LoadingDotStream from "../../../components/common/Loading";
+import "react-toastify/dist/ReactToastify.css";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const TutorRegister = () => {
   const [username, setUsername] = useState("");
@@ -44,14 +43,14 @@ const TutorRegister = () => {
       }
     } else {
       setErrors(errors);
-      toast.error("Please fix the validation errors");
+      displayToastAlert(400, "Please fix the validation errors");
     }
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-blue-100">
+    <div className="flex h-screen items-center justify-center bg-indigo-400">
       <div className="flex bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="w-1/2 bg-blue-200 flex items-center justify-center">
+        <div className="w-1/2 bg-indigo-500 flex items-center justify-center">
           <div className="text-center p-10">
             <img
               src="/tutor.jpg"
@@ -81,7 +80,7 @@ const TutorRegister = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 required
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
                   errors.username ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your name"
@@ -97,7 +96,7 @@ const TutorRegister = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 required
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
                   errors.email ? "border-red-500" : ""
                 }`}
                 placeholder="Enter email address"
@@ -113,7 +112,7 @@ const TutorRegister = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 required
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
                   errors.password ? "border-red-500" : ""
                 }`}
                 placeholder="Enter password"
@@ -124,12 +123,12 @@ const TutorRegister = () => {
             </div>
             <div className="mb-4 flex items-center justify-between">
               <Link to={"/forget-password"}>
-                <p className="text-sm text-blue-600 hover:underline">
+                <p className="text-sm text-indigo-600 hover:underline">
                   Forgot Password?
                 </p>
               </Link>
             </div>
-            <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200">
+            <button className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition duration-200">
               {loading ? <LoadingDotStream /> : "Register"}
             </button>
           </form>
@@ -137,7 +136,7 @@ const TutorRegister = () => {
           <p className="mt-4 text-center text-gray-600">
             Already have an account?{" "}
             <Link to="/tutor/login">
-              <span className="text-blue-600 hover:underline">Log In</span>
+              <span className="text-indigo-600 hover:underline">Log In</span>
             </Link>
           </p>
         </div>

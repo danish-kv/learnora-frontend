@@ -102,7 +102,7 @@ const ReviewModal = ({
               <FaStar
                 key={star}
                 className={`cursor-pointer ${
-                  star <= rating ? "text-yellow-500" : "text-gray-300"
+                  star <= rating ? "text-indigo-700" : "text-gray-300"
                 }`}
                 onClick={() => setRating(star)}
               />
@@ -118,7 +118,7 @@ const ReviewModal = ({
         ></textarea>
         <button
           onClick={handleSubmit}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
         >
           {reviewToEdit ? "Update Review" : "Submit Review"}
         </button>
