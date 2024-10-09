@@ -1,6 +1,7 @@
 import { Twitter, Youtube } from "lucide-react";
 import React from "react";
 import { FaInstagram, FaPinterest } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -9,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
           <div>
-            <h2 className="text-2xl font-bold text-blue-600 mb-4">LEARNORA</h2>
+            <h2 className="text-2xl font-bold text-indigo-600 mb-4">LEARNORA</h2>
             <p className="text-gray-600 mb-4">
               {" "}
               LEARNORA is an e-learning platform offering personalized courses,
@@ -17,16 +18,16 @@ const Footer = () => {
               anywhere.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-blue-500 hover:text-blue-600">
+              <a href="" className="text-indigo-500 hover:text-indigo-600">
                 <FaInstagram size={20} />
               </a>
-              <a href="#" className="text-blue-500 hover:text-blue-600">
+              <a href="" className="text-indigo-500 hover:text-indigo-600">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-blue-500 hover:text-blue-600">
+              <a href="" className="text-indigo-500 hover:text-indigo-600">
                 <Youtube size={20} />
               </a>
-              <a href="#" className="text-blue-500 hover:text-blue-600">
+              <a href="" className="text-indigo-500 hover:text-indigo-600">
                 <FaPinterest size={20} />
               </a>
             </div>
@@ -68,18 +69,18 @@ const Footer = () => {
             All rights reserved &copy; LEARNORA
           </p>
           <nav className="flex space-x-4 text-sm">
-            <a href="#" className="text-gray-600 hover:text-blue-600">
-              Courses
-            </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600">
-              Contests
-            </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600">
-              Communities
-            </a>
-            <a href="#" className="text-gray-600 hover:text-blue-600">
-              Discussion
-            </a>
+            <Link to={"/courses"}>
+              <p className="text-gray-600 hover:text-indigo-600">Courses</p>
+            </Link>
+            <Link to={"/contest"}>
+              <p className="text-gray-600 hover:text-indigo-600">Contests</p>
+            </Link>
+            <Link to={"/community"}>
+              <p className="text-gray-600 hover:text-indigo-600">Communities</p>
+            </Link>
+            <Link to={"/discussion"}>
+              <p className="text-gray-600 hover:text-indigo-600">Discussion</p>
+            </Link>
           </nav>
         </div>
       </div>

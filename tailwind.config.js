@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
   ],
   prefix: "",
   theme: {
@@ -17,7 +17,14 @@ module.exports = {
       },
     },
     extend: {
+      animation: {
+        "fade-in-up": "fadeInUp 0.3s ease-out",
+      },
       keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -32,7 +39,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       borderColor: {
-        'border': '#e0e0e0', // Example color
+        border: "#e0e0e0",
       },
     },
   },

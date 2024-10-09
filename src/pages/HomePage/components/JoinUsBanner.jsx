@@ -14,10 +14,10 @@ const JoinUsBanner = () => {
             supportive community to achieve your educational and professional
             goals.
           </p>
-          <Link to={'courses'} >
-          <button className="bg-white text-indigo-600 font-semibold py-2 px-6 rounded-full hover:bg-indigo-50 transition duration-300">
-            Join Course
-          </button>
+          <Link to="/courses">
+            <button className="bg-white text-indigo-600 font-semibold py-2 px-6 rounded-full hover:bg-indigo-50 transition duration-300">
+              Join Course
+            </button>
           </Link>
         </div>
         <div className="md:w-2/5 flex justify-end">

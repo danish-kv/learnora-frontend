@@ -38,9 +38,7 @@ const CourseCard = ({
   </motion.div>
 );
 
-const CourseSection = ({ data }) => {
-  console.log("data from", data);
-
+const CourseSection = ({ categories }) => {
   return (
     <div className="bg-gradient-to-b from-gray-100 to-white py-16 px-4">
       <motion.div
@@ -68,8 +66,10 @@ const CourseSection = ({ data }) => {
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data &&
-            data.map((course, index) => <CourseCard key={index} {...course} />)}
+          {categories &&
+            categories.map((course, index) => (
+              <CourseCard key={index} {...course} />
+            ))}
         </div>
       </motion.div>
     </div>

@@ -2,7 +2,6 @@ import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
-import HomePage from "../pages/HomePage/HomePage";
 import OtpPage from "../components/common/OtpPage";
 import StudentProfile from "@/features/profile/student/pages/StudentProfile";
 import DiscussionPage from "@/features/discussion/pages/DiscussionPage";
@@ -13,6 +12,7 @@ import ContestParticipatePage from "@/features/contest/page/ContestParticipatePa
 import CommunityPage from "@/features/community/pages/CommunityPage";
 import CommunityChat from "@/features/community/pages/CommunityChat";
 import VideoCallRoom from "@/features/community/pages/VideoCallRoom";
+import LandingPage from "@/pages/HomePage/LandingPage";
 
 const ForgetPassword = lazy(() =>
   import("../features/auth/pages/ForgetPassword")
@@ -74,7 +74,7 @@ const StudentRoutes = () => {
 
         <Route
           path="/"
-          element={<ProtectedRoute element={<HomePage />} role="student" />}
+          element={<ProtectedRoute element={<LandingPage />} role="student" />}
         />
         <Route
           path="courses"
@@ -152,10 +152,7 @@ const StudentRoutes = () => {
             <ProtectedRoute element={<CommunityChat />} role={"student"} />
           }
         />
-        <Route
-          path="/community/:slug/room/"
-          element={<VideoCallRoom />} 
-        />
+        <Route path="/community/:slug/room/" element={<VideoCallRoom />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
