@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../../redux/thunk/authThunks";
 import { capitalizeFirstLetter } from "../../utils/format";
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from "lucide-react";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -35,8 +35,8 @@ function Header() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const navItems = [
@@ -51,9 +51,15 @@ function Header() {
     <nav className="bg-white shadow-sm px-6 py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <img src="/logo.png" alt="Learnora Logo" className="h-12 w-auto" />
-          </div>
+          <Link to={"/"}>
+            <div className="flex items-center">
+              <img
+                src="/logo.png"
+                alt="Learnora Logo"
+                className="h-12 w-auto"
+              />
+            </div>
+          </Link>
 
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
@@ -100,7 +106,7 @@ function Header() {
                         Profile
                       </p>
                     </Link>
-            
+
                     <p
                       onClick={handleLogout}
                       className="block px-4 py-2 text-gray-700 hover:bg-indigo-500 hover:text-white rounded-b-lg cursor-pointer"
@@ -122,7 +128,7 @@ function Header() {
                     Register
                   </button>
                 </Link>
-                <Link to="/tutor/register">
+                <Link to="/register" state={{ TutorRegister: true }}>
                   <button className="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-600 transition duration-300">
                     Become a Tutor
                   </button>
@@ -171,7 +177,9 @@ function Header() {
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{username}</div>
+                  <div className="text-base font-medium text-gray-800">
+                    {username}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -191,7 +199,7 @@ function Header() {
                   Register
                 </Link>
                 <Link
-                  to="/tutor/register"
+                  to="/register"
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                   onClick={toggleMobileMenu}
                 >

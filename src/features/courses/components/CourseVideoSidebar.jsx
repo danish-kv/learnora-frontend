@@ -27,7 +27,7 @@ const CourseVideoSidebar = ({
     return (
       <button
         onClick={toggleMinimize}
-        className="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-50"
+        className="fixed bottom-4 right-4 bg-indigo-500 text-white p-4 rounded-full shadow-lg hover:bg-indigo-600 transition-all duration-300 z-50"
       >
         <FaBars className="text-xl" />
       </button>
@@ -58,7 +58,7 @@ const CourseVideoSidebar = ({
                 onClick={() => handleModuleClick(module)}
                 className={`cursor-pointer p-4 rounded-lg transition-all duration-300 hover:shadow-md ${
                   activeModule?.id === module?.id
-                    ? "bg-blue-50 border-l-4 border-blue-500"
+                    ? "bg-indigo-50 border-l-4 border-indigo-500"
                     : "bg-white hover:bg-gray-50"
                 }`}
               >
@@ -66,12 +66,12 @@ const CourseVideoSidebar = ({
                   <h3
                     className={`font-semibold text-lg flex items-center transition-colors duration-200 ${
                       activeModule?.id === module?.id
-                        ? "text-blue-700"
+                        ? "text-indigo-700"
                         : "text-gray-800"
                     }`}
                   >
                     {activeModule?.id === module?.id ? (
-                      <FaPlay className="inline-block mr-3 text-blue-500" />
+                      <FaPlay className="inline-block mr-3 text-indigo-500" />
                     ) : module.is_watched ? (
                       <FaCheck className="inline-block mr-3 text-green-500" />
                     ) : (
@@ -93,7 +93,7 @@ const CourseVideoSidebar = ({
         {activeModule && (
           <div className="mt-6 border-t pt-4">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center">
-              <FaBook className="mr-2 text-blue-500" />
+              <FaBook className="mr-2 text-indigo-500" />
               Study Materials
             </h3>
             {activeModule.notes ? (
@@ -101,10 +101,10 @@ const CourseVideoSidebar = ({
                 href={activeModule.notes}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block bg-blue-50 p-3 rounded-lg text-blue-700 hover:bg-blue-100 transition-colors duration-200"
+                className="block bg-indigo-50 p-3 rounded-lg text-indigo-700 hover:bg-indigo-100 transition-colors duration-200"
               >
                 <div className="font-medium mb-1">View Study Notes</div>
-                <div className="text-sm text-blue-600">
+                <div className="text-sm text-indigo-600">
                   Supplementary material for {activeModule.title}
                 </div>
               </a>

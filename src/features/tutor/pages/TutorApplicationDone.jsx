@@ -20,9 +20,9 @@ const TutorApplicationDone = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md max-w-lg w-full p-6">
         <div className="flex justify-center mb-6">
-          <div className="bg-blue-200 rounded-full p-3">
+          <div className="bg-indigo-200 rounded-full p-3">
             <svg
-              className="w-8 h-8 text-blue-600"
+              className="w-8 h-8 text-indigo-600"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -53,7 +53,7 @@ const TutorApplicationDone = () => {
         <Link to={"/"}>
           <button
             onClick={() => dispatch(tutorApplicationDone(false))}
-            className="w-full bg-blue-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded"
+            className="w-full bg-indigo-400 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded"
           >
             ← Back to Home
           </button>

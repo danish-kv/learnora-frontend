@@ -26,7 +26,7 @@ const NotificationToast = ({ notifications, removeNotification, navigate }) => {
           >
             <div className="p-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <MessageSquare className="text-blue-500" size={20} />
+                <MessageSquare className="text-indigo-500" size={20} />
                 <h3 className="text-sm font-semibold text-gray-800">
                   {notification.message}
                 </h3>
@@ -44,7 +44,7 @@ const NotificationToast = ({ notifications, removeNotification, navigate }) => {
                     removeNotification(notification.id);
                     navigate(notification.link);
                   }}
-                  className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors duration-200"
+                  className="flex items-center gap-1 px-2 py-1 bg-indigo-500 text-white text-xs rounded hover:bg-indigo-600 transition-colors duration-200"
                 >
                   View
                   <ArrowRight size={12} />
