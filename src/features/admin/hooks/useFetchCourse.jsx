@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { fetchCourses } from "../services/adminService";
 import api from "@/services/api";
 
@@ -14,7 +14,7 @@ const useFetchCourse = () => {
     try {
       const data = await fetchCourses(page, category);
       setCourses(data.results);
-      setTotalPages(Math.ceil(data.count / 4));
+      setTotalPages(Math.ceil(data.count / 9));
     } catch (error) {
       console.log(error);
       setError(error);
