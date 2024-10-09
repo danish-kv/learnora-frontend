@@ -8,6 +8,7 @@ import ChangePassword from "../components/ChangePassword";
 import SavedNotes from "../components/SavedNotes";
 import UseFetchStudentProfile from "../hooks/UseFetchStudentProfile";
 import { useSelector } from "react-redux";
+import ProfilePhoto from "../components/ProfilePhoto";
 
 const StudentProfile = () => {
   const { profile } = UseFetchStudentProfile();
@@ -31,6 +32,7 @@ const StudentProfile = () => {
           <Routes>
             <Route path="/" element={<ProfileView profile={profile[0]} />} />
             <Route path="/edit" element={<EditProfile profile={profile[0]} />} />
+            <Route path="/photo" element={<ProfilePhoto profile={profile[0]} />} />
             <Route path="/change-password" element={<ChangePassword profile={profile[0]} />} />
             <Route path="/saved-notes" element={<SavedNotes profile={profile[0]} />} />
           </Routes>

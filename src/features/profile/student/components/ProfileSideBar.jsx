@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Edit, Lock, Book, LogOut } from "lucide-react";
+import { User, Edit, Lock, Book, LogOut, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -58,6 +58,12 @@ const ProfileSideBar = () => {
             <Button variant="ghost" className="w-full justify-start">
               <Edit className="mr-2 h-4 w-4" />
               Edit Profile
+            </Button>
+          </Link>
+          <Link to={"/profile/photo"}>
+            <Button variant="ghost" className="w-full justify-start">
+              <Image className="mr-2 h-4 w-4" />
+              Photo
             </Button>
           </Link>
 
