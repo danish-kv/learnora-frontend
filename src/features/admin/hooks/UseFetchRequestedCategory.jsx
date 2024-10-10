@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchRequestedCourses } from "../services/adminService";
+import { fetchRequestedCategory } from "../services/adminService";
 
 const UseFetchRequestedCategory = () => {
   const [category, setCategory] = useState([]);
@@ -9,7 +9,7 @@ const UseFetchRequestedCategory = () => {
   const getRequestedCategory = async () => {
     setLoading(true);
     try {
-      const data = await fetchRequestedCourses();
+      const data = await fetchRequestedCategory();
       setCategory(data);
       console.log("requested :", data);
     } catch (error) {
@@ -21,8 +21,8 @@ const UseFetchRequestedCategory = () => {
   };
 
   useEffect(() => {
-    getRequestedCategory()
-  },[])
+    getRequestedCategory();
+  }, []);
   return { category, error, loading, getRequestedCategory };
 };
 

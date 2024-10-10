@@ -37,6 +37,11 @@ export const fetchCategory = async () => {
 }
 
 export const fetchRequestedCourses = async () => {
+  const res = await api.get('requested-courses/')
+  return res.data
+}
+
+export const fetchRequestedCategory = async () => {
   const res = await api.get('requested-category/')
   return res.data
 }
