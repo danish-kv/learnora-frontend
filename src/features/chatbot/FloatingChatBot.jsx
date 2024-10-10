@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, Loader } from "lucide-react";
+import { X, Send, Loader } from "lucide-react";
 import api from "@/services/api";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import AnimatedChatButton from "./AnimatedButton";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 const API_URL = `${BASE_URL}/conversations/`;
@@ -181,12 +182,7 @@ const FloatingChatBot = () => {
           </div>
         </div>
       ) : (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-3 shadow-lg transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
-        >
-          <MessageCircle size={24} />
-        </button>
+        <AnimatedChatButton />
       )}
     </div>
   );
