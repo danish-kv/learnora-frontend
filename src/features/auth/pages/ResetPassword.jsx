@@ -25,7 +25,7 @@ const ResetPassword = () => {
       setError("Passwords don't match");
       return;
     }
-    if (!password.trim () || !confirmPassword.trim()) {
+    if (!password.trim() || !confirmPassword.trim()) {
       setError("Passwords don't match");
       return;
     }
@@ -39,7 +39,7 @@ const ResetPassword = () => {
           title: "Password Changed Succussfully",
         });
         if (is_tutor) {
-          navigate("/tutor/login");
+          navigate("/login", { state: { TutorRegister: true } });
         } else {
           navigate("/login");
         }

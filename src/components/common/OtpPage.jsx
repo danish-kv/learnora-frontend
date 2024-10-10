@@ -35,7 +35,7 @@ const OtpPage = () => {
   useEffect(() => {
     if (!otp_access || !email) {
       if (is_tutor) {
-        navigate("/tutor/login");
+        navigate("/login", { state: { TutorRegister: true } });
       } else {
         navigate("/login");
       }
@@ -78,7 +78,7 @@ const OtpPage = () => {
             state: { email, is_tutor, is_forget },
           });
         } else if ((is_tutor, for_verify)) {
-          navigate("/tutor/login ");
+          navigate("/login", { state: { TutorRegister: true } });
         } else if (is_tutor) {
           dispatch(tutorApplication(true));
           navigate("/tutor/application ", { state: { email } });

@@ -40,10 +40,6 @@ export const useGoogleAuth = () => {
           navigate("/login");
         } else if (from === "login") {
           navigate("/");
-        } else if ("tutor/register") {
-          navigate("tutor/login");
-        } else if ("tutor/login") {
-          navigate("tutor/");
         }
       }
     } catch (error) {

@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { validateLogin } from "../../../utils/validation";
-import authService from "../../../services/authService";
-import { toast } from "react-toastify";
-import LoadingDotStream from "../../../components/common/Loading";
-import { displayToastAlert } from "../../../utils/displayToastAlert";
 import { useDispatch, useSelector } from "react-redux";
 import { Login } from "../../../redux/thunk/authThunks";
-import { toggleOtpAccess } from "../../../redux/slices/authSlice";
+import {
+  toggleOtpAccess,
+  tutorApplication,
+  tutorApplicationDone,
+} from "../../../redux/slices/authSlice";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
-import Header from "../../../components/layout/Header";
+import { validateLogin } from "../../../utils/validation";
+import { displayToastAlert } from "../../../utils/displayToastAlert";
+import LoadingDotStream from "../../../components/common/Loading";
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -20,11 +22,10 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const { handleSignInWithGoogle } = useGoogleAuth();
   const navigate = useNavigate();
-  const dispath = useDispatch();
-
+  const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
-  console.log("loading in ", loading);
 
+  console.log(formData);
   useEffect(() => {
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_CLIENT_ID,
@@ -33,18 +34,16 @@ const LoginPage = () => {
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
       theme: "outline",
       size: "large",
-      text: "continue_with",
+      text: "signin_with",
       width: "780",
     });
-  }, []);
+  }, [formData.role]);
 
   const onGoogleSignIn = async (res) => {
-    await handleSignInWithGoogle(res, "student", "login");
+    await handleSignInWithGoogle(res, formData.role, "login");
   };
 
   const handleOnChange = (e) => {
-    console.log(formData);
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -52,118 +51,259 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("handleSubmit called");
     e.preventDefault();
-
-    console.log(formData.email, formData.password);
-
     const { isValid, errors } = validateLogin(formData);
-    console.log(isValid, errors);
 
-    if (isValid) {
-      // setLoading(true);
-      console.log("form submitted");
-
-      try {
-        const res = await dispath(Login(formData)).unwrap();
-        console.log("res of res ====>", res);
-
-        if (res.role === "student") {
-          navigate("/");
-          displayToastAlert(200, "Welcome back!");
-        } else {
-          displayToastAlert(400, "Not a authorized person");
-        }
-      } catch (error) {
-        console.log(error);
-        if (error.status == 403) {
-          dispath(toggleOtpAccess(true));
-          await displayToastAlert(100, "Verification Incomplete");
-          navigate("otp/", { state: { email } });
-        }
-      }
-    } else {
+    if (!isValid) {
       setErrors(errors);
-      toast.error("Please fix the errors");
+      displayToastAlert(400, "Please fix the errors");
+      return;
+    }
+
+    try {
+      const res = await dispatch(Login(formData)).unwrap();
+
+      if (res.role === formData.role) {
+        const token = jwtDecode(res.access_token);
+        console.log("token ===> ", token);
+
+        if (!token.is_active) {
+          await swal("Blocked", "Admin blocked you.", "error");
+          return;
+        }
+
+        handleNavigation(res.role);
+        displayToastAlert(200, "Welcome back!");
+      } else {
+        displayToastAlert(400, "Not an authorized person");
+      }
+    } catch (error) {
+      handleLoginErrors(error);
     }
   };
 
+  const handleNavigation = (role) => {
+    if (role === "tutor") {
+      navigate("/tutor");
+    } else if (role === "student") {
+      navigate("/");
+    }
+  };
+
+  const handleLoginErrors = async (error) => {
+    if (error?.error === "User not verified") {
+      await swal(
+        "Email Not Verified",
+        "Please verify your email. Check your email for an OTP.",
+        "error"
+      );
+      dispatch(toggleOtpAccess(true));
+      navigateToOtpPage(formData.role);
+    } else if (
+      error?.error === "Application status is pending" &&
+      formData.role === "tutor"
+    ) {
+      await handlePendingApplication();
+    } else if (
+      error?.error === "Application status is requested" &&
+      formData.role === "tutor"
+    ) {
+      handleRequestedApplication();
+    } else if (
+      error?.error === "Application status is rejected" &&
+      formData.role === "tutor"
+    ) {
+      await swal(
+        "Application Rejected",
+        "Unfortunately, your application has been rejected by the admin.",
+        "info"
+      );
+    }
+  };
+
+  const navigateToOtpPage = (role) => {
+    if (role === "student") {
+      navigate("/otp", { state: { email: formData.email } });
+    } else if (role === "tutor") {
+      navigate("/otp", {
+        state: {
+          email: formData.email,
+          is_tutor: true,
+          for_verify: true,
+        },
+      });
+    }
+  };
+
+  const handlePendingApplication = async () => {
+    await swal(
+      "Application Incomplete",
+      "Please complete your tutor application to proceed.",
+      "info"
+    );
+    dispatch(tutorApplication(true));
+    navigate("/tutor/application", {
+      state: { email: formData.email },
+    });
+  };
+
+  const handleRequestedApplication = () => {
+    dispatch(tutorApplicationDone(true));
+    navigate("/tutor/application/done");
+  };
+
   return (
-    <div className="flex h-screen">
-      {/* Left side */}
-      <div className="w-1/2 bg-indigo-300 p-12 flex flex-col justify-between">
-        <div className="text-white">
-          {/* <h2 className="text-3xl font-bold mb-4">Knowledge Unleashed,</h2>
-          <h2 className="text-3xl font-bold">Virtually Limitless</h2> */}
-        </div>
-        <div className="illustration ">
-          {/* <img src='/3974104.jpg' alt="image" className='size-96' /> */}
+    <div className="flex h-screen overflow-hidden">
+      {/* Left side - Fixed */}
+      <div className="hidden md:flex w-1/3 bg-indigo-900 fixed left-0 top-0 h-full items-center justify-center">
+        <div className="p-2 rounded-full bg-white shadow-lg">
+          <img
+            src="/logo-cropped.png"
+            alt="Logo"
+            className="w-20 h-20 rounded-full"
+          />
         </div>
       </div>
 
-      {/* Right side */}
-      <div className="w-1/2 p-12 flex flex-col justify-center">
-        <h1 className="text-2xl font-bold mb-6">Hello ! Welcome back</h1>
-        <p className="mb-6">
-          Log in with your data that you entered during Your registration
-        </p>
+      {/* Right side  */}
+      <div className="w-full md:w-2/3 md:ml-[33.333333%] overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-6 py-12 lg:px-8">
+          <div className="w-full max-w-md space-y-8">
+            <div>
+              <h2 className="mt-6 text-left text-3xl font-bold text-gray-900">
+                Log in
+              </h2>
+            </div>
+            <div className="mt-8">
+              <div className="border-b border-gray-200">
+                <nav className="-mb-px flex" aria-label="Tabs">
+                  <button
+                    className={`w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                      formData.role === "student"
+                        ? "border-indigo-500 text-indigo-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, role: "student" })
+                    }
+                  >
+                    I'm a student
+                  </button>
+                  <button
+                    className={`w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                      formData.role === "tutor"
+                        ? "border-indigo-500 text-indigo-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }`}
+                    onClick={() => setFormData({ ...formData, role: "tutor" })}
+                  >
+                    I'm a tutor
+                  </button>
+                </nav>
+              </div>
+            </div>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <div className="rounded-md shadow-sm -space-y-px">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="inline-block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Email address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    value={formData.email}
+                    onChange={handleOnChange}
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="inline-block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    value={formData.password}
+                    onChange={handleOnChange}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="email"
-              name="email"
-              required
-              onChange={handleOnChange}
-              value={formData.email}
-              placeholder="Email address"
-              className={`w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
-                errors.email ? "border-red-500" : ""
-              }`}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <Link
+                    to="/forget-password/"
+                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  {loading ? <LoadingDotStream /> : "Sign in"}
+                </button>
+              </div>
+            </form>
+
+            {formData.role === "student" && (
+              <div className="mt-6">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-center">
+                  <div id="signInDiv"></div>
+                </div>
+              </div>
             )}
-          </div>
 
-          <div className="mb-4">
-            <input
-              type="password"
-              name="password"
-              required
-              onChange={handleOnChange}
-              value={formData.password}
-              placeholder="Password"
-              className={`w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
-                errors.password ? "border-red-500" : ""
-              }`}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
+            <p className="mt-4 text-left text-sm text-gray-600">
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Sign up
+              </Link>
+            </p>
           </div>
-          <div className="mb-4 text-right">
-            <Link to="/forget-password">
-              <p className="text-indigo-500">Forgot Password</p>
-            </Link>
-          </div>
-          <button className="w-full bg-indigo-500 text-white p-2 rounded mb-4">
-            {loading ? <LoadingDotStream /> : "Login"}
-          </button>
-          <div className="text-center mb-4">OR</div>
-          <button
-            id="signInDiv"
-            className="w-full    flex items-center justify-center"
-          ></button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <Link to="/register">
-            Don't have an account? <p className="text-indigo-500">Sign Up</p>
-          </Link>
         </div>
       </div>
     </div>
   );
 };
+
 export default LoginPage;

@@ -12,10 +12,6 @@ import TutorEditProfile from "@/features/profile/tutor/pages/TutorEditProfile";
 import TutorDashboard from "@/features/dashboard/pages/TutorDashboard";
 import TutorSalesReport from "@/features/salesReport/pages/TutorSalesReport";
 
-const TutorRegister = lazy(() =>
-  import("../features/tutor/pages/TutorRegister")
-);
-const TutorLogin = lazy(() => import("../features/tutor/pages/TutorLogin"));
 const TutorApplication = lazy(() =>
   import("../features/tutor/pages/TutorApplication")
 );
@@ -65,24 +61,6 @@ const TutorRoutes = () => {
   return (
     <Suspense fallback={<LoadingDotStream />}>
       <Routes>
-        <Route
-          path="register"
-          element={
-            <AuthRouteProtection
-              element={<TutorRegister />}
-              redirectTo={"/tutor"}
-            />
-          }
-        />
-        <Route
-          path="login"
-          element={
-            <AuthRouteProtection
-              element={<TutorLogin />}
-              redirectTo={"/tutor"}
-            />
-          }
-        />
         <Route
           path="application"
           element={
@@ -192,7 +170,6 @@ const TutorRoutes = () => {
           }
         />
 
-        
         <Route
           path="/community/:slug"
           element={
@@ -215,7 +192,6 @@ const TutorRoutes = () => {
             <ProtectedRoute element={<TutorSalesReport />} role={"tutor"} />
           }
         />
-
 
         <Route path="*" element={<NotFound />} />
       </Routes>
