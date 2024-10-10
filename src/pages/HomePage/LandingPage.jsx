@@ -21,7 +21,7 @@ const LandingPage = () => {
       <CourseSection categories={homeData.categories} />
       <JoinUsBanner />
       <TutorsSection tutors={homeData.tutors} />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Footer />
       <FloatingChatBot />
     </>

@@ -37,16 +37,14 @@ const ImageCarousel = ({ students }) => {
         onMouseLeave={() => setIsHovering(false)}
       >
         {students &&
-          students
-            .concat(students)
-            .map((student, index) => (
-              <img
-                key={index}
-                src={`${BASE_URL}${student.profile}`}
-                alt={`tutors ${(index % students.length) + 1}`}
-                className="w-48 h-64 object-cover rounded-lg shadow-md flex-shrink-0 transition-transform duration-300 hover:scale-105"
-              />
-            ))}
+          students.map((student, index) => (
+            <img
+              key={index}
+              src={`${BASE_URL}${student.profile}`}
+              alt={`tutors ${(index % students.length) + 1}`}
+              className="w-48 h-64 object-cover rounded-lg shadow-md flex-shrink-0 transition-transform duration-300 hover:scale-105"
+            />
+          ))}
       </div>
     </div>
   );

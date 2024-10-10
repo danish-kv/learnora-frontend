@@ -55,7 +55,11 @@ const TutorsSection = ({ tutors }) => {
           </button>
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory py-4"
+            className="flex overflow-x-auto snap-x snap-mandatory py-4"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
           >
             {tutors &&
               tutors.map((tutor, index) => (
@@ -64,6 +68,15 @@ const TutorsSection = ({ tutors }) => {
                 </div>
               ))}
           </div>
+
+          <style>
+            {`
+            div::-webkit-scrollbar {
+              display: none; 
+            }
+          `}
+          </style>
+
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md z-10 focus:outline-none"

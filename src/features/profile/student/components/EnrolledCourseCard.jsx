@@ -9,7 +9,7 @@ const EnrolledCourseCard = ({ course }) => {
 
   return (
     <Link to={`/course/${course.slug}`}>
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-2 shadow-sm overflow-hidden">
         <img src={`${BASE_URL}${course.thumbnail}`} alt={course.title} className="w-full h-48 object-cover" />
         <div className="p-6">
           <h2 className="text-xl font-semibold mb-2 text-gray-800">{course.title}</h2>
