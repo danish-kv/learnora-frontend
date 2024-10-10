@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Upload } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useSelector } from "react-redux";
 import api from "@/services/api";
 
 const ProfilePhoto = ({ profile }) => {
@@ -54,7 +53,7 @@ const ProfilePhoto = ({ profile }) => {
   };
 
   return (
-    <Card className="w-full max-w-5xl mx-auto ">
+    <Card className="w-full max-w-6xl mx-auto ">
       <CardHeader>
         <CardTitle>Profile Photo</CardTitle>
       </CardHeader>
