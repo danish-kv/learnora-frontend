@@ -15,7 +15,7 @@ const CourseDetailsCard = ({ course }) => {
 
   const handlePurchase = async (type) => {
     try {
-      const res = await api.post("stripe/course-purchase", {
+      const res = await api.post("stripe/course-purchase/", {
         course_id: course.id,
         access_type: type,
       });

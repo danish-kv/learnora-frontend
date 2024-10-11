@@ -182,7 +182,7 @@ const FloatingChatBot = () => {
           </div>
         </div>
       ) : (
-        <AnimatedChatButton />
+        <AnimatedChatButton onClick={() => setIsOpen(true)} />
       )}
     </div>
   );

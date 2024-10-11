@@ -8,7 +8,7 @@ const useFetchCourseDetails = (slug) => {
   const [courseDetails, setCourseDetails] = useState();
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const getCourseDetails = async () => {
     setLoading(true);
@@ -17,10 +17,10 @@ const useFetchCourseDetails = (slug) => {
       setCourseDetails(data);
       setLoading(false);
     } catch (error) {
-      console.log('errosddddddr',error);
+      console.log("errosddddddr", error);
       setError(error);
-      displayToastAlert(404, error.response.data.details)
-      navigate(`/courses/`)
+      displayToastAlert(404, error.response.data.detail);
+      navigate(`/courses/`);
     }
   };
   useEffect(() => {
