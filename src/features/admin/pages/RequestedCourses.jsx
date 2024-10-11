@@ -7,6 +7,7 @@ import AdminHeader from "../components/AdminHeader";
 import { useSelector } from "react-redux";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const RequestedCourses = () => {
   const { courses, getRequestedCourses } = UseFetchRequestedCourses();
@@ -18,13 +19,16 @@ const RequestedCourses = () => {
     console.log(slug, new_status);
 
     try {
-      const res = await api.patch(`requested-courses/${slug}/`, {
+      const res = await api.patch(`courses/${slug}/`, {
         status: new_status,
       });
+      displayToastAlert(200, "Course Approved!");
       console.log(res);
 
       getRequestedCourses();
     } catch (error) {
+      displayToastAlert(200, "Failed to Approve Course, Please try later!");
+
       console.log(error);
     }
   };
@@ -107,7 +111,7 @@ const RequestedCourses = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16">
+              <div className="flex flex-col items-center justify-center py-16 col-span-1 md:col-span-2 lg:col-span-3">
                 <h2 className="text-2xl font-semibold text-gray-600">
                   No Requested Courses Available
                 </h2>

@@ -25,6 +25,7 @@ const AdminRequestedCategory = () => {
         displayToastAlert(200, "Category Approved!");
         getRequestedCategory();
       } catch (error) {
+        displayToastAlert(200, "Failed to Approve Category, Please try later!");
         console.log(error);
       }
     } else {
