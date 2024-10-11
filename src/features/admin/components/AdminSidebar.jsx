@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -10,12 +10,43 @@ import {
   FolderOpen,
   BarChart2,
 } from "lucide-react";
-import { toggleSidebar } from "@/redux/slices/sidebarSlice";
+import {
+  closeSidebar,
+  openSidebar,
+  toggleSidebar,
+} from "@/redux/slices/sidebarSlice";
 
 const AdminSidebar = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
   const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isMobileSize = window.innerWidth < 1024;
+      setIsMobile(isMobileSize);
+      if (isMobileSize) {
+        dispatch(closeSidebar());
+      } else {
+        dispatch(openSidebar());
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, [dispatch]);
+
+  const handleSidebarToggle = () => {
+    console.log("heyy");
+    if (isMobile) {
+      dispatch(closeSidebar());
+    } else {
+      dispatch(toggleSidebar());
+    }
+  };
 
   const menuItems = [
     { path: "/admin/", label: "Dashboard", icon: Layout },
@@ -39,7 +70,7 @@ const AdminSidebar = () => {
           <h1 className="text-white text-xl font-bold">LN</h1>
         )}
         <button
-          onClick={() => dispatch(toggleSidebar())}
+          onClick={handleSidebarToggle}
           className="p-1 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           {isSidebarOpen ? (
