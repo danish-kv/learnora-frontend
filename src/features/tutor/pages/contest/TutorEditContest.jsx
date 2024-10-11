@@ -44,9 +44,14 @@ const TutorEditContest = () => {
 
   const handleOnSubmit = async (values, actions) => {
     const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    formData.append("name", values.contest_title);
+    formData.append("description", values.description);
+    formData.append("start_time", values.start_time);
+    formData.append("end_time", values.end_time);
+    formData.append("time_limit", values.time_limit);
+    formData.append("difficulty_level", values.difficulty_level);
+    formData.append("max_points", values.max_points);
+    formData.append("category_id", values.category);
 
     try {
       const res = await api.patch(`contest/${id}/`, formData, {

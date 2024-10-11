@@ -9,6 +9,7 @@ import {
   tutorApplication,
   tutorApplicationDone,
 } from "../../../redux/slices/authSlice";
+import swal from "sweetalert";
 
 const TutorApplication = () => {
   const [step, setStep] = useState(1);
@@ -18,17 +19,14 @@ const TutorApplication = () => {
   const dispatch = useDispatch();
 
   const { tutorApplicationAccess } = useSelector((state) => state.auth);
-  console.log("applcaiton access", tutorApplicationAccess);
-
   const location = useLocation();
   const { email } = location.state || {};
-  console.log("email of ===", email);
 
   useEffect(() => {
     if (!tutorApplicationAccess) {
-      navigate("/tutor/register");
+      navigate("/register");
     }
-  }, []);
+  }, [tutorApplicationAccess, navigate]);
 
   const [formData, setFormData] = useState({
     profilePhoto: null,
@@ -49,48 +47,46 @@ const TutorApplication = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newData = new FormData();
+    const { isValid, errors } = validateTutorApplication(formData);
+    console.log(formData, isValid, errors);
 
-    newData.append("first_name", formData.firstName);
-    newData.append("last_name", formData.lastName);
-    newData.append("email", formData.email);
-    newData.append("display_name", formData.public_name);
-    newData.append("phone", formData.phone);
-    newData.append("headline", formData.headline);
-    newData.append("bio", formData.bio);
-    newData.append("dob", formData.dateOfBirth);
-    newData.append("cv", formData.cv);
-    newData.append("profile", formData.profilePhoto);
-    newData.append("skills", formData.skills.split(","));
+    if (isValid) {
+      const newData = new FormData();
 
-    newData.append("education", JSON.stringify(formData.education));
-    newData.append("experiences", JSON.stringify(formData.experiences));
+      newData.append("first_name", formData.firstName);
+      newData.append("last_name", formData.lastName);
+      newData.append("email", formData.email);
+      newData.append("display_name", formData.public_name);
+      newData.append("phone", formData.phone);
+      newData.append("headline", formData.headline);
+      newData.append("bio", formData.bio);
+      newData.append("dob", formData.dateOfBirth);
+      newData.append("cv", formData.cv);
+      newData.append("profile", formData.profilePhoto);
+      newData.append("skills", formData.skills.split(","));
+  
+      newData.append("education", JSON.stringify(formData.education));
+      newData.append("experiences", JSON.stringify(formData.experiences));
+  
 
-    try {
-      const { isValid, errors } = validateTutorApplication(formData);
-      console.log(errors);
-
-      if (isValid) {
-        console.log("form submitedd");
-
+      try {
         const res = await api.post("tutor/", newData);
-        console.log(res);
         if (res.status === 201) {
-          await swal("Done!", "Account Created Succussfully", "success");
+          await swal("Done!", "Account Created Successfully", "success");
           dispatch(tutorApplication(false));
           dispatch(tutorApplicationDone(true));
           navigate("/tutor/application/done");
         }
-      } else {
-        setErrors(errors);
-        await swal("Failed", "Please complete your application", "error");
+      } catch (error) {
+        console.error("Error creating account", error);
+        displayToastAlert(
+          error.response?.status || 500,
+          "Failed to create account"
+        );
       }
-    } catch (error) {
-      console.error("Error creating account", error);
-      displayToastAlert(
-        error.response?.status || 500,
-        "Failed to create account"
-      );
+    } else {
+      setErrors(errors);
+      await swal("Failed", "Please complete your application", "error");
     }
   };
 
@@ -99,12 +95,9 @@ const TutorApplication = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const { name, files } = e.target;
-    console.log("name", name, files);
-
     setFormData({ ...formData, [name]: files[0] });
-    // newData.forEach((obj) => console.log(obj));
   };
 
   const handleArrayInputChange = (index, field, subfield, value) => {
@@ -139,7 +132,35 @@ const TutorApplication = () => {
     setFormData({ ...formData, [field]: newArray });
   };
 
-  const nextStep = () => setStep(step + 1);
+  const validateStep = (currentStep) => {
+    const { errors } = validateTutorApplication(formData);
+    setErrors(errors);
+
+    switch (currentStep) {
+      case 1:
+        return (
+          !errors.firstName &&
+          !errors.lastName &&
+          !errors.public_name &&
+          !errors.phone &&
+          !errors.dateOfBirth &&
+          !errors.profilePhoto
+        );
+      case 2:
+        return !errors.headline && !errors.bio && !errors.skills && !errors.cv;
+      case 3:
+        return !errors.experiences && !errors.education;
+      default:
+        return false;
+    }
+  };
+
+  const nextStep = () => {
+    if (validateStep(step)) {
+      setStep(step + 1);
+    }
+  };
+
   const prevStep = () => setStep(step - 1);
 
   const renderStepContent = () => {
@@ -156,8 +177,7 @@ const TutorApplication = () => {
                 <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">
                   <img
                     src={
-                      formData.profilePhoto &&
-                      URL.createObjectURL(formData.profilePhoto)
+                      formData.profilePhoto && URL.createObjectURL(formData.profilePhoto)
                     }
                     // className="w-20 h-20 rounded-full "
                     className="w-full"
@@ -223,7 +243,9 @@ const TutorApplication = () => {
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
                   />
                   {errors.public_name && (
-                    <p className="text-red-500 text-sm">{errors.public_name}</p>
+                    <p className="text-red-500 text-sm">
+                      {errors.public_name}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -628,10 +650,9 @@ const TutorApplication = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-
       <div className="min-h-screen bg-white">
         <main className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="bg-white  overflow-hidden sm:rounded-lg">
+          <div className="bg-white overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h2 className="text-center text-3xl font-bold text-gray-700 mb-10">
                 Apply as a Tutor
@@ -670,7 +691,6 @@ const TutorApplication = () => {
 
               <form onSubmit={handleSubmit}>
                 {renderStepContent()}
-
                 <div className="mt-8 flex justify-between">
                   {step > 1 ? (
                     <button
@@ -685,7 +705,7 @@ const TutorApplication = () => {
                   )}
                   {step < 3 ? (
                     <button
-                      type="submit"
+                      type="button"
                       onClick={nextStep}
                       className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
                     >
