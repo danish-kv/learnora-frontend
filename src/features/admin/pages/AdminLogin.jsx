@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import swal from "sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { Login } from "../../../redux/thunk/authThunks";
-import LoadingDotStream from "../../../components/common/Loading";
 import { jwtDecode } from "jwt-decode";
 import { validateLogin } from "../../../utils/validation";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import { AlertCircle, Mail, Lock } from "lucide-react";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const AdminLogin = () => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-    role: "admin",
-  });
+  const [user, setUser] = useState({ email: "", password: "", role: "admin" });
   const [error, setError] = useState({});
 
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
-
   const navigate = useNavigate();
 
   const changeInput = (e) => {
@@ -28,21 +26,17 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
-    setError("");
+    setError({});
 
     const { isValid, errors } = validateLogin(user);
 
     if (isValid) {
       try {
         const res = await dispatch(Login(user)).unwrap();
-        console.log(res);
-
         const token = jwtDecode(res.access_token);
-        console.log("token jwt ", token);
 
         if (token?.is_admin) {
-          await swal("Success", "Logged in successfully", "success");
+          displayToastAlert(200, "Logged in successfully");
           navigate("/admin/");
         } else {
           displayToastAlert(400, "You are not authorized");
@@ -50,11 +44,7 @@ const AdminLogin = () => {
         }
       } catch (error) {
         console.error("Login error:", error);
-        swal(
-          "Error",
-          "Failed to log in. Please check your credentials.",
-          "error"
-        );
+        displayToastAlert(400, "Failed to log in. Please check your credentials.");
       }
     } else {
       setError(errors);
@@ -62,78 +52,84 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <div className="flex bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="w-1/2 bg-gray-200 flex items-center justify-center">
-          <div className="text-center p-10">
-            <img
-              src="/admin-login.jpg"
-              alt="Illustration"
-              className="mb-4 max-w-xs max-h-100 object-contain mx-auto"
-            />
-            <h2 className="text-2xl font-bold text-gray-700 mb-2">
-              Admin Dashboard: Manage with Confidence
-            </h2>
-          </div>
+    <div className="flex min-h-screen bg-gray-50">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto my-auto bg-white shadow-lg rounded-lg overflow-hidden">
+
+        <div className="hidden md:flex md:w-1/2 bg-indigo-600 text-white p-10 flex-col justify-center">
+          <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
+          <p className="text-lg mb-4">Manage with confidence and efficiency.</p>
+          <img
+            src="/admin-login.jpg"
+            alt="Admin Illustration"
+            className="w-full mb-7 max-w-xs mx-auto  rounded-lg shadow-md"
+          />
         </div>
-        <div className="w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">
-            Welcome, Admin!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Sign in to manage the platform and ensure everything runs smoothly.
-          </p>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="email"
-              >
+
+        <div className="w-full md:w-1/2 p-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Welcome Back, Admin</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                 Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={changeInput}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
+              </Label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={user.email}
+                  onChange={changeInput}
+                  className="pl-10 block w-full"
+                  placeholder="you@gmail.com"
+                  required
+                />
+              </div>
               {error.email && (
-                <p className="text-red-500 text-xs mt-1">{error.email}</p>
+                <p className="mt-2 text-sm text-red-600">{error.email}</p>
               )}
             </div>
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="password"
-              >
+            <div>
+              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                 Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={user.password}
-                onChange={changeInput}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
+              </Label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={user.password}
+                  onChange={changeInput}
+                  className="pl-10 block w-full"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
               {error.password && (
-                <p className="text-red-500 text-xs mt-1">{error.password}</p>
+                <p className="mt-2 text-sm text-red-600">{error.password}</p>
               )}
             </div>
-            {loading ? (
-              <button className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
-                <LoadingDotStream />
-              </button>
-            ) : (
-              <button className="w-full bg-indigo-700 text-white py-2 rounded-md hover:bg-indigo-800 transition duration-200">
-                Login
-              </button>
-            )}
+            <Button 
+              type="submit" 
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
+            </Button>
           </form>
+          {Object.keys(error).length > 0 && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Please correct the errors above to proceed.
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </div>
     </div>
