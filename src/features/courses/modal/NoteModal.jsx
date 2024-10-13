@@ -44,9 +44,9 @@ const NoteModal = ({
         setNotes("");
       } else {
         const res = await api.post("notes/", {
-          user: data?.progress?.student,
+          user: data?.progress?.student?.id,
           content: notes,
-          module: id,
+          module_id : Number(id),
           timeline: currentTime,
         });
 
@@ -60,9 +60,10 @@ const NoteModal = ({
           displayToastAlert(400, "Failed to submit review. Please try again");
         }
       }
-
+      
       refetch();
     } catch (error) {
+      displayToastAlert(400, "Failed to submit review. Please try again");
       console.log(error);
     }
   };
