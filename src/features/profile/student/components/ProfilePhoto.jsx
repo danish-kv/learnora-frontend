@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Upload } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import api from "@/services/api";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const ProfilePhoto = ({ profile }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -42,8 +43,10 @@ const ProfilePhoto = ({ profile }) => {
     formData.append("profile", selectedFile);
     try {
       const res = await api.patch(`student-profile/${profile.id}/`, formData);
+      displayToastAlert(200, 'Updated Profile Photo')
       console.log(res);
     } catch (error) {
+      displayToastAlert(200, 'Failed Profile Photo')
       console.log(error);
       setError("Failed to upload the image. Please try again.");
     }

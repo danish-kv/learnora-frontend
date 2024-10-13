@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import api from "@/services/api";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const EditProfile = ({ profile }) => {
   const [formValues, setFormValues] = useState({
@@ -40,8 +41,6 @@ const EditProfile = ({ profile }) => {
     setFormValues({ ...formValues, [id]: value });
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formValues);
@@ -49,7 +48,13 @@ const EditProfile = ({ profile }) => {
     try {
       const res = await api.patch(`student-profile/${profile.id}/`, formValues);
       console.log(res);
+      if (res.status === 200) {
+        displayToastAlert(200, "Profile updated successfully");
+      } else {
+        displayToastAlert(300, "Facing some issue");
+      }
     } catch (error) {
+      displayToastAlert(400, "Failed to updated profile");
       console.log(error);
     }
   };
@@ -113,10 +118,7 @@ const EditProfile = ({ profile }) => {
             >
               Email
             </label>
-            <Input
-              value={formValues.email}
-              disabled
-            />
+            <Input value={formValues.email} disabled />
           </div>
         </div>
         <div>

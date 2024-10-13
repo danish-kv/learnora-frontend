@@ -12,11 +12,11 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (newPassword != confirmPassword) {
         displayToastAlert(400, "Both password is not same");
@@ -25,19 +25,17 @@ const ChangePassword = () => {
       const res = await api.post("change-password/", {
         old_password: currentPassword,
         new_password: newPassword,
-        confirm_password : confirmPassword
+        confirm_password: confirmPassword,
       });
       console.log(res);
-      swal('Changed', 'Password changed successfully', 'success')
-      dispatch(Logout())
-      navigate('/login')
-
-      
+      swal("Changed", "Password changed successfully", "success");
+      dispatch(Logout());
+      navigate("/login");
     } catch (error) {
       console.log(error);
       if (error.response && error.response.data) {
         const errors = error.response.data;
-  
+
         if (errors.old_password) {
           displayToastAlert(400, errors.old_password[0]);
         } else if (errors.confirm_password) {
@@ -95,7 +93,9 @@ const ChangePassword = () => {
             id="confirm-password"
           />
         </div>
-        <Button onClick={handleSubmit} type="submit">Change Password</Button>
+        <Button onClick={handleSubmit} type="submit">
+          Change Password
+        </Button>
       </form>
     </div>
   );

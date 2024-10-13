@@ -7,29 +7,51 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Book, Edit, Trash2, Search } from "lucide-react";
+import { Trash2, Search } from "lucide-react";
 import useFetchNotes from "../hooks/useFetchNotes";
-import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/utils/format";
 import { Input } from "@/components/ui/input";
+import Swal from "sweetalert2";
+import api from "@/services/api";
 
 const SavedNotes = () => {
-  const { notes, deleteNote } = useFetchNotes();
-  const navigate = useNavigate();
+  const { notes, getNotes } = useFetchNotes();
   const [searchTerm, setSearchTerm] = useState("");
 
-
-  const handleDeleteNote = (noteId) => {
-    if (window.confirm("Are you sure you want to delete this note?")) {
-      deleteNote(noteId);
-    }
+  const handleDeleteNote = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You really want to delete this note?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete!",
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        try {
+          const res = await api.delete(`notes/${id}/`);
+          getNotes();
+          await Swal.fire({
+            title: "Deleted!",
+            text: "You have been successfully Deleted notes.",
+            icon: "success",
+          });
+        } catch (error) {
+          console.log(error);
+          Swal.fire({
+            title: "Error!",
+            text: "There was an issue with deleting the note.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
-
-
 
   const filteredNotes = notes.filter(
     (note) =>
-      note.module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      note?.module?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -56,7 +78,7 @@ const SavedNotes = () => {
               className="cursor-pointer hover:shadow-lg transition-shadow duration-300"
             >
               <CardHeader>
-                <CardTitle className="text-lg">{note.module.title}</CardTitle>
+                <CardTitle className="text-lg">{note?.module?.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 line-clamp-3">{note.content}</p>
