@@ -2,12 +2,11 @@ import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const TutorCard = ({ tutor }) => {
-  const BASE_URL = import.meta.env.VITE_API_URL;
   return (
     <div className="flex-shrink-0 w-64 mx-2 bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
       <div className="relative h-80">
         <img
-          src={`${BASE_URL}${tutor.user.profile}`}
+          src={`${tutor.user.profile}`}
           alt={tutor.user.username}
           className="w-full h-full object-cover"
         />

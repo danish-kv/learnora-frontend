@@ -25,7 +25,6 @@ const ImageCarousel = ({ students }) => {
     }
   }, [isHovering]);
 
-  const BASE_URL = import.meta.env.VITE_API_URL;
 
   return (
     <div className="w-full overflow-hidden bg-gray-100 py-8">
@@ -40,7 +39,7 @@ const ImageCarousel = ({ students }) => {
           students.map((student, index) => (
             <img
               key={index}
-              src={`${BASE_URL}${student.profile}`}
+              src={`${student.profile}`}
               alt={`tutors ${(index % students.length) + 1}`}
               className="w-48 h-64 object-cover rounded-lg shadow-md flex-shrink-0 transition-transform duration-300 hover:scale-105"
             />
