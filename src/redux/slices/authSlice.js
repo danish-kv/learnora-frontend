@@ -11,7 +11,7 @@ const initialState = {
   error: null,
   otp_access: false,
   tutorApplicationAccess: false,
-  tutorApplicationDoneAccess : false
+  tutorApplicationDoneAccess: false,
 };
 
 const authSlice = createSlice({
@@ -75,6 +75,7 @@ const authSlice = createSlice({
       })
       .addCase(Logout.fulfilled, (state) => {
         state.user = null;
+        state.id = null;
         state.email = null;
         state.role = null;
         state.loading = false;
@@ -85,6 +86,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { toggleOtpAccess, googleSignin, tutorApplication, tutorApplicationDone } =
-  authSlice.actions;
+export const {
+  toggleOtpAccess,
+  googleSignin,
+  tutorApplication,
+  tutorApplicationDone,
+} = authSlice.actions;
 export default authSlice.reducer;
