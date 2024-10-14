@@ -4,12 +4,13 @@ import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
 import { validateModules } from "@/utils/validation";
 import TutorHeader from "../components/TutorHeader";
+import LoadingDotStream from "@/components/common/Loading";
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
     { title: "", description: "", video: "", notes: "", duration: "" },
   ]);
-
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
 
   console.log("course id", id);
@@ -18,9 +19,14 @@ const TutorCreateModule = () => {
   const navigate = useNavigate();
 
   const handleModuleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault();
 
-    if (!validateModules(modules)) return;
+    if (!validateModules(modules)){
+
+      setLoading(false)
+      return;
+    }
 
     const modulesData = modules.map((module) => ({
       title: module.title,
@@ -58,6 +64,8 @@ const TutorCreateModule = () => {
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -212,8 +220,10 @@ const TutorCreateModule = () => {
               <button
                 type="submit"
                 className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
+                disabled={loading}
               >
-                Create Module
+                {loading ? <LoadingDotStream /> : "Create Modules"}
+
               </button>
             </form>
           </div>
