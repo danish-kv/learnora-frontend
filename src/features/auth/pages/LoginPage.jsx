@@ -73,7 +73,9 @@ const LoginPage = () => {
         }
 
         handleNavigation(res.role);
-        displayToastAlert(200, "Welcome back!");
+        setTimeout(() => {
+          displayToastAlert(200, "Welcome back!");
+        }, 1600);
       } else {
         displayToastAlert(400, "Not an authorized person");
       }

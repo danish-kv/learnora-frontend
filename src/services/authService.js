@@ -55,12 +55,12 @@ export const login = async ({ email, password, role }) => {
         );
       } else if (error.response.data) {
         const errorMess = error.response.data;
-        for (let key in errorMess) {
-          if (errorMess.hasOwnProperty(key)) {
-            displayToastAlert(400, `${key}: ${errorMess[key]}`);
-            console.error(`${key}: ${errorMess[key]}`);
-          }
-        }
+        // for (let key in errorMess) {
+        //   if (errorMess.hasOwnProperty(key)) {
+        //     displayToastAlert(400, `${key}: ${errorMess[key]}`);
+        //     console.error(`${key}: ${errorMess[key]}`);
+        //   }
+        // }
       } else {
         displayToastAlert('An unexpected error occurred.');
         displayToastAlert(status, detail )

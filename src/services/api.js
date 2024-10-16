@@ -16,22 +16,21 @@ api.interceptors.request.use(
   },
   (error) => {
     console.log("Request error:", error);
-
     return Promise.reject(error);
   }
 );
 
 const refreshToken = async (refresh) => {
   try {
-    const res = await api.post("token/refresh/", {
-      refresh: refresh,
-    });
-    console.log("ress of ====", res);
-
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}token/refresh/`,
+      {
+        refresh: refresh,
+      }
+    );
     return res.data.access;
   } catch (error) {
-    console.log(error);
-
+    console.log("Refresh token error:", error);
     throw error;
   }
 };
@@ -43,17 +42,16 @@ api.interceptors.response.use(
 
     if (error.code === "ERR_NETWORK") {
       displayToastAlert(400, "Server Error, Please try later");
+      return Promise.reject(error);
     }
+
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       const refresh = localStorage.getItem(REFRESH_TOKEN);
-      if (refresh) {
-        const newAccessToken = await refreshToken(refresh);
-        localStorage.setItem(ACCESS_TOKEN, newAccessToken);
 
+      if (refresh) {
         try {
           const newAccessToken = await refreshToken(refresh);
           localStorage.setItem(ACCESS_TOKEN, newAccessToken);
@@ -61,30 +59,43 @@ api.interceptors.response.use(
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return api(originalRequest);
         } catch (err) {
+          console.log("Refresh token failed", err);
           localStorage.clear();
-          console.log("refresh token fialed", err);
-          window.location.href ='/login'
-          return Promise.reject(err)
+          displayToastAlert(
+            400,
+            "Your session has expired. Please log in again!"
+          );
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 1500);
+          return Promise.reject(err);
         }
+      } else {
+        window.location.href = "/login";
+        return Promise.reject(error);
       }
-    } else if (error.response && error.response.status === 403) {
-      console.error("403 Forbidden error:", error.response.data?.detail);
-      displayToastAlert(403, error.response.data?.detail || "permission error");
     }
-    
-    // if (error.response && error.response.data) {
-    //   const errorData = error.response.data;
-    //   Object.keys(errorData).forEach((key) => {
-    //     const messages = errorData[key];
-    //     if (Array.isArray(messages)) {
-    //       messages.forEach((message) => {
-    //         displayToastAlert(400, `${key}: ${message}`);
-    //       });
-    //     } else {
-    //       displayToastAlert(400, `${key}: ${messages}`);
-    //     }
-    //   });
-    // }
+
+    if (error.response?.data?.error) {
+      const errorMessage = error.response.data.error;
+      console.log("errror messsage =========", errorMessage);
+
+      switch (error.response.data.code) {
+        case "no_account":
+          displayToastAlert(400, errorMessage);
+        case "authentication":
+          displayToastAlert(400, errorMessage);
+          break;
+        case "blocked":
+          displayToastAlert(400, errorMessage);
+          break;
+        case "authorization":
+          displayToastAlert(400, errorMessage);
+          break;
+        default:
+          displayToastAlert(error.response.status, errorMessage);
+      }
+    }
 
     return Promise.reject(error);
   }
