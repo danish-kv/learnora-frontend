@@ -94,161 +94,141 @@ const TutorEditCourse = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <TutorSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-semibold mb-6">Edit Course</h1>
-            <form
-              onSubmit={handleOnSubmit}
-              className="bg-white p-6 border rounded-lg shadow-md"
-            >
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label htmlFor="title" className="block text-gray-700 mb-2">
-                    Title
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    value={courseData.title}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Course Title"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="category"
-                    className="block text-gray-700 mb-2"
-                  >
-                    Category
-                  </label>
-                  <select
-                    name="category"
-                    id="category"
-                    value={courseData.category}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  >
-                    <option value="">Select a category</option>
-                    {categories &&
-                      categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="description"
-                    className="block text-gray-700 mb-2"
-                  >
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={courseData.description}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Course Description"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="thumbnail"
-                    className="block text-gray-700 mb-2"
-                  >
-                    Thumbnail URL
-                  </label>
-                  <input
-                    type="file"
-                    id="thumbnail"
-                    name="thumbnail"
-                    onChange={handleFileChange}
-                    className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                    placeholder="Thumbnail"
-                  />
-                  {courseData.thumbnail &&
-                    typeof courseData.thumbnail === "string" && (
-                      <p className="mt-2 text-gray-600">
-                        Current file: {courseData.thumbnail.split("/").pop()}
-                      </p>
-                    )}
-                </div>
-              </div>
-
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label htmlFor="price" className="block text-gray-700 mb-2">
-                    Price
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={courseData.price}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Price"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="rental_price"
-                    className="block text-gray-700 mb-2"
-                  >
-                    Rental Price
-                  </label>
-                  <input
-                    type="number"
-                    id="rental_price"
-                    name="rental_price"
-                    value={courseData.rental_price}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Rental Price"
-                  />
-                </div>
-              </div>
-
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="rental_duration"
-                    className="block text-gray-700 mb-2"
-                  >
-                    Rental Duration (days)
-                  </label>
-                  <input
-                    type="number"
-                    id="rental_duration"
-                    name="rental_duration"
-                    value={courseData.rental_duration}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Rental Duration"
-                  />
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
-              >
-                Update Course
-              </button>
-            </form>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-semibold mb-6">Edit Course</h1>
+      <form
+        onSubmit={handleOnSubmit}
+        className="bg-white p-6 border rounded-lg shadow-md"
+      >
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="title" className="block text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={courseData.title}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Course Title"
+            />
           </div>
-        </main>
-      </div>
+          <div className="flex-1">
+            <label htmlFor="category" className="block text-gray-700 mb-2">
+              Category
+            </label>
+            <select
+              name="category"
+              id="category"
+              value={courseData.category}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="">Select a category</option>
+              {categories &&
+                categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="description" className="block text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={courseData.description}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Course Description"
+            />
+          </div>
+          <div className="flex-1">
+            <label htmlFor="thumbnail" className="block text-gray-700 mb-2">
+              Thumbnail URL
+            </label>
+            <input
+              type="file"
+              id="thumbnail"
+              name="thumbnail"
+              onChange={handleFileChange}
+              className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              placeholder="Thumbnail"
+            />
+            {courseData.thumbnail &&
+              typeof courseData.thumbnail === "string" && (
+                <p className="mt-2 text-gray-600">
+                  Current file: {courseData.thumbnail.split("/").pop()}
+                </p>
+              )}
+          </div>
+        </div>
+
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="price" className="block text-gray-700 mb-2">
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={courseData.price}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Price"
+            />
+          </div>
+          <div className="flex-1">
+            <label htmlFor="rental_price" className="block text-gray-700 mb-2">
+              Rental Price
+            </label>
+            <input
+              type="number"
+              id="rental_price"
+              name="rental_price"
+              value={courseData.rental_price}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Rental Price"
+            />
+          </div>
+        </div>
+
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label
+              htmlFor="rental_duration"
+              className="block text-gray-700 mb-2"
+            >
+              Rental Duration (days)
+            </label>
+            <input
+              type="number"
+              id="rental_duration"
+              name="rental_duration"
+              value={courseData.rental_duration}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Rental Duration"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
+        >
+          Update Course
+        </button>
+      </form>
     </div>
   );
 };

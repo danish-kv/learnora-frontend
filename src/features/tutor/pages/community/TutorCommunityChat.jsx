@@ -7,13 +7,11 @@ import ChatInput from "@/features/community/components/ChatInput";
 import CommunityInfoTab from "@/features/community/components/CommunityInfoTab";
 import MessageList from "@/features/community/components/MessageList";
 import ParticipantsTab from "@/features/community/components/ParticipantsTab";
-import TutorSidebar from "../../components/TutorSidebar";
 import api from "@/services/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import useFetchCommunityDetails from "../../hooks/useFetchCommunityDetails";
 import Swal from "sweetalert2";
-import TutorHeader from "../../components/TutorHeader";
 
 const TutorCommunityChat = () => {
   const { slug } = useParams();
@@ -175,79 +173,67 @@ const TutorCommunityChat = () => {
     );
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <TutorSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TutorHeader />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="bg-white shadow-md z-10">
-            <div className="flex items-center px-4 py-3">
-              <ChatHeader
-                community={community}
-                onExit={handleExit}
-                socket={socket}
-                userID={userID}
-              />
-              <Button
-                variant="ghost"
-                className="ml-auto md:hidden"
-                onClick={() => setInfoOpen(!infoOpen)}
-              >
-                <Menu size={24} />
-              </Button>
-            </div>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="bg-white shadow-md z-10">
+        <div className="flex items-center px-4 py-3">
+          <ChatHeader
+            community={community}
+            onExit={handleExit}
+            socket={socket}
+            userID={userID}
+          />
+          <Button
+            variant="ghost"
+            className="ml-auto md:hidden"
+            onClick={() => setInfoOpen(!infoOpen)}
+          >
+            <Menu size={24} />
+          </Button>
+        </div>
+      </div>
+      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col">
+          <div
+            ref={messageContainerRef}
+            onScroll={handleScroll}
+            className="flex-grow overflow-y-auto"
+          >
+            <MessageList messages={messages} />
+            <div ref={messageEndRef} />
           </div>
-          <div className="flex-1 flex overflow-hidden">
-            <div className="flex-1 flex flex-col">
-              <div
-                ref={messageContainerRef}
-                onScroll={handleScroll}
-                className="flex-grow overflow-y-auto"
-              >
-                <MessageList messages={messages} />
-                <div ref={messageEndRef} />
-              </div>
-              <ChatInput
-                newMessage={newMessage}
-                setNewMessage={setNewMessage}
-                handleSendMessage={handleSendMessage}
-              />
-            </div>
-            <div
-              className={`fixed inset-y-0 z-10 right-0 w-64 bg-white border-l border-gray-200 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
-                infoOpen ? "translate-x-0" : "translate-x-full"
-              } md:relative md:translate-x-0`}
+          <ChatInput
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            handleSendMessage={handleSendMessage}
+          />
+        </div>
+        <div
+          className={`fixed inset-y-0 z-10 right-0 w-64 bg-white border-l border-gray-200 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
+            infoOpen ? "translate-x-0" : "translate-x-full"
+          } md:relative md:translate-x-0`}
+        >
+          <Button
+            variant="ghost"
+            className="absolute top-2 right-2 md:hidden"
+            onClick={() => setInfoOpen(false)}
+          >
+            <X size={24} />
+          </Button>
+          <Tabs defaultValue="participants" className="h-full flex flex-col">
+            <TabsList className="grid w-full grid-cols-2 p-2">
+              <TabsTrigger value="participants">Participants</TabsTrigger>
+              <TabsTrigger value="info">Info</TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="participants"
+              className="flex-1 overflow-y-auto p-4"
             >
-              <Button
-                variant="ghost"
-                className="absolute top-2 right-2 md:hidden"
-                onClick={() => setInfoOpen(false)}
-              >
-                <X size={24} />
-              </Button>
-              <Tabs
-                defaultValue="participants"
-                className="h-full flex flex-col"
-              >
-                <TabsList className="grid w-full grid-cols-2 p-2">
-                  <TabsTrigger value="participants">Participants</TabsTrigger>
-                  <TabsTrigger value="info">Info</TabsTrigger>
-                </TabsList>
-                <TabsContent
-                  value="participants"
-                  className="flex-1 overflow-y-auto p-4"
-                >
-                  <ParticipantsTab participants={participants} />
-                </TabsContent>
-                <TabsContent
-                  value="info"
-                  className="flex-1 overflow-y-auto p-4"
-                >
-                  <CommunityInfoTab community={community} />
-                </TabsContent>
-              </Tabs>
-            </div>
-          </div>
+              <ParticipantsTab participants={participants} />
+            </TabsContent>
+            <TabsContent value="info" className="flex-1 overflow-y-auto p-4">
+              <CommunityInfoTab community={community} />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

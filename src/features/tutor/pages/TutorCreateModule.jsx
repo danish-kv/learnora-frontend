@@ -19,12 +19,11 @@ const TutorCreateModule = () => {
   const navigate = useNavigate();
 
   const handleModuleSubmit = async (e) => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
 
-    if (!validateModules(modules)){
-
-      setLoading(false)
+    if (!validateModules(modules)) {
+      setLoading(false);
       return;
     }
 
@@ -64,8 +63,8 @@ const TutorCreateModule = () => {
       }
     } catch (error) {
       console.log(error);
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,130 +104,114 @@ const TutorCreateModule = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <TutorSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-2xl font-semibold mb-6">Add Modules</h1>
-            <form
-              onSubmit={handleModuleSubmit}
-              className="bg-white p-6 rounded-lg border shadow-md"
-            >
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Modules</h2>
-                {modules.map((module, index) => (
-                  <div
-                    key={index}
-                    className="relative mb-4 p-4 border rounded-lg"
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-2xl font-semibold mb-6">Add Modules</h1>
+      <form
+        onSubmit={handleModuleSubmit}
+        className="bg-white p-6 rounded-lg border shadow-md"
+      >
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Modules</h2>
+          {modules.map((module, index) => (
+            <div key={index} className="relative mb-4 p-4 border rounded-lg">
+              <div className="mb-4 flex gap-4">
+                <div className="flex-1">
+                  <label
+                    htmlFor={`module-title-${index}`}
+                    className="block text-gray-700 mb-1"
                   >
-                    <div className="mb-4 flex gap-4">
-                      <div className="flex-1">
-                        <label
-                          htmlFor={`module-title-${index}`}
-                          className="block text-gray-700 mb-1"
-                        >
-                          Module Title
-                        </label>
-                        <input
-                          type="text"
-                          id={`module-title-${index}`}
-                          name="title"
-                          value={module.title}
-                          onChange={(e) => handleModuleChange(index, e)}
-                          className="w-full p-2 border border-gray-300 rounded"
-                          placeholder="Module Title"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label
-                          htmlFor={`module-description-${index}`}
-                          className="block text-gray-700 mb-1"
-                        >
-                          Description
-                        </label>
-                        <textarea
-                          id={`module-description-${index}`}
-                          name="description"
-                          value={module.description}
-                          onChange={(e) => handleModuleChange(index, e)}
-                          className="w-full p-2 border border-gray-300 rounded"
-                          placeholder="Module Description"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-4 flex gap-4">
-                      <div className="flex-1">
-                        <label
-                          htmlFor={`module-video-${index}`}
-                          className="block text-gray-700 mb-1"
-                        >
-                          Video URL
-                        </label>
-                        {/* <video /> */}
-                        <input
-                          type="file"
-                          accept="video/*"
-                          id={`module-video-${index}`}
-                          name="video"
-                          onChange={(e) => handleModuleChange(index, e)}
-                          className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label
-                          htmlFor={`module-notes-${index}`}
-                          className="block text-gray-700 mb-1"
-                        >
-                          Study Notes
-                        </label>
-                        <input
-                          id={`module-notes-${index}`}
-                          name="notes"
-                          type="file"
-                          onChange={(e) => handleModuleChange(index, e)}
-                          className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                        />
-                      </div>
-                    </div>
-                    {index > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => removeModule(index)}
-                        className="absolute top-2 right-2"
-                      >
-                        <img
-                          src="/close-icon.png"
-                          alt="remove"
-                          className="w-6 h-6"
-                        />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addModule}
-                  className="text-indigo-600 hover:underline"
-                >
-                  Add Another Module
-                </button>
+                    Module Title
+                  </label>
+                  <input
+                    type="text"
+                    id={`module-title-${index}`}
+                    name="title"
+                    value={module.title}
+                    onChange={(e) => handleModuleChange(index, e)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    placeholder="Module Title"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label
+                    htmlFor={`module-description-${index}`}
+                    className="block text-gray-700 mb-1"
+                  >
+                    Description
+                  </label>
+                  <textarea
+                    id={`module-description-${index}`}
+                    name="description"
+                    value={module.description}
+                    onChange={(e) => handleModuleChange(index, e)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    placeholder="Module Description"
+                  />
+                </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
-                disabled={loading}
-              >
-                {loading ? <LoadingDotStream /> : "Create Modules"}
+              <div className="mb-4 flex gap-4">
+                <div className="flex-1">
+                  <label
+                    htmlFor={`module-video-${index}`}
+                    className="block text-gray-700 mb-1"
+                  >
+                    Video URL
+                  </label>
+                  {/* <video /> */}
+                  <input
+                    type="file"
+                    accept="video/*"
+                    id={`module-video-${index}`}
+                    name="video"
+                    onChange={(e) => handleModuleChange(index, e)}
+                    className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label
+                    htmlFor={`module-notes-${index}`}
+                    className="block text-gray-700 mb-1"
+                  >
+                    Study Notes
+                  </label>
+                  <input
+                    id={`module-notes-${index}`}
+                    name="notes"
+                    type="file"
+                    onChange={(e) => handleModuleChange(index, e)}
+                    className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                  />
+                </div>
+              </div>
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeModule(index)}
+                  className="absolute top-2 right-2"
+                >
+                  <img src="/close-icon.png" alt="remove" className="w-6 h-6" />
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addModule}
+            className="text-indigo-600 hover:underline"
+          >
+            Add Another Module
+          </button>
+        </div>
 
-              </button>
-            </form>
-          </div>
-        </main>
-      </div>
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
+          disabled={loading}
+        >
+          {loading ? <LoadingDotStream /> : "Create Modules"}
+        </button>
+      </form>
     </div>
   );
 };

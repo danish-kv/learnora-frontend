@@ -11,6 +11,8 @@ import TutorProfile from "@/features/profile/tutor/pages/TutorProfile";
 import TutorEditProfile from "@/features/profile/tutor/pages/TutorEditProfile";
 import TutorDashboard from "@/features/dashboard/pages/TutorDashboard";
 import TutorSalesReport from "@/features/salesReport/pages/TutorSalesReport";
+import TutorSidebar from "@/features/tutor/components/TutorSidebar";
+import TutorHeader from "@/features/tutor/components/TutorHeader";
 
 const TutorApplication = lazy(() =>
   import("../features/tutor/pages/TutorApplication")
@@ -57,8 +59,14 @@ const TutorCommunity = lazy(() =>
   import("@/features/tutor/pages/community/TutorCommunity")
 );
 
-const TutorRoutes = () => {
+const TutorLayout = () => {
   return (
+    <div className="flex h-screen">
+    <TutorSidebar />
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <TutorHeader />
+      <main className="flex-1 overflow-x-hidden overflow-y-auto">
+
     <Suspense fallback={<LoadingDotStream />}>
       <Routes>
         <Route
@@ -196,7 +204,10 @@ const TutorRoutes = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
+    </main>
+      </div>
+    </div>
   );
 };
 
-export default TutorRoutes;
+export default TutorLayout;

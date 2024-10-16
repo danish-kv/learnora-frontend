@@ -5,9 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import api from "@/services/api";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchTutorDetails from "@/features/admin/hooks/useFetchTutorDetails";
-import TutorSidebar from "@/features/tutor/components/TutorSidebar";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import TutorHeader from "@/features/tutor/components/TutorHeader";
 
 const TutorEditProfile = () => {
   const [formValues, setFormValues] = useState({
@@ -108,142 +106,134 @@ const TutorEditProfile = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <TutorSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TutorHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="first_name"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    First Name
-                  </label>
-                  <Input
-                    type="text"
-                    id="first_name"
-                    value={formValues.first_name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your First Name"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="last_name"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Last Name
-                  </label>
-                  <Input
-                    type="text"
-                    id="last_name"
-                    value={formValues.last_name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your last name"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="username"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Username
-                  </label>
-                  <Input
-                    type="text"
-                    id="username"
-                    value={formValues.username}
-                    onChange={handleInputChange}
-                    placeholder="Enter your user name"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="display_name"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Display Name
-                  </label>
-                  <Input
-                    type="text"
-                    id="display_name"
-                    value={formValues.display_name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your display name"
-                    className="w-full"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label
-                    htmlFor="bio"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Bio
-                  </label>
-                  <Textarea
-                    id="bio"
-                    value={formValues.bio}
-                    onChange={handleInputChange}
-                    placeholder="Tell us about yourself"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Email
-                  </label>
-                  <Input value={formValues.email} disabled className="w-full" />
-                </div>
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Phone
-                  </label>
-                  <Input
-                    type="tel"
-                    id="phone"
-                    value={formValues.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="dob"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Date of Birth
-                  </label>
-                  <Input
-                    type="date"
-                    id="dob"
-                    value={formValues.dob}
-                    onChange={handleInputChange}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-              <Button type="submit" className="mt-6 w-full md:w-auto">
-                Save Changes
-              </Button>
-            </form>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              htmlFor="first_name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              First Name
+            </label>
+            <Input
+              type="text"
+              id="first_name"
+              value={formValues.first_name}
+              onChange={handleInputChange}
+              placeholder="Enter your First Name"
+              className="w-full"
+            />
           </div>
-        </main>
-      </div>
+          <div>
+            <label
+              htmlFor="last_name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Last Name
+            </label>
+            <Input
+              type="text"
+              id="last_name"
+              value={formValues.last_name}
+              onChange={handleInputChange}
+              placeholder="Enter your last name"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Username
+            </label>
+            <Input
+              type="text"
+              id="username"
+              value={formValues.username}
+              onChange={handleInputChange}
+              placeholder="Enter your user name"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="display_name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Display Name
+            </label>
+            <Input
+              type="text"
+              id="display_name"
+              value={formValues.display_name}
+              onChange={handleInputChange}
+              placeholder="Enter your display name"
+              className="w-full"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label
+              htmlFor="bio"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Bio
+            </label>
+            <Textarea
+              id="bio"
+              value={formValues.bio}
+              onChange={handleInputChange}
+              placeholder="Tell us about yourself"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Email
+            </label>
+            <Input value={formValues.email} disabled className="w-full" />
+          </div>
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Phone
+            </label>
+            <Input
+              type="tel"
+              id="phone"
+              value={formValues.phone}
+              onChange={handleInputChange}
+              placeholder="Enter your phone number"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="dob"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Date of Birth
+            </label>
+            <Input
+              type="date"
+              id="dob"
+              value={formValues.dob}
+              onChange={handleInputChange}
+              className="w-full"
+            />
+          </div>
+        </div>
+        <Button type="submit" className="mt-6 w-full md:w-auto">
+          Save Changes
+        </Button>
+      </form>
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TutorSidebar from "../../components/TutorSidebar";
-import TutorHeader from "../../components/TutorHeader";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import swal from "sweetalert";
@@ -84,106 +82,92 @@ const TutorEditQuestion = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <TutorSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TutorHeader />
-        <main className="flex-grow p-4 overflow-auto">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-2xl font-semibold mb-6">Edit Question</h1>
-            <form
-              onSubmit={handleOnSubmit}
-              className="bg-white p-6 rounded-lg border space-y-6"
-            >
-              <div>
-                <label
-                  htmlFor="question_text"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Question Text
-                </label>
-                <textarea
-                  id="question_text"
-                  name="question_text"
-                  rows="3"
-                  value={questionText}
-                  onChange={(e) => setQuestionText(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Enter your question here"
+    <div className="max-w-6xl p-4 mx-auto">
+      <h1 className="text-2xl font-semibold mb-6">Edit Question</h1>
+      <form
+        onSubmit={handleOnSubmit}
+        className="bg-white p-6 rounded-lg border space-y-6"
+      >
+        <div>
+          <label
+            htmlFor="question_text"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Question Text
+          </label>
+          <textarea
+            id="question_text"
+            name="question_text"
+            rows="3"
+            value={questionText}
+            onChange={(e) => setQuestionText(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Enter your question here"
+          />
+          {errors.questionText && (
+            <p className="mt-1 text-sm text-red-600">{errors.questionText}</p>
+          )}
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Options</h2>
+          <div className="space-y-3">
+            {options.map((option, index) => (
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row sm:items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={option.option_text}
+                  onChange={(e) => {
+                    const newOptions = [...options];
+                    newOptions[index].option_text = e.target.value;
+                    setOptions(newOptions);
+                  }}
+                  className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder={`Option ${String.fromCharCode(65 + index)}`}
                 />
-                {errors.questionText && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.questionText}
-                  </p>
-                )}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={option.is_correct}
+                    onChange={() => {
+                      const newOptions = [...options];
+                      newOptions[index].is_correct =
+                        !newOptions[index].is_correct;
+                      setOptions(newOptions);
+                    }}
+                    className="rounded text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-gray-700">Correct</span>
+                </label>
               </div>
-
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Options</h2>
-                <div className="space-y-3">
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col sm:flex-row sm:items-center gap-2"
-                    >
-                      <input
-                        type="text"
-                        value={option.option_text}
-                        onChange={(e) => {
-                          const newOptions = [...options];
-                          newOptions[index].option_text = e.target.value;
-                          setOptions(newOptions);
-                        }}
-                        className="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder={`Option ${String.fromCharCode(
-                          65 + index
-                        )}`}
-                      />
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={option.is_correct}
-                          onChange={() => {
-                            const newOptions = [...options];
-                            newOptions[index].is_correct =
-                              !newOptions[index].is_correct;
-                            setOptions(newOptions);
-                          }}
-                          className="rounded text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <span className="text-sm text-gray-700">Correct</span>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-                {errors.correctOption && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.correctOption}
-                  </p>
-                )}
-                {options.length < 4 && (
-                  <button
-                    type="button"
-                    onClick={handleAddOption}
-                    className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Add Option
-                  </button>
-                )}
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Update Question
-                </button>
-              </div>
-            </form>
+            ))}
           </div>
-        </main>
-      </div>
+          {errors.correctOption && (
+            <p className="mt-1 text-sm text-red-600">{errors.correctOption}</p>
+          )}
+          {options.length < 4 && (
+            <button
+              type="button"
+              onClick={handleAddOption}
+              className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Add Option
+            </button>
+          )}
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Update Question
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
