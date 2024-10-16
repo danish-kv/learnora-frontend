@@ -1,17 +1,39 @@
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export const displayToastAlert = (status, message) => {
+  console.log(status, message);
+
   const options = {
-    position: "bottom-right",
-    draggable: true,
+    position: "top-right",
+    duration: 4000,
+    style: {
+      padding: "16px",
+      borderRadius: "8px",
+    },
   };
-  if (status === 100) {
-    toast.info(message, options);
-  } else if (status === 200) {
-    toast.success(message, options);
-  } else if (status === 300) {
-    toast.warning(message, options);
-  } else {
-    toast.error(message, options);
+
+  switch (status) {
+    case 100:
+      toast(message, {
+        ...options,
+        icon: "🔵",
+      });
+      break;
+    case 200:
+      toast.success(message, options);
+      break;
+    case 300:
+      toast(message, {
+        ...options,
+        icon: "⚠️",
+        style: {
+          ...options.style,
+          backgroundColor: "#fef08a",
+          color: "#854d0e",
+        },
+      });
+      break;
+    default:
+      toast.error(message, options);
   }
 };
