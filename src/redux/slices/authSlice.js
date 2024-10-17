@@ -23,7 +23,10 @@ const authSlice = createSlice({
     },
     googleSignin: (state, action) => {
       state.user = action.payload.user;
+      state.id = action.payload.id;
+      state.email = action.payload.email;
       state.role = action.payload.role;
+      state.loading = false;
     },
     tutorApplication: (state, action) => {
       state.tutorApplicationAccess = action.payload;

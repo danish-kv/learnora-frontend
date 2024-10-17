@@ -32,8 +32,12 @@ export const useGoogleAuth = () => {
 
         const payload = {
           user: response.data.user,
+          id: response.data.id,
+          email: response.data.email,
           role: response.data.role,
         };
+        console.log("res from google==", response.data);
+        console.log(" payload ===", payload);
         dispath(googleSignin(payload));
 
         if (from === "register") {
