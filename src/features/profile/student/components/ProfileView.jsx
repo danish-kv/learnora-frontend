@@ -12,7 +12,7 @@ const ProfileView = ({ profile }) => {
       <div className="bg-white rounded-lg border  p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
           <Avatar className="w-24 h-24 sm:w-32 sm:h-32">
-            <AvatarImage
+            <AvatarImage className="object-cover"
               src={profile.profile || "/default-avatar.png"}
               alt={profile.username}
             />

@@ -59,10 +59,10 @@ const CourseCard = ({ course }) => {
             </div>
             <div className="text-right">
               <span className="text-gray-400 line-through text-sm">
-                ${(course.price * 1.08).toFixed(2)}
+                {(course.price * 1.08).toFixed(2)}
               </span>
               <span className="text-purple-600 font-bold text-lg ml-2">
-                ${course.price}
+                {course.price}
               </span>
               {course.rental_price > 0 && (
                 <div className="text-sm text-blue-500 mt-1">

@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../services/api";
 import { Login, Signup, Logout } from "../thunk/authThunks";
 
 const initialState = {
@@ -7,6 +6,7 @@ const initialState = {
   id: null,
   role: null,
   email: null,
+  profile : null,
   loading: false,
   error: null,
   otp_access: false,
@@ -24,6 +24,7 @@ const authSlice = createSlice({
     googleSignin: (state, action) => {
       state.user = action.payload.user;
       state.id = action.payload.id;
+      state.profile = action.payload.profile;
       state.email = action.payload.email;
       state.role = action.payload.role;
       state.loading = false;
@@ -66,6 +67,7 @@ const authSlice = createSlice({
 
         state.user = action.payload.user;
         state.id = action.payload.id;
+        state.profile = action.payload.profile;
         state.email = action.payload.email;
         state.role = action.payload.role;
         state.loading = false;
