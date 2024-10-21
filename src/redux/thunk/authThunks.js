@@ -47,7 +47,8 @@ export const Login = createAsyncThunk(
             refresh_token,
             role,  
             id: userId,  
-            user
+            user,
+            profile : token.profile
           };
         }
       } else {
