@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
-import swal from "sweetalert";
 import { useDispatch } from "react-redux";
 import { googleSignin } from "../../../redux/slices/authSlice";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 export const useGoogleAuth = () => {
   const navigate = useNavigate();
@@ -27,8 +27,7 @@ export const useGoogleAuth = () => {
         localStorage.setItem("role", role);
 
         console.log("res data", response.data);
-
-        await swal("Success", "Logged in successfully", "success");
+        displayToastAlert(200, "Welcome Back!");
 
         const payload = {
           user: response.data.user,
@@ -48,7 +47,7 @@ export const useGoogleAuth = () => {
       }
     } catch (error) {
       console.error("Error during Google sign-in:", error);
-      await swal("Error", "Failed to log in with Google", "error");
+      displayToastAlert(400, "Failed to log in with Google");
     }
   };
 

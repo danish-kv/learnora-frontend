@@ -43,12 +43,7 @@ const TutorCreateContest = () => {
       });
       console.log(res);
       if (res.status === 201) {
-        await swal({
-          title: "Success!",
-          text: "Your contest has been created successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Your contest has been created successfully")
         actions.resetForm();
         navigate(`/tutor/contest/questions/create/${res.data.id}`);
       }

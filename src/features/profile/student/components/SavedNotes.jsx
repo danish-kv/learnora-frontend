@@ -13,6 +13,7 @@ import { formatDate } from "@/utils/format";
 import { Input } from "@/components/ui/input";
 import Swal from "sweetalert2";
 import api from "@/services/api";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const SavedNotes = () => {
   const { notes, getNotes } = useFetchNotes();
@@ -32,18 +33,10 @@ const SavedNotes = () => {
         try {
           const res = await api.delete(`notes/${id}/`);
           getNotes();
-          await Swal.fire({
-            title: "Deleted!",
-            text: "You have been successfully Deleted notes.",
-            icon: "success",
-          });
+          displayToastAlert(200, "You have been successfully Deleted notes");
         } catch (error) {
           console.log(error);
-          Swal.fire({
-            title: "Error!",
-            text: "There was an issue with deleting the note.",
-            icon: "error",
-          });
+          displayToastAlert(200, "There was an issue with deleting the note");
         }
       }
     });

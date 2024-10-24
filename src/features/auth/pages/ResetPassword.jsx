@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../../services/authService";
 import api from "../../../services/api";
 import Swal from "sweetalert2";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -34,21 +35,14 @@ const ResetPassword = () => {
       console.log(res);
 
       if (res.status === 201) {
-        await Swal.fire({
-          icon: "success",
-          title: "Password Changed Succussfully",
-        });
+        displayToastAlert(200," Password Changed Succussfully")
         if (is_tutor) {
           navigate("/login", { state: { TutorRegister: true } });
         } else {
           navigate("/login");
         }
       } else {
-        await Swal.fire({
-          icon: "error",
-          title: "Wrong",
-          text: "Something went wrong please try again",
-        });
+        displayToastAlert(400, 'Something went wrong please try again')
       }
     } catch (error) {
       console.log(error);

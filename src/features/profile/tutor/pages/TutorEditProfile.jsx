@@ -69,11 +69,7 @@ const TutorEditProfile = () => {
       const res = await api.patch(`tutor-profile/${TutorDetails.id}/`, payload);
       console.log(res);
       if (res.status === 200) {
-        swal(
-          "Profile Updated",
-          "Your profile has been updated successfully!",
-          "success"
-        );
+        displayToastAlert(200, "Profile Updated Successfully")
         navigate("/tutor/profile");
       } else {
         displayToastAlert(

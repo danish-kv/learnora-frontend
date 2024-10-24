@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import swal from "sweetalert";
 import api from "../../../services/api";
 import { formatDate } from "@/utils/format";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const NotesAndReviews = ({
   handleNotesModal,
@@ -37,14 +38,13 @@ const NotesAndReviews = ({
       try {
         const res = await api.delete(`reviews/${id}/`);
         if (res.status === 204) {
-          swal("Poof! Your review has been deleted!", {
-            icon: "success",
-          });
+          displayToastAlert(200, "Poof! Your review has been deleted!");
           refetch();
         } else {
-          swal("Failed to delete the review. Review not found.", {
-            icon: "error",
-          });
+          displayToastAlert(
+            200,
+            "Failed to delete the review. Review not found!"
+          );
         }
       } catch (error) {
         console.log(error);
@@ -64,14 +64,14 @@ const NotesAndReviews = ({
     try {
       const res = await api.delete(`notes/${id}/`);
       if (res.status === 204) {
-        swal("Deleted", "The note has been deleted!", "success");
+        displayToastAlert(200, "The note has been deleted!")
         refetch();
       } else {
-        swal("Failed", "Could not delete the note", "error");
+        displayToastAlert(400, "Could not delete the note!")
       }
     } catch (error) {
       console.log(error);
-      swal("Failed", "An error occurred. Please try again.", "error");
+      displayToastAlert(400, "An error occurred. Please try again")
     }
   };
 

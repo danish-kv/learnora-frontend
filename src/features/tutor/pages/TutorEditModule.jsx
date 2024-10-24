@@ -46,12 +46,7 @@ const TutorEditModule = () => {
         },
       });
       if (res.status === 200) {
-        swal({
-          title: "Updated!",
-          text: "Module has been updated successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Module has been updated successfully");
         navigate("/tutor/courses");
       }
     } catch (error) {

@@ -5,6 +5,7 @@ import api from "../../../services/api";
 import UseFetchCategory from "../../admin/hooks/UseFetchCategory";
 import useFetchCourseDetails from "../hooks/useFetchCourseDetails";
 import TutorHeader from "../components/TutorHeader";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const TutorEditCourse = () => {
   const [courseData, setCourseData] = useState({
@@ -64,12 +65,7 @@ const TutorEditCourse = () => {
       });
       console.log(res);
       if (res.status === 200) {
-        await swal({
-          title: "Updated!",
-          text: "Your course has been updated successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Your course has been updated successfully");
         navigate("/tutor/courses");
       }
     } catch (error) {

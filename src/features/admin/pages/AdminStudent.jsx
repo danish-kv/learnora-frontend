@@ -5,9 +5,9 @@ import AdminSidebar from "../components/AdminSidebar";
 import useFetchStudent from "../hooks/useFetchStudnet";
 import api from "../../../services/api";
 import { formatDate } from "@/utils/format";
-import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const AdminStudent = () => {
   const { students, refetch } = useFetchStudent();
@@ -22,13 +22,13 @@ const AdminStudent = () => {
       console.log(res);
       refetch();
       if (current_status) {
-        swal("Blocked", "Student blocked successfully", "success");
+        displayToastAlert(200, "Student blocked successfully");
       } else {
-        swal("Unblocked", "Student Unlocked successfully", "success");
+        displayToastAlert(200, "Student Unblocked successfully");
       }
     } catch (error) {
       console.log(error);
-      swal("Failed", "please try again later", "error");
+      displayToastAlert(200, "Please try again later!");
     }
   };
 
@@ -73,7 +73,7 @@ const AdminStudent = () => {
                     Dashboard
                   </Link>
                 </li>
-             
+
                 <li aria-current="page">
                   <div className="flex items-center">
                     <ChevronRightIcon className="h-5 w-5 text-gray-400" />

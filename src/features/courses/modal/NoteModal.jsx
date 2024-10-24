@@ -35,7 +35,7 @@ const NoteModal = ({
           content: notes,
         });
         if (res.status === 200) {
-          swal("Success", "Note updated successfully", "success");
+          displayToastAlert(200, "Note updated successfully")
           setNoteToEdit("");
         } else {
           displayToastAlert(400, "Failed to update note . Please try again");
@@ -55,7 +55,7 @@ const NoteModal = ({
         setNotes("");
 
         if (res.status === 201) {
-          swal("Success", `Note added successfully`, "success");
+          displayToastAlert(200, "Note added successfully");
         } else {
           displayToastAlert(400, "Failed to submit review. Please try again");
         }

@@ -9,7 +9,6 @@ import {
   tutorApplication,
   tutorApplicationDone,
 } from "../../../redux/slices/authSlice";
-import swal from "sweetalert";
 
 const TutorApplication = () => {
   const [step, setStep] = useState(1);
@@ -64,15 +63,14 @@ const TutorApplication = () => {
       newData.append("cv", formData.cv);
       newData.append("profile", formData.profilePhoto);
       newData.append("skills", formData.skills.split(","));
-  
+
       newData.append("education", JSON.stringify(formData.education));
       newData.append("experiences", JSON.stringify(formData.experiences));
-  
 
       try {
         const res = await api.post("tutor/", newData);
         if (res.status === 201) {
-          await swal("Done!", "Account Created Successfully", "success");
+          displayToastAlert(200, "Account Created Successfully");
           dispatch(tutorApplication(false));
           dispatch(tutorApplicationDone(true));
           navigate("/tutor/application/done");
@@ -86,7 +84,7 @@ const TutorApplication = () => {
       }
     } else {
       setErrors(errors);
-      await swal("Failed", "Please complete your application", "error");
+      displayToastAlert(400, "Please complete your application");
     }
   };
 
@@ -177,7 +175,8 @@ const TutorApplication = () => {
                 <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">
                   <img
                     src={
-                      formData.profilePhoto && URL.createObjectURL(formData.profilePhoto)
+                      formData.profilePhoto &&
+                      URL.createObjectURL(formData.profilePhoto)
                     }
                     // className="w-20 h-20 rounded-full "
                     className="w-full"
@@ -243,9 +242,7 @@ const TutorApplication = () => {
                     } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
                   />
                   {errors.public_name && (
-                    <p className="text-red-500 text-sm">
-                      {errors.public_name}
-                    </p>
+                    <p className="text-red-500 text-sm">{errors.public_name}</p>
                   )}
                 </div>
                 <div>

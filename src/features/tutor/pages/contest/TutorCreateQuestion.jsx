@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import swal from "sweetalert";
 
 const TutorCreateQuestion = () => {
   const [questionText, setQuestionText] = useState("");
@@ -56,11 +55,7 @@ const TutorCreateQuestion = () => {
           setQuestionText("");
           setOptions([{ option_text: "", is_correct: false }]);
         } else if (actionType === "finish") {
-          await swal(
-            "Success",
-            "Contest Question creation completed",
-            "success"
-          );
+          displayToastAlert(200, "Contest Question creation completed")
           navigate("/tutor/contest/");
         }
       }

@@ -56,12 +56,7 @@ const TutorEditContest = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.status === 200) {
-        await swal({
-          title: "Updated!",
-          text: "Your contest has been updated successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Your contest has been updated successfully");
         actions.resetForm();
         navigate(`/tutor/contest/${id}`);
       }

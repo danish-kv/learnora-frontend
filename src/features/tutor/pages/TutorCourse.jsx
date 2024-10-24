@@ -27,9 +27,9 @@ const TutorCourse = () => {
       await api.patch(`courses/${slug}/`, { is_active: !current_status });
       getCourses();
       if (current_status) {
-        swal("Blocked", "Course Blocked successfully", "success");
+        displayToastAlert(200, "Course Blocked successfully");
       } else {
-        swal("UnBlocked", "Course Unblocked successfully", "success");
+        displayToastAlert(200, "Course Unblocked successfully");
       }
     } catch (error) {
       console.error(error);

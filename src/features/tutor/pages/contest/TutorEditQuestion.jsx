@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import swal from "sweetalert";
 
 const TutorEditQuestion = () => {
   const [questionText, setQuestionText] = useState("");
@@ -62,11 +61,7 @@ const TutorEditQuestion = () => {
         headers: { "Content-Type": "application/json" },
       });
       if (res.status === 200) {
-        await swal(
-          "Updated",
-          "Contest Question Updated successfully",
-          "success"
-        );
+        displayToastAlert(200, "Contest Question Updated successfully");
         navigate("/tutor/contest/");
       }
     } catch (error) {

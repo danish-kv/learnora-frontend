@@ -51,12 +51,7 @@ const TutorCreateCourse = () => {
       });
       console.log(res);
       if (res.status === 201) {
-        await swal({
-          title: "Success!",
-          text: "Your course has been created successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Your course has been created successfully");
         actions.resetForm();
         navigate(`/tutor/new-module/${res.data.id}`);
       }

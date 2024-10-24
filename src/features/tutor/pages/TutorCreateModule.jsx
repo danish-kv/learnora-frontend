@@ -5,6 +5,7 @@ import api from "../../../services/api";
 import { validateModules } from "@/utils/validation";
 import TutorHeader from "../components/TutorHeader";
 import LoadingDotStream from "@/components/common/Loading";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
@@ -53,12 +54,7 @@ const TutorCreateModule = () => {
         },
       });
       if (res.status === 201) {
-        swal({
-          title: "Success!",
-          text: "Modules have been added successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Modules have been added successfully");
         navigate("/tutor/courses");
       }
     } catch (error) {

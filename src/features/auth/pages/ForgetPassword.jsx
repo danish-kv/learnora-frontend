@@ -7,6 +7,7 @@ import LoadingDotStream from '../../../components/common/Loading';
 import api from '../../../services/api';
 import { useDispatch } from 'react-redux';
 import { toggleOtpAccess } from '../../../redux/slices/authSlice';
+import { displayToastAlert } from '@/utils/displayToastAlert';
 
 
 const ForgetPassword = () => {
@@ -17,14 +18,6 @@ const ForgetPassword = () => {
 
     const navigate = useNavigate()
 
-    const handleClick = () => {
-        Swal.fire({
-            icon: "success",
-            title: "The Internet",
-            text: "That thing is still around",
-          });
-
-    }
     const handleSubmit = async(e) => {
         e.preventDefault()
         setLoading(true)
@@ -42,19 +35,11 @@ const ForgetPassword = () => {
             
             console.log('hi');
             if(res.status === 200){
-                await Swal.fire({
-                    icon : 'success',
-                    title : 'Resent OTP sented',
-                    text : 'Please check your email for OTP'
-                })
+                displayToastAlert(200, "Please check your email for OTP")
                 dispath(toggleOtpAccess(true))
                 navigate('/otp', {state : {email : email, is_forget : true, is_tutor : res.data.role === 'tutor'}})
             }else {
-                await Swal.fire({
-                    icon : 'error',
-                    title : 'Email not found',
-                    text : 'Entered email is not registered'
-                })
+                displayToastAlert(400, 'Email not found')
             }
 
         } catch (error) {

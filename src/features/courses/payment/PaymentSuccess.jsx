@@ -24,7 +24,7 @@ const PaymentSuccess = () => {
         });
         console.log(res);
 
-        swal("Payment Success", "Your course purchase success.", "success");
+        displayToastAlert(200, "Your course purchase success")
         navigate(`/course/${courseID}`, { state: { showConfetti: true } });
       } catch (error) {
         console.error(error);

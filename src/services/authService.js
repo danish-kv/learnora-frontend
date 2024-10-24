@@ -9,12 +9,15 @@ export const register = async (email, password, username, role) => {
       username,
       role,
     });
-    displayToastAlert(200,"User registered successfully!");
+    displayToastAlert(200, "User registered successfully!");
     return response.data;
   } catch (error) {
     console.error("catch error signup ===>", error);
     console.error("catch  ===>", error.response);
-    displayToastAlert(error.response.status || 400, error.response.data.email || 'Facing some issue please try later')
+    displayToastAlert(
+      error.response.status || 400,
+      error.response.data.email || "Facing some issue please try later"
+    );
 
     if (error.response && error.response.data) {
       const errorMessages = error.response.data;
@@ -48,11 +51,7 @@ export const login = async ({ email, password, role }) => {
       const detail = error.response.data?.detail;
 
       if (status === 401) {
-        await swal(
-          "Wrong credentails",
-          "Data not found given credentails.",
-          "info"
-        );
+        displayToastAlert(100, "Data not found given credentails");
       } else if (error.response.data) {
         const errorMess = error.response.data;
         // for (let key in errorMess) {
@@ -62,20 +61,16 @@ export const login = async ({ email, password, role }) => {
         //   }
         // }
       } else {
-        displayToastAlert('An unexpected error occurred.');
-        displayToastAlert(status, detail )
+        displayToastAlert("An unexpected error occurred.");
+        displayToastAlert(status, detail);
       }
     } else {
-      displayToastAlert('An error occurred');
-      console.error('Error: ', error);
+      displayToastAlert("An error occurred");
+      console.error("Error: ", error);
     }
     throw error;
   }
 };
-
-
-
-
 
 export default {
   register,

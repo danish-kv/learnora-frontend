@@ -4,6 +4,7 @@ import useFetchCourseDetails from "../hooks/useFetchCourseDetails";
 import api from "../../../services/api";
 import { formatDuration } from "../../../utils/format";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
+import { displayToastAlert } from "@/utils/displayToastAlert";
 const TutorCourseDetails = () => {
   const [expandedModule, setExpandedModule] = useState(null);
   const { slug } = useParams();
@@ -18,16 +19,12 @@ const TutorCourseDetails = () => {
       const res = await api.delete(`modules/${id}/`);
       console.log(res);
       if (res.status === 204) {
-        swal({
-          title: "Deleted!",
-          text: "Modules have been deleted successfully.",
-          icon: "success",
-          button: "Okay",
-        });
+        displayToastAlert(200, "Modules have been deleted successfully")
       }
       refetch();
     } catch (error) {
       console.log(error);
+      displayToastAlert(400, "Facing some issue, please try again later...")
     }
   };
 

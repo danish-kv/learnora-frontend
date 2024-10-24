@@ -28,7 +28,7 @@ const ChangePassword = () => {
         confirm_password: confirmPassword,
       });
       console.log(res);
-      swal("Changed", "Password changed successfully", "success");
+      displayToastAlert(200, "Password changed successfully")
       dispatch(Logout());
       navigate("/login");
     } catch (error) {

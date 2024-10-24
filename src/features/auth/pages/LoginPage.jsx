@@ -68,7 +68,7 @@ const LoginPage = () => {
         console.log("token ===> ", token);
 
         if (!token.is_active) {
-          await swal("Blocked", "Admin blocked you.", "error");
+          displayToastAlert(400, 'Admin Blocked You!!')
           return;
         }
 
