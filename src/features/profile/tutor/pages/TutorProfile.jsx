@@ -6,6 +6,7 @@ import api from "@/services/api";
 import ExperienceModal from "../components/ExperienceModal";
 import EducationModal from "../components/EducationModal";
 import SkillsModal from "../components/SkillsModal";
+import ProfileSkeleton from "@/skeleton/ProfileSkeleton";
 
 const TutorProfile = () => {
   const ProfileSection = ({ title, children }) => (
@@ -46,7 +47,7 @@ const TutorProfile = () => {
   }, [profileData]);
 
   if (!profileData || Object.keys(profileData).length === 0) {
-    return <div>Loading...</div>;
+    return <ProfileSkeleton />;
   }
 
   const handleEditClick = (id) => {

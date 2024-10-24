@@ -60,7 +60,7 @@ const TutorSalesReport = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Sales Report</h2>
+      <h2 className="text-3xl font-bold mb-6 text-gray-700">Sales Report</h2>
 
       <div className="bg-white p-6 border rounded-lg shadow-sm mb-8">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">

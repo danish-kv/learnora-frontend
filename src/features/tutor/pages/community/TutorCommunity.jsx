@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Plus } from "lucide-react";
+import CardSkeleton from "@/skeleton/CardSkeleton";
+import { Search, Plus, Home, ChevronRight } from "lucide-react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import useFetchCommunity from "../../hooks/useFetchCommunity";
 import TutorCommunityCard from "../../components/TutorCommunityCard";
 
@@ -14,38 +19,57 @@ const TutorCommunity = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white border rounded-lg p-6 mb-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 className="text-3xl font-semibold mb-4 sm:mb-0 text-gray-800">
-            My Communities
-          </h2>
-          <Link to="/tutor/community/create">
-            <button className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300 flex items-center">
-              <Plus size={20} className="mr-2" />
-              Add New Community
-            </button>
-          </Link>
-        </div>
+      <Card className="mb-8">
+        <CardHeader className="space-y-6">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:justify-between sm:items-center">
+            <h1 className="text-3xl font-bold tracking-tight  text-gray-700">
+              My Communities
+            </h1>
+            <Link to="/tutor/community/create">
+              <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700">
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Community
+              </Button>
+            </Link>
+          </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <div className="relative w-full sm:w-96 mb-4 sm:mb-0">
-            <input
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <li className="flex items-center">
+                <Link
+                  to="/tutor"
+                  className="flex items-center hover:text-indigo-600 transition-colors"
+                >
+                  <Home className="h-4 w-4 mr-1" />
+                  Dashboard
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <ChevronRight className="h-4 w-4 mx-1" />
+                <span className="text-foreground">Communities</span>
+              </li>
+            </ol>
+          </nav>
+        </CardHeader>
+
+        <Separator className="mb-6" />
+
+        <CardContent>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
               type="text"
               placeholder="Search communities..."
-              className="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full sm:max-w-sm pl-9"
             />
-            <Search className="absolute left-3 top-3 text-gray-400" size={20} />
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {loading ? (
-        <div className="text-center text-gray-600">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          Loading communities...
-        </div>
+        <CardSkeleton />
       ) : error ? (
         <div className="text-center text-red-500 bg-red-100 p-4 rounded-lg">
           Error: {error}
