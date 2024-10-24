@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import LandingImageSkeleton from "@/features/discussion/components/LandingImageSkeleton";
 
 const TutorCard = ({ tutor }) => {
   return (
@@ -22,7 +23,7 @@ const TutorCard = ({ tutor }) => {
   );
 };
 
-const TutorsSection = ({ tutors }) => {
+const TutorsSection = ({ tutors, loading }) => {
   const scrollContainerRef = useRef(null);
 
   const scroll = (direction) => {
@@ -60,12 +61,16 @@ const TutorsSection = ({ tutors }) => {
               msOverflowStyle: "none",
             }}
           >
-            {tutors &&
+            {loading ? (
+              <LandingImageSkeleton />
+            ) : (
+              tutors &&
               tutors.map((tutor, index) => (
                 <div key={index} className="snap-start">
                   <TutorCard tutor={tutor} />
                 </div>
-              ))}
+              ))
+            )}
           </div>
 
           <style>

@@ -7,6 +7,7 @@ import Leaderboard from "../components/Leaderboard";
 import useFetchGlobalLeaderboard from "../hooks/useFetchGlobalLeaderboard";
 import { Trophy } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import CardSkeleton from "@/skeleton/CardSkeleton";
 
 const ContestPage = () => {
   const { contests, loading } = useFetchContest();
@@ -54,19 +55,19 @@ const ContestPage = () => {
             </div>
 
             {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-emerald-600"></div>
-              </div>
-            ) : contests && contests.length > 0 ? (
-              <div className="space-y-6">
-                {contests.map((contest) => (
-                  <ContestCard key={contest.id} contest={contest} />
-                ))}
-              </div>
+              [...Array(6)].map((_, index) => <CardSkeleton key={index} />)
             ) : (
-              <p className="text-center text-gray-500 mt-8">
-                No contests available
-              </p>
+              <>
+                <div className="space-y-6">
+                  {contests.map((contest) => (
+                    <ContestCard key={contest.id} contest={contest} />
+                  ))}
+                </div>
+                ) : (
+                <p className="text-center text-gray-500 mt-8">
+                  No contests available
+                </p>
+              </>
             )}
           </main>
 

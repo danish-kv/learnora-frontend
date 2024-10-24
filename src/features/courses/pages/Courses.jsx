@@ -9,6 +9,7 @@ import PaginationComponent from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import { BookOpen } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import CardSkeleton from "@/skeleton/CardSkeleton";
 
 const Courses = () => {
   const { categories } = UseFetchCategory();
@@ -39,7 +40,7 @@ const Courses = () => {
     setPage(1);
     setSearchQuery("");
     navigate(`/courses/?category=${category}&page=1`);
-    getCourses(1, category); 
+    getCourses(1, category);
   };
 
   const handlePageChange = (newPage) => {
@@ -94,9 +95,7 @@ const Courses = () => {
               from="courses"
             />
             {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
-              </div>
+              [...Array(5)].map((_, index) => <CardSkeleton key={index} />)
             ) : (
               <>
                 <CourseList courses={courses} />

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import StatisticsSection from "./StatisticsSection";
 import ImageCarousel from "./ImageCarousel";
+import LandingImageSkeleton from "@/features/discussion/components/LandingImageSkeleton";
 
-const Hero = ({ data }) => {
+const Hero = ({ data, loading }) => {
   return (
     <div
       style={{
@@ -13,7 +14,11 @@ const Hero = ({ data }) => {
       className="min-h-screen flex flex-col"
     >
       <HeroContent />
-      <ImageCarousel students={data?.students} />
+      {loading ? (
+        <LandingImageSkeleton />
+      ) : (
+        <ImageCarousel students={data?.students} />
+      )}
       <StatisticsSection data={data} />
     </div>
   );

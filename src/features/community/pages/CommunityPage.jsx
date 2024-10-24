@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Banner from "@/components/common/Banner";
 import { useSelector } from "react-redux";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import CardSkeleton from "@/skeleton/CardSkeleton";
 
 const CommunityPage = () => {
   const { communities, error, loading } = useFetchCommunity();
@@ -23,7 +24,7 @@ const CommunityPage = () => {
     try {
       if (!user) {
         console.log("not user found");
-        displayToastAlert(100, 'Please login to continue...')
+        displayToastAlert(100, "Please login to continue...");
         return navigate("/login");
       }
       const res = await api.post(`community/${slug}/join/`);
@@ -82,25 +83,26 @@ const CommunityPage = () => {
         </div>
 
         {/* Community List */}
-        {loading ? (
-          <div className="text-center">Loading communities...</div>
-        ) : error ? (
-          <div className="text-center text-red-500">Error: {error}</div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCommunities?.map((community) => (
-              <CommunityCard
-                onJoin={handleJoinCommuntiy}
-                key={community.id}
-                community={community}
-              />
-            ))}
-          </div>
-        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
+            [...Array(6)].map((_, index) => <CardSkeleton key={index} />)
+          ) : (
+            <>
+              {filteredCommunities?.map((community) => (
+                <CommunityCard
+                  onJoin={handleJoinCommuntiy}
+                  key={community.id}
+                  community={community}
+                />
+              ))}
+            </>
+          )}
+        </div>
 
         {filteredCommunities?.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
-            No communities found. Try adjusting your search.
+            No communities found
           </div>
         )}
       </div>

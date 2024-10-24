@@ -10,6 +10,7 @@ import { MessageCircle } from "lucide-react";
 import Banner from "@/components/common/Banner";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import DiscussionSkeleton from "@/skeleton/DiscussionSkeleton";
 
 const DiscussionPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -105,6 +106,24 @@ const DiscussionPage = () => {
     toggleCreateForm();
   };
 
+
+  if (loading) {
+    return (
+      <div>
+        <Header />
+        <Banner
+          title="Join the Conversation"
+          description="Share ideas, ask questions, and learn from your peers."
+          buttonText="Start a Discussion"
+          icon={MessageCircle}
+          gradient="bg-gradient-to-r from-blue-600 to-teal-600"
+          onClick={toggleCreateForm}
+        />
+        <DiscussionSkeleton />
+      </div>
+    );
+  }
+  
   return (
     <div>
       <Header />
@@ -126,12 +145,6 @@ const DiscussionPage = () => {
           <h1 className="text-3xl p-6 font-bold mb-6 text-center">
             Discussion Forum
           </h1>
-          {/* <button
-            onClick={toggleCreateForm}
-            className="bg-teal-600  text-white px-4 py-2 rounded hover:bg-indigo-600"
-          >
-            New Discussion
-          </button> */}
         </div>
 
         {discussions.map((discussion) => (

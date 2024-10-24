@@ -12,15 +12,15 @@ import FloatingChatBot from "@/features/chatbot/FloatingChatBot";
 
 const LandingPage = () => {
 
-  const { homeData } = useFetchLandingPage()
+  const { homeData, loading } = useFetchLandingPage()
   return (
     <>
       <Header />
-      <Hero data={homeData} />
+      <Hero data={homeData} loading={loading} />
       <OnlineLearningSection />
       <CourseSection categories={homeData.categories} />
       <JoinUsBanner />
-      <TutorsSection tutors={homeData.tutors} />
+      <TutorsSection tutors={homeData.tutors} loading={loading} />
       {/* <Testimonials /> */}
       <Footer />
       <FloatingChatBot />

@@ -1,9 +1,8 @@
 import React from "react";
-import { Mail, Phone, BookOpen, Calendar, Clock } from "lucide-react";
 
 const CardSkeleton = () => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out">
+    <div className="bg-white rounded-lg mb-4 shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out">
       <div className="p-6">
         <div className="flex items-center mb-4">
           <div className="w-16 h-16 rounded-full mr-4 bg-gray-200 animate-pulse border-2 border-gray-100"></div>
