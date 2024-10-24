@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AdminSidebar from "../components/AdminSidebar";
-import AdminHeader from "../components/AdminHeader";
 import UseFetchCategory from "../hooks/UseFetchCategory";
 import api from "../../../services/api";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
-import { useSelector } from "react-redux";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
 
 const AdminCategory = () => {
@@ -16,7 +11,6 @@ const AdminCategory = () => {
   const [categoryName, setCategoryName] = useState("");
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editingCategoryId, setEditingCategoryId] = useState(null);
-  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
   const { categories, getCategory } = UseFetchCategory();
 
@@ -74,147 +68,132 @@ const AdminCategory = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <AdminSidebar />
-      <div
-        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-20"
-        }`}
-      >
-        <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
-              <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
-                Categories
-              </h1>
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className="bg-indigo-800 text-white py-2 px-4 rounded-md hover:bg-indigo-900 transition duration-200"
-                >
-                  Create Category
-                </button>
-                <Link
-                  to="/admin/requested-category/"
-                  className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition duration-200"
-                >
-                  Requested Categories
-                </Link>
-              </div>
-            </div>
-
-            {/* Breadcrumbs */}
-            <nav className="flex mb-8" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 md:space-x-3">
-                <li className="inline-flex items-center">
-                  <Link
-                    to="/admin"
-                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
-                  >
-                    <HomeIcon className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </Link>
-                </li>
-
-                <li aria-current="page">
-                  <div className="flex items-center">
-                    <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-                    <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                      Category
-                    </span>
-                  </div>
-                </li>
-              </ol>
-            </nav>
-
-            <div className="bg-white shadow-md border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full table-auto">
-                  <thead className="bg-gray-200">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        ID
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Category Name
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {categories.length > 0 ? (
-                      categories.map((category, index) => (
-                        <tr key={category.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <p className="text-sm text-gray-900">{index + 1}</p>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <p className="text-sm text-gray-900">
-                              {category.name}
-                            </p>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <span
-                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                category.is_active
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {category.is_active ? "Active" : "Blocked"}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              onClick={() =>
-                                handleBlockCategory(
-                                  category.id,
-                                  category.is_active
-                                )
-                              }
-                              className={`${
-                                category.is_active
-                                  ? "bg-red-600 hover:bg-red-700"
-                                  : "bg-green-600 hover:bg-green-700"
-                              } text-white px-3 py-1 rounded mr-2 transition duration-200`}
-                            >
-                              {category.is_active ? "Block" : "Unblock"}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setEditCategoryName(category.name);
-                                setEditingCategoryId(category.id);
-                                setIsEditModalOpen(true);
-                              }}
-                              className="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition duration-200"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="3"
-                          className="px-4 py-3 text-center text-gray-500"
-                        >
-                          There are no categories
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+            Categories
+          </h1>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-indigo-800 text-white py-2 px-4 rounded-md hover:bg-indigo-900 transition duration-200"
+            >
+              Create Category
+            </button>
+            <Link
+              to="/admin/requested-category/"
+              className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition duration-200"
+            >
+              Requested Categories
+            </Link>
           </div>
-        </main>
+        </div>
+
+        {/* Breadcrumbs */}
+        <nav className="flex mb-8" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li className="inline-flex items-center">
+              <Link
+                to="/admin"
+                className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
+              >
+                <HomeIcon className="mr-2 h-4 w-4" />
+                Dashboard
+              </Link>
+            </li>
+
+            <li aria-current="page">
+              <div className="flex items-center">
+                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                  Category
+                </span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
+        <div className="bg-white shadow-md border rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full table-auto">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Category Name
+                  </th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {categories.length > 0 ? (
+                  categories.map((category, index) => (
+                    <tr key={category.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <p className="text-sm text-gray-900">{index + 1}</p>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <p className="text-sm text-gray-900">{category.name}</p>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            category.is_active
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {category.is_active ? "Active" : "Blocked"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() =>
+                            handleBlockCategory(category.id, category.is_active)
+                          }
+                          className={`${
+                            category.is_active
+                              ? "bg-red-600 hover:bg-red-700"
+                              : "bg-green-600 hover:bg-green-700"
+                          } text-white px-3 py-1 rounded mr-2 transition duration-200`}
+                        >
+                          {category.is_active ? "Block" : "Unblock"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditCategoryName(category.name);
+                            setEditingCategoryId(category.id);
+                            setIsEditModalOpen(true);
+                          }}
+                          className="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition duration-200"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="3"
+                      className="px-4 py-3 text-center text-gray-500"
+                    >
+                      There are no categories
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Create Category Modal */}
@@ -276,9 +255,7 @@ const AdminCategory = () => {
           </div>
         </div>
       )}
-
-      <ToastContainer />
-    </div>
+    </main>
   );
 };
 

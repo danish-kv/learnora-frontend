@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import AdminHeader from "../components/AdminHeader";
-import AdminSidebar from "../components/AdminSidebar";
 import useFetchStudent from "../hooks/useFetchStudnet";
 import api from "../../../services/api";
 import { formatDate } from "@/utils/format";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import TableSkeleton from "@/skeleton/TableSkeleton";
 
 const AdminStudent = () => {
-  const { students, refetch } = useFetchStudent();
+  const { students, refetch, loading } = useFetchStudent();
   const [searchQuery, setSearchQuery] = useState("");
-  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
   const handleBlock = async (id, current_status) => {
     try {
@@ -39,14 +36,10 @@ const AdminStudent = () => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <AdminSidebar />
-      <div
-        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-20"
-        }`}
-      >
-        <AdminHeader />
+    <>
+      {loading ? (
+        <TableSkeleton />
+      ) : (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
@@ -84,7 +77,6 @@ const AdminStudent = () => {
                 </li>
               </ol>
             </nav>
-
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
@@ -163,8 +155,8 @@ const AdminStudent = () => {
             </div>
           </div>
         </main>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

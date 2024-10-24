@@ -6,10 +6,10 @@ import { jwtDecode } from "jwt-decode";
 import { validateLogin } from "../../../utils/validation";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import { AlertCircle, Mail, Lock } from "lucide-react";
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const AdminLogin = () => {
   const [user, setUser] = useState({ email: "", password: "", role: "admin" });
@@ -44,7 +44,10 @@ const AdminLogin = () => {
         }
       } catch (error) {
         console.error("Login error:", error);
-        displayToastAlert(400, "Failed to log in. Please check your credentials.");
+        displayToastAlert(
+          400,
+          "Failed to log in. Please check your credentials."
+        );
       }
     } else {
       setError(errors);
@@ -52,24 +55,28 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto my-auto bg-white shadow-lg rounded-lg overflow-hidden">
-
         <div className="hidden md:flex md:w-1/2 bg-indigo-600 text-white p-10 flex-col justify-center">
           <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
           <p className="text-lg mb-4">Manage with confidence and efficiency.</p>
           <img
             src="/admin-login.jpg"
             alt="Admin Illustration"
-            className="w-full mb-7 max-w-xs mx-auto  rounded-lg shadow-md"
+            className="w-full mb-7 max-w-xs mx-auto rounded-lg shadow-md"
           />
         </div>
 
         <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Welcome Back, Admin</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Welcome Back, Admin
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Email
               </Label>
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -92,7 +99,10 @@ const AdminLogin = () => {
               )}
             </div>
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password
               </Label>
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -114,8 +124,8 @@ const AdminLogin = () => {
                 <p className="mt-2 text-sm text-red-600">{error.password}</p>
               )}
             </div>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={loading}
             >

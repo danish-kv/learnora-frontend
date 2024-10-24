@@ -1,9 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import useFetchTutorDetails from "../hooks/useFetchTutorDetails";
-import AdminHeader from "../components/AdminHeader";
-import AdminSidebar from "../components/AdminSidebar";
 import AdminTutorAboutSection from "../components/AdminTutorAboutSection";
 import AdminTutorProfileSection from "../components/AdminTutorProfileSection";
 import AdminTutorEducationSection from "../components/AdminTutorEducationSection";
@@ -13,7 +10,6 @@ import AdminTutorSkillsSection from "../components/AdminTutorSkillsSection";
 const AdminTutorDetails = () => {
   const { id } = useParams();
   const { TutorDetails, error, loading } = useFetchTutorDetails(id);
-  const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
   if (loading)
     return (
@@ -55,36 +51,24 @@ const AdminTutorDetails = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <AdminSidebar />
-      <div
-        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-20"
-        }`}
-      >
-        <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-16">
-          <div className="container mx-auto px-6 py-8">
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-              <div className="p-6">
-                <AdminTutorProfileSection
-                  TutorDetails={TutorDetails}
-                  renderStatusBadge={renderStatusBadge}
-                />
-                <AdminTutorAboutSection bio={TutorDetails.user.bio} />
-                <AdminTutorEducationSection
-                  education={TutorDetails.education}
-                />
-                <AdminTutorExperienceSection
-                  experiences={TutorDetails.experiences}
-                />
-                <AdminTutorSkillsSection skills={TutorDetails.skills} />
-              </div>
-            </div>
+    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-16">
+      <div className="container mx-auto px-6 py-8">
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="p-6">
+            <AdminTutorProfileSection
+              TutorDetails={TutorDetails}
+              renderStatusBadge={renderStatusBadge}
+            />
+            <AdminTutorAboutSection bio={TutorDetails.user.bio} />
+            <AdminTutorEducationSection education={TutorDetails.education} />
+            <AdminTutorExperienceSection
+              experiences={TutorDetails.experiences}
+            />
+            <AdminTutorSkillsSection skills={TutorDetails.skills} />
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -70,96 +70,84 @@ const AdminTutor = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <AdminSidebar />
-      <div
-        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-20"
-        }`}
-      >
-        {" "}
-        <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
-              <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
-                Tutor's
-              </h1>
+    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+            Tutor's
+          </h1>
+        </div>
+        {/* Breadcrumbs */}
+        <nav className="flex mb-8" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li className="inline-flex items-center">
+              <Link
+                to="/admin"
+                className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
+              >
+                <HomeIcon className="mr-2 h-4 w-4" />
+                Dashboard
+              </Link>
+            </li>
 
-            </div>
-            {/* Breadcrumbs */}
-            <nav className="flex mb-8" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 md:space-x-3">
-                <li className="inline-flex items-center">
-                  <Link
-                    to="/admin"
-                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600"
-                  >
-                    <HomeIcon className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </Link>
-                </li>
-             
-                <li aria-current="page">
-                  <div className="flex items-center">
-                    <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-                    <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                      Tutor's
-                    </span>
-                  </div>
-                </li>
-              </ol>
-            </nav>
-
-            <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="relative flex-grow md:max-w-md">
-                <input
-                  type="text"
-                  placeholder="Search by name or email"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
+            <li aria-current="page">
+              <div className="flex items-center">
+                <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                  Tutor's
+                </span>
               </div>
-              <div className="relative">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full md:w-auto pl-10 pr-8 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="Active">Active</option>
-                  <option value="Requested">Requested</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Rejected">Rejected</option>
-                  <option value="Blocked">Blocked</option>
-                </select>
-                <Filter
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-              </div>
-            </div>
+            </li>
+          </ol>
+        </nav>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTutors.map((tutor) => (
-                <TutorCard
-                  key={tutor.id}
-                  tutor={tutor}
-                  onStatusChange={handleStatusChange}
-                  onBlockToggle={handleBlockToggle}
-                  onClick={() => handleCardClick(tutor.id)}
-                />
-              ))}
-            </div>
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="relative flex-grow md:max-w-md">
+            <input
+              type="text"
+              placeholder="Search by name or email"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
           </div>
-        </main>
+          <div className="relative">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full md:w-auto pl-10 pr-8 py-2 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Requested">Requested</option>
+              <option value="Pending">Pending</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+            <Filter
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTutors.map((tutor) => (
+            <TutorCard
+              key={tutor.id}
+              tutor={tutor}
+              onStatusChange={handleStatusChange}
+              onBlockToggle={handleBlockToggle}
+              onClick={() => handleCardClick(tutor.id)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 
