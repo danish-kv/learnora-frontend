@@ -6,9 +6,11 @@ import api from "../../../services/api";
 import PaginationComponent from "@/features/courses/components/Pagination";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
+import CardSkeleton from "@/skeleton/CardSkeleton";
 
 const AdminCourse = () => {
-  const { courses, getCourses, setPage, page, totalPages } = useFetchCourse();
+  const { courses, getCourses, setPage, page, totalPages, loading } =
+    useFetchCourse();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -103,15 +105,16 @@ const AdminCourse = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses &&
-                courses.map((course, index) => (
-                  <AdminCourseCard
-                    key={index}
-                    course={course}
-                    onBlockToggle={handleBlock}
-                    onStatusToggle={handleStatus}
-                  />
-                ))}
+              {loading
+                ? [...Array(6)].map((_, index) => <CardSkeleton key={index} />)
+                : courses.map((course, index) => (
+                    <AdminCourseCard
+                      key={index}
+                      course={course}
+                      onBlockToggle={handleBlock}
+                      onStatusToggle={handleStatus}
+                    />
+                  ))}
             </div>
             {courses.length > 0 && (
               <div className="mt-6">

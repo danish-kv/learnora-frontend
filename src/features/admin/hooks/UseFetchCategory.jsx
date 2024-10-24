@@ -4,8 +4,10 @@ import { fetchCategory } from "../services/adminService";
 const UseFetchCategory = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const getCategory = async () => {
+    setLoading(true)
     try {
       const data = await fetchCategory();
       console.log(data);
@@ -14,6 +16,8 @@ const UseFetchCategory = () => {
     } catch (error) {
       console.log(error);
       setError(error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -21,7 +25,7 @@ const UseFetchCategory = () => {
     getCategory();
   }, []);
 
-  return { categories, error, getCategory };
+  return { categories, error, getCategory, loading };
 };
 
 export default UseFetchCategory;

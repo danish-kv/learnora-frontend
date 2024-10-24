@@ -8,13 +8,14 @@ import api from "../../../services/api";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import useFetchTutor from "../hooks/useFetchTutor";
 import { Search, Filter, ChevronRightIcon, HomeIcon } from "lucide-react";
+import CardSkeleton from "@/skeleton/CardSkeleton";
 
 const AdminTutor = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const navigate = useNavigate();
   const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
-  const { tutors, getTutors } = useFetchTutor();
+  const { tutors, getTutors, loading } = useFetchTutor();
   const [filteredTutors, setFilteredTutors] = useState([]);
 
   useEffect(() => {
@@ -136,15 +137,17 @@ const AdminTutor = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTutors.map((tutor) => (
-            <TutorCard
-              key={tutor.id}
-              tutor={tutor}
-              onStatusChange={handleStatusChange}
-              onBlockToggle={handleBlockToggle}
-              onClick={() => handleCardClick(tutor.id)}
-            />
-          ))}
+          {loading
+            ? [...Array(6)].map((_, index) => <CardSkeleton key={index} />)
+            : filteredTutors.map((tutor) => (
+                <TutorCard
+                  key={tutor.id}
+                  tutor={tutor}
+                  onStatusChange={handleStatusChange}
+                  onBlockToggle={handleBlockToggle}
+                  onClick={() => handleCardClick(tutor.id)}
+                />
+              ))}
         </div>
       </div>
     </main>
