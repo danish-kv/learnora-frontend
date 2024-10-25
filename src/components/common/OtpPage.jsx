@@ -22,15 +22,11 @@ const OtpPage = () => {
 
   const dispatch = useDispatch();
   const { otp_access } = useSelector((state) => state.auth);
-  console.log("otp_access", otp_access);
 
   const { email } = location.state || {};
   const { is_tutor } = location.state || {};
   const { is_forget } = location.state || {};
   const { for_verify } = location.state || {};
-  console.log("email ==", email);
-  console.log("is tutor ==", is_tutor);
-  console.log("is forget ==", is_forget);
 
   useEffect(() => {
     if (!otp_access || !email) {
@@ -60,7 +56,6 @@ const OtpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Entered OTP is:", otp.join(""));
     const otpString = otp.join("");
     if (otpString.length < 5) {
       setError("Enter 5 digits OTP");
@@ -88,9 +83,7 @@ const OtpPage = () => {
       } else {
         console.log(res);
       }
-      console.log(res);
     } catch (error) {
-      console.log(error);
       displayToastAlert(400, "Failed to verify OTP. Please try again.");
     } finally {
       setLoading(false);
@@ -105,7 +98,6 @@ const OtpPage = () => {
       setTimer(60);
       setResendDisabled(true);
     } catch (error) {
-      console.log(error);
       displayToastAlert(400, "Failed to resend otp, please try again");
     } finally {
       setResendLoading(false);
