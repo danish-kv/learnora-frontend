@@ -1,13 +1,11 @@
-import React, { act, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
 import UseFetchCategory from "../../admin/hooks/UseFetchCategory";
 import { validationCourseSchema } from "@/utils/yupValidationSchema";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import LoadingDotStream from "@/components/common/Loading";
 import { displayToastAlert } from "@/utils/displayToastAlert";
-import TutorHeader from "../components/TutorHeader";
 
 const TutorCreateCourse = () => {
   const [courseData, setCourseData] = useState({
