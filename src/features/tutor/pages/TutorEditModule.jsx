@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import useFetchModuleDetails from "../hooks/useFetchModuleDetails";
-import TutorHeader from "../components/TutorHeader";
+import LoadingDotStream from "@/components/common/Loading";
 
 const TutorEditModule = () => {
   const [module, setModule] = useState({
@@ -13,6 +12,7 @@ const TutorEditModule = () => {
     video: "",
     notes: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -28,17 +28,30 @@ const TutorEditModule = () => {
 
   const handleModuleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+  
     const formData = new FormData();
     formData.append("title", module.title);
     formData.append("description", module.description);
-
+  
+    // Upload video only if it's a new file, else send the existing video key (URL)
     if (module.video && typeof module.video !== "string") {
+      const videoResponse = await uploadFileToS3(module.video, "video");
+      formData.append("video", videoResponse.videoKey);
+    } else if (typeof module.video === "string" && module.video !== "") {
+      // If the video is a URL, send it as is (assuming it's a valid URL or S3 key)
       formData.append("video", module.video);
     }
+  
+    // Upload notes only if it's a new file, else send the existing notes key
     if (module.notes && typeof module.notes !== "string") {
+      const notesResponse = await uploadFileToS3(module.notes, "notes");
+      formData.append("notes", notesResponse.notesKey);
+    } else if (typeof module.notes === "string" && module.notes !== "null") {
+      // If notes is a string (URL or existing file key), send it as is
       formData.append("notes", module.notes);
     }
-
+  
     try {
       const res = await api.patch(`modules/${id}/`, formData, {
         headers: {
@@ -51,7 +64,51 @@ const TutorEditModule = () => {
       }
     } catch (error) {
       console.log(error);
-      displayToastAlert(400, "server error");
+      displayToastAlert(400, "Error updating module. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const uploadFileToS3 = async (file, fileType) => {
+    try {
+      const presignedUrlResponse = await getPresignedUrl(file, fileType);
+      await uploadFile(file, presignedUrlResponse.presignedUrl);
+      return { videoKey: presignedUrlResponse.key };
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Error uploading ${fileType} to S3`);
+    }
+  };
+
+  const getPresignedUrl = async (file, fileType) => {
+    try {
+      const response = await api.get(
+        `/get-presigned-url?filename=${file.name}&file_type=${fileType}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error getting presigned URL");
+    }
+  };
+
+  const uploadFile = async (file, presignedUrl) => {
+    try {
+      const response = await fetch(presignedUrl, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to upload file to S3: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error uploading file to S3");
     }
   };
 
@@ -162,7 +219,7 @@ const TutorEditModule = () => {
           type="submit"
           className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
         >
-          Update Module
+          {loading ? <LoadingDotStream /> : "Update Module"}
         </button>
       </form>
     </div>
