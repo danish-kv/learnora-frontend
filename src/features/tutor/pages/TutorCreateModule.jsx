@@ -5,8 +5,6 @@ import { validateModules } from "@/utils/validation";
 import LoadingDotStream from "@/components/common/Loading";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 
-
-
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
     { title: "", description: "", video: null, notes: null, duration: "" },
@@ -15,7 +13,6 @@ const TutorCreateModule = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  
   const handleModuleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -62,12 +59,12 @@ const TutorCreateModule = () => {
 
   const uploadFilesToS3 = async (module) => {
     try {
-      const videoResponse = await getPresignedUrl(module.video, "video"); 
+      const videoResponse = await getPresignedUrl(module.video, "video");
       await uploadFileToS3(module.video, videoResponse.presignedUrl);
 
       let notesResponse = null;
       if (module.notes) {
-        notesResponse = await getPresignedUrl(module.notes, "notes"); 
+        notesResponse = await getPresignedUrl(module.notes, "notes");
         await uploadFileToS3(module.notes, notesResponse.presignedUrl);
       }
 
@@ -78,6 +75,8 @@ const TutorCreateModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error("Error uploading files to S3");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +89,8 @@ const TutorCreateModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error("Error getting presigned URL");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +110,8 @@ const TutorCreateModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error("Error uploading file to S3");
+    } finally {
+      setLoading(false);
     }
   };
 

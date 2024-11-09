@@ -29,29 +29,36 @@ const TutorEditModule = () => {
   const handleModuleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     const formData = new FormData();
     formData.append("title", module.title);
     formData.append("description", module.description);
-  
-    // Upload video only if it's a new file, else send the existing video key (URL)
-    if (module.video && typeof module.video !== "string") {
+
+    const extractFilePath = (url) => {
+      const regex = /media\/(module_videos|module_notes)\/(.+)/;
+      const match = url.match(regex);
+      console.log("match ====", match);
+      console.log("match2 ====", match[1] + "/" + match[2]);
+      return match ? match[1] + "/" + match[2] : url;
+    };
+
+    if (module.video && typeof module.video === "string") {
+      const videoPath = extractFilePath(module.video);
+      formData.append("video", videoPath);
+    } else if (module.video && typeof module.video !== "string") {
       const videoResponse = await uploadFileToS3(module.video, "video");
       formData.append("video", videoResponse.videoKey);
-    } else if (typeof module.video === "string" && module.video !== "") {
-      // If the video is a URL, send it as is (assuming it's a valid URL or S3 key)
-      formData.append("video", module.video);
     }
-  
-    // Upload notes only if it's a new file, else send the existing notes key
-    if (module.notes && typeof module.notes !== "string") {
+
+    if (module.notes && typeof module.notes === "string") {
+      const notesPath = extractFilePath(module.notes);
+      formData.append("notes", notesPath);
+    } else if (module.notes && typeof module.notes !== "string") {
+      // If the notes is a new file, upload to S3
       const notesResponse = await uploadFileToS3(module.notes, "notes");
-      formData.append("notes", notesResponse.notesKey);
-    } else if (typeof module.notes === "string" && module.notes !== "null") {
-      // If notes is a string (URL or existing file key), send it as is
-      formData.append("notes", module.notes);
+      formData.append("notes", notesResponse.notesKey); // Send the S3 key
     }
-  
+
     try {
       const res = await api.patch(`modules/${id}/`, formData, {
         headers: {
@@ -69,7 +76,7 @@ const TutorEditModule = () => {
       setLoading(false);
     }
   };
-  
+
   const uploadFileToS3 = async (file, fileType) => {
     try {
       const presignedUrlResponse = await getPresignedUrl(file, fileType);
@@ -78,6 +85,8 @@ const TutorEditModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error(`Error uploading ${fileType} to S3`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +99,8 @@ const TutorEditModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error("Error getting presigned URL");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +120,8 @@ const TutorEditModule = () => {
     } catch (error) {
       console.error(error);
       throw new Error("Error uploading file to S3");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -218,6 +231,7 @@ const TutorEditModule = () => {
         <button
           type="submit"
           className="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-300"
+          disabled={loading}
         >
           {loading ? <LoadingDotStream /> : "Update Module"}
         </button>
