@@ -9,6 +9,7 @@ import swal from "sweetalert";
 import api from "../../../services/api";
 import { formatDate } from "@/utils/format";
 import { displayToastAlert } from "@/utils/displayToastAlert";
+import Swal from "sweetalert2";
 
 const NotesAndReviews = ({
   handleNotesModal,
@@ -26,15 +27,18 @@ const NotesAndReviews = ({
   }
 
   const handleDelete = async (id) => {
-    const willDelete = await swal({
+    const willDelete = await Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this review!",
       icon: "warning",
-      buttons: true,
+      showCancelButton: true, 
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
       dangerMode: true,
     });
+    
 
-    if (willDelete) {
+    if (willDelete.isConfirmed) {
       try {
         const res = await api.delete(`reviews/${id}/`);
         if (res.status === 204) {
@@ -48,7 +52,7 @@ const NotesAndReviews = ({
         }
       } catch (error) {
         console.log(error);
-        swal("Failed to delete the review. Please try again later.", {
+        Swal.fire("Failed to delete the review. Please try again later.", {
           icon: "error",
         });
       }

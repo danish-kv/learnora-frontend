@@ -57,7 +57,7 @@ const ReviewModal = ({
 
       console.log(res);
       if (res.status === (reviewToEdit ? 200 : 201)) {
-        swal(
+        Swal.fire(
           "Success",
           `${rating} Star Review submitted successfully`,
           "success"

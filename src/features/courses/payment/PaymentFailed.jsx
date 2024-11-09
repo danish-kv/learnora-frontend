@@ -15,7 +15,7 @@ const PaymentFailed = () => {
 
     const CoursePurchaseFailed = async () => {
       try {
-        await swal("Payment Failed", "Your course purchase failed. Please try again.", "error");
+        await Swal.fire("Payment Failed", "Your course purchase failed. Please try again.", "error");
         navigate(`/course/${courseID}`)
         
       } catch (error) {

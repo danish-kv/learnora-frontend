@@ -60,7 +60,7 @@ const ContestParticipatePage = () => {
         return;
       }
       const info = error.response?.data?.info || "Failed to Submit";
-      await swal("Oops", info, "warning");
+      await Swal.fire("Oops", info, "warning");
       setFailedToSubmit((prev) => [...prev, questionID]);
     }
   };
@@ -68,7 +68,7 @@ const ContestParticipatePage = () => {
   const handleNextQuestion = async () => {
     if (selectedOption === null) {
       console.log("nothing seleceted ");
-      return swal(
+      return Swal.fire(
         "Option not selected",
         "Please select an option before moving to the next question.",
         "warning"

@@ -63,10 +63,11 @@ const ContestPage = () => {
                     <ContestCard key={contest.id} contest={contest} />
                   ))}
                 </div>
-                ) : (
-                <p className="text-center text-gray-500 mt-8">
-                  No contests available
-                </p>
+                {contests.length === 0 && (
+                  <p className="text-center text-gray-500 mt-8">
+                    No contests available
+                  </p>
+                )}
               </>
             )}
           </main>

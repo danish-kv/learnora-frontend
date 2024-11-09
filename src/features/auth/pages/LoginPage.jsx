@@ -12,6 +12,7 @@ import { validateLogin } from "../../../utils/validation";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import LoadingDotStream from "../../../components/common/Loading";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -94,7 +95,7 @@ const LoginPage = () => {
 
   const handleLoginErrors = async (error) => {
     if (error?.error === "User not verified") {
-      await swal(
+      await Swal.fire(
         "Email Not Verified",
         "Please verify your email. Check your email for an OTP.",
         "error"
@@ -115,7 +116,7 @@ const LoginPage = () => {
       error?.error === "Application status is rejected" &&
       formData.role === "tutor"
     ) {
-      await swal(
+      await Swal.fire(
         "Application Rejected",
         "Unfortunately, your application has been rejected by the admin.",
         "info"
@@ -138,7 +139,7 @@ const LoginPage = () => {
   };
 
   const handlePendingApplication = async () => {
-    await swal(
+    await Swal.fire(
       "Application Incomplete",
       "Please complete your tutor application to proceed.",
       "info"
