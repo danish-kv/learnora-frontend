@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaStar, FaTimes } from "react-icons/fa";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import api from "../../../services/api";
+import Swal from "sweetalert2";
 
 const ReviewModal = ({
   courseId,
