@@ -83,35 +83,54 @@ const TutorCreateModule = () => {
   const getPresignedUrl = async (file, fileType) => {
     try {
       const response = await api.get(
-        `/get-presigned-url?filename=${file.name}&file_type=${fileType}`
+        `/get-presigned-url?filename=${encodeURIComponent(file.name)}&file_type=${fileType}&content_type=${encodeURIComponent(file.type)}`
       );
       return response.data;
     } catch (error) {
-      console.error(error);
-      throw new Error("Error getting presigned URL");
-    } finally {
-      setLoading(false);
+      console.error('Error getting presigned URL:', error);
+      throw new Error('Error getting presigned URL');
     }
   };
-
+  
   const uploadFileToS3 = async (file, presignedUrl) => {
     try {
+      console.log('Starting upload to:', presignedUrl);
+      console.log('File type:', file.type);
+      console.log('File size:', file.size);
+  
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+  
       const response = await fetch(presignedUrl, {
-        method: "PUT",
+        method: 'PUT',
         body: file,
         headers: {
-          "Content-Type": file.type,
+          'Content-Type': file.type,
         },
+        signal: controller.signal
       });
-
+  
+      clearTimeout(timeoutId);
+  
       if (!response.ok) {
-        throw new Error(`Failed to upload file to S3: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('Upload failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
       }
+  
+      return response;
     } catch (error) {
-      console.error(error);
-      throw new Error("Error uploading file to S3");
-    } finally {
-      setLoading(false);
+      console.error('Upload error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      throw error;
     }
   };
 
