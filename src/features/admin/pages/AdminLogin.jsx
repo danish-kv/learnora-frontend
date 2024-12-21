@@ -43,11 +43,7 @@ const AdminLogin = () => {
           navigate("/admin/login");
         }
       } catch (error) {
-        console.error("Login error:", error);
-        displayToastAlert(
-          400,
-          "Failed to log in. Please check your credentials."
-        );
+        console.error("Login error==", error);
       }
     } else {
       setError(errors);
