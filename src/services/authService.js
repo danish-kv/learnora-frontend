@@ -14,10 +14,10 @@ export const register = async (email, password, username, role) => {
   } catch (error) {
     console.error("catch error signup ===>", error);
     console.error("catch  ===>", error.response);
-    displayToastAlert(
-      error.response.status || 400,
-      error.response.data.email || "Facing some issue please try later"
-    );
+    // displayToastAlert(
+    //   error.response.status || 400,
+    //   error.response.data.email || "Facing some issue please try later"
+    // );
 
     if (error.response && error.response.data) {
       const errorMessages = error.response.data;
