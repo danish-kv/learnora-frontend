@@ -1,8 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { BookOpen, Eye, IndianRupeeIcon, Users } from "lucide-react";
-import AdminSidebar from "@/features/admin/components/AdminSidebar";
-import AdminHeader from "@/features/admin/components/AdminHeader";
 import DashboardCard from "../components/DashboardCard";
 import EnrollmentChart from "../components/EnrollmentChart";
 import CourseProgressChart from "../components/CourseProgressChart ";
@@ -14,7 +11,6 @@ import useFetchAdminDashboard from "../hooks/useFetchAdminDashboard";
 
 const AdminDashboard = () => {
   const { dashboardData } = useFetchAdminDashboard();
-  const { isSidebarOpen } = useSelector((state) => state.sidebar);
 
   const stats = [
     {
@@ -44,9 +40,9 @@ const AdminDashboard = () => {
   ];
 
   const courseProgressData = {
-    completed: dashboardData?.progress?.completed_course || 0,
-    ongoing: dashboardData?.progress?.ongoing_course || 0,
-    notStarted: dashboardData?.progress?.not_started_course || 0,
+    completed: dashboardData?.progress?.completed_courses || 0,
+    ongoing: dashboardData?.progress?.ongoing_courses || 0,
+    notStarted: dashboardData?.progress?.not_started_courses || 0,
   };
 
   return (
@@ -82,7 +78,7 @@ const AdminDashboard = () => {
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4">Latest Payments</h2>
             <LatestPaymentsTable
-              paymentsData={dashboardData?.recent_purchase}
+              paymentsData={dashboardData?.recent_purchases}
             />
           </div>
         </div>
