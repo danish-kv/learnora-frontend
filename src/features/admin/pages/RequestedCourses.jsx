@@ -43,8 +43,10 @@ const RequestedCourses = () => {
   return (
     <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-semibold">Requested Courses</h2>
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-700 mb-2 sm:mb-0">
+            Requested Courses
+          </h1>
         </div>
 
         {/* Breadcrumbs */}
@@ -81,9 +83,9 @@ const RequestedCourses = () => {
           </ol>
         </nav>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <>
               {courses.map((course, index) => (
                 <AdminCourseCard
                   key={index}
@@ -92,9 +94,9 @@ const RequestedCourses = () => {
                   onStatusToggle={handleStatus}
                 />
               ))}
-            </div>
+            </>
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 col-span-1 md:col-span-2 lg:col-span-3">
+            <div className="flex flex-col items-center justify-center py-16 col-span-1 sm:col-span-2 lg:col-span-3">
               <h2 className="text-2xl font-semibold text-gray-600">
                 No Requested Courses Available
               </h2>

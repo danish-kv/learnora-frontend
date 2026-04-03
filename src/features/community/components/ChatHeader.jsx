@@ -36,7 +36,7 @@ const ChatHeader = ({ community, onExit, socket, userID }) => {
           <Video className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           <span className="hidden sm:inline">Video Call</span>
         </Button>
-        <Button
+        {/* <Button
           variant="secondary"
           className="flex items-center text-xs sm:text-sm"
         >
@@ -44,7 +44,7 @@ const ChatHeader = ({ community, onExit, socket, userID }) => {
           <span onClick={handleExit} className="hidden sm:inline">
             Exit
           </span>
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

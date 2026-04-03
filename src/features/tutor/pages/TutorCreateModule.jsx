@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TutorSidebar from "../components/TutorSidebar";
 import api from "../../../services/api";
 import { validateModules } from "@/utils/validation";
-import TutorHeader from "../components/TutorHeader";
 import LoadingDotStream from "@/components/common/Loading";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 
 const TutorCreateModule = () => {
   const [modules, setModules] = useState([
-    { title: "", description: "", video: "", notes: "", duration: "" },
+    { title: "", description: "", video: null, notes: null, duration: "" },
   ]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
-
-  console.log("course id", id);
-  console.log(modules);
-
   const navigate = useNavigate();
 
   const handleModuleSubmit = async (e) => {
@@ -28,24 +22,22 @@ const TutorCreateModule = () => {
       return;
     }
 
-    const modulesData = modules.map((module) => ({
-      title: module.title,
-      description: module.description,
-      duration: module.duration,
-    }));
+    const modulesData = await Promise.all(
+      modules.map(async (module) => {
+        const { videoKey, notesKey } = await uploadFilesToS3(module);
+        return {
+          title: module.title,
+          description: module.description,
+          duration: module.duration,
+          video: videoKey,
+          notes: notesKey,
+        };
+      })
+    );
 
     const formData = new FormData();
     formData.append("course", id);
     formData.append("modules", JSON.stringify(modulesData));
-
-    modules.forEach((module, index) => {
-      if (module.video) {
-        formData.append(`video_${index}`, module.video);
-      }
-      if (module.notes) {
-        formData.append(`notes_${index}`, module.notes);
-      }
-    });
 
     try {
       const res = await api.post("modules/", formData, {
@@ -58,9 +50,87 @@ const TutorCreateModule = () => {
         navigate("/tutor/courses");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      displayToastAlert(400, "Error uploading modules. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const uploadFilesToS3 = async (module) => {
+    try {
+      const videoResponse = await getPresignedUrl(module.video, "video");
+      await uploadFileToS3(module.video, videoResponse.presignedUrl);
+
+      let notesResponse = null;
+      if (module.notes) {
+        notesResponse = await getPresignedUrl(module.notes, "notes");
+        await uploadFileToS3(module.notes, notesResponse.presignedUrl);
+      }
+
+      return {
+        videoKey: videoResponse.key,
+        notesKey: notesResponse ? notesResponse.key : null,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error uploading files to S3");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPresignedUrl = async (file, fileType) => {
+    try {
+      const response = await api.get(
+        `/get-presigned-url?filename=${encodeURIComponent(file.name)}&file_type=${fileType}&content_type=${encodeURIComponent(file.type)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error getting presigned URL:', error);
+      throw new Error('Error getting presigned URL');
+    }
+  };
+  
+  const uploadFileToS3 = async (file, presignedUrl) => {
+    try {
+      console.log('Starting upload to:', presignedUrl);
+      console.log('File type:', file.type);
+      console.log('File size:', file.size);
+  
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+  
+      const response = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+        signal: controller.signal
+      });
+  
+      clearTimeout(timeoutId);
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Upload failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+      }
+  
+      return response;
+    } catch (error) {
+      console.error('Upload error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      throw error;
     }
   };
 

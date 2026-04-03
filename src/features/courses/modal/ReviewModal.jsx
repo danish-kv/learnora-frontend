@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaStar, FaTimes } from "react-icons/fa";
 import { displayToastAlert } from "../../../utils/displayToastAlert";
 import api from "../../../services/api";
+import Swal from "sweetalert2";
 
 const ReviewModal = ({
   courseId,
@@ -57,7 +58,7 @@ const ReviewModal = ({
 
       console.log(res);
       if (res.status === (reviewToEdit ? 200 : 201)) {
-        swal(
+        Swal.fire(
           "Success",
           `${rating} Star Review submitted successfully`,
           "success"

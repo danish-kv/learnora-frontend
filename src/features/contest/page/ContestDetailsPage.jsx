@@ -7,6 +7,7 @@ import api from "@/services/api";
 import useFetchContestDetails from "@/features/tutor/hooks/useFetchContestDetails";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const ContestDetailsPage = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const ContestDetailsPage = () => {
       const res = await api.post(`contest/${id}/participate/`);
       console.log("res of res ====", res);
       if (res.status === 200) {
-        await swal("Started", "Your time starts now", "success");
+        await Swal.fire("Started", "Your time starts now", "success");
         navigate(`/contest/${id}/participate`);
       }
     } catch (error) {

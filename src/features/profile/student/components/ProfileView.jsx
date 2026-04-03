@@ -13,7 +13,7 @@ const ProfileView = ({ profile }) => {
         <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
           <Avatar className="w-24 h-24 sm:w-32 sm:h-32">
             <AvatarImage className="object-cover"
-              src={profile.profile || "/default-avatar.png"}
+              src={profile.profile || "https://github.com/shadcn.png"}
               alt={profile.username}
             />
             <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>

@@ -49,12 +49,9 @@ export const formatMessageTime = (timestamp) => {
 import { isToday, isYesterday, differenceInCalendarDays } from 'date-fns';
 
 export const formatMessageDateHeader = (dateString) => {
-  console.log("Received dateString===", dateString); 
   const date = new Date(dateString);
-  console.log("Parsed date==", date); 
 
   if (isNaN(date)) {
-    console.error("Invalid Date:", dateString);
     return "";
   }
 

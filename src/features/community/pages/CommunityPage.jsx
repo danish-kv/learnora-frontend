@@ -10,6 +10,7 @@ import Banner from "@/components/common/Banner";
 import { useSelector } from "react-redux";
 import { displayToastAlert } from "@/utils/displayToastAlert";
 import CardSkeleton from "@/skeleton/CardSkeleton";
+import Swal from "sweetalert2";
 
 const CommunityPage = () => {
   const { communities, error, loading } = useFetchCommunity();
@@ -29,7 +30,7 @@ const CommunityPage = () => {
       }
       const res = await api.post(`community/${slug}/join/`);
       if (res.status === 200) {
-        await swal(
+        await Swal.fire(
           "Joined",
           `Successfully joined ${name} community`,
           "success"
@@ -43,7 +44,7 @@ const CommunityPage = () => {
         error?.response?.data?.error || "Failed to join to community";
       console.log(ErrorMessage);
 
-      await swal("Error", ErrorMessage, "error");
+      await Swal.fire("Error", ErrorMessage, "error");
     }
   };
 

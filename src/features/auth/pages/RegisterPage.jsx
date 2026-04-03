@@ -76,8 +76,7 @@ const RegisterPage = () => {
           });
         }
       } catch (error) {
-        console.log("Signup error: ", error);
-        displayToastAlert(400, "Registration failed. Please try again.");
+        console.log("Signup error== ", error);
       }
     } else {
       setErrors(errors);

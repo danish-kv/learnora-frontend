@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../../redux/thunk/authThunks";
 import { capitalizeFirstLetter } from "../../utils/format";
 import { Menu, X, ChevronDown, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -89,9 +90,13 @@ function Header() {
                         alt={`${username}'s profile`}
                       />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <User className="h-5 w-5 text-gray-500" />
-                      </div>
+                      <Avatar className="h-8 w-8 rounded-full bg-gray-200 border border-gray-300 shadow-sm">
+                        <AvatarImage
+                          className="h-8 w-8 rounded-full"
+                          src="https://github.com/shadcn.png"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
                     )}
                     <span className="ml-3 text-gray-700 font-medium">
                       {username}
@@ -209,9 +214,13 @@ function Header() {
                         alt=""
                       />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <User className="h-5 w-5 text-gray-500" />
-                      </div>
+                      <Avatar className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                        <AvatarImage
+                          className="h-8 w-8 rounded-full"
+                          src="https://github.com/shadcn.png"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
                     )}
                   </div>
                   <div className="ml-3">

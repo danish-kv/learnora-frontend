@@ -63,7 +63,7 @@ const ProfilePhoto = ({ profile }) => {
       <CardContent>
         <div className="flex flex-col items-center space-y-4">
           <Avatar className="w-32 h-32 ">
-            <AvatarImage className={'object-cover'} src={previewUrl || profile?.profile} alt="Profile" />
+            <AvatarImage className={'object-cover'} src={previewUrl || profile?.profile || 'https://github.com/shadcn.png'} alt="Profile" />
             <AvatarFallback>
               {profile?.first_name?.[0]}
               {profile?.last_name?.[0]}

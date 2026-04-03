@@ -21,7 +21,7 @@ const TutorCard = ({ tutor, onStatusChange, onBlockToggle, onClick }) => {
           onClick={onClick}
         >
           <img
-            src={`${BASE_URL}${tutor.user?.profile}`}
+            src={`${tutor.user?.profile}`}
             alt={`${tutor.user?.username}'s profile`}
             className="w-16 h-16 rounded-full mr-4 object-cover border-2 border-blue-500"
           />
